@@ -163,7 +163,7 @@ class Compound(object):
     @property
     def mol(self):
         """ Return record in MOL format """
-        if self._mol == None:
+        if self._mol is None:
             apiurl = 'http://www.chemspider.com/MassSpecAPI.asmx/GetRecordMol?csid=%s&calc3d=true&token=%s' % (self.csid,TOKEN)
             response = urllib2.urlopen(apiurl)
             tree = ET.parse(response)
