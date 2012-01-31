@@ -174,7 +174,7 @@ class Compound(object):
 def find(query):
     """ Search by Name, SMILES, InChI, InChIKey, etc. Returns first 100 Compounds """
     assert type(query) == str or type(query) == unicode, 'query not a string object'
-    searchurl = 'http://www.chemspider.com/Search.asmx/SimpleSearch?query=%s&token=%s' % (query, TOKEN)
+    searchurl = 'http://www.chemspider.com/Search.asmx/SimpleSearch?query=%s&token=%s' % (urllib2.quote(query), TOKEN)
     response = urllib2.urlopen(searchurl)
     tree = ET.parse(response)
     elem = tree.getroot()
