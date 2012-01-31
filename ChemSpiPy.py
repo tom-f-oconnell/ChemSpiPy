@@ -1,179 +1,192 @@
-import urllib
+# -*- coding: utf-8 -*-
+""" Python wrapper for the ChemSpider API.
+https://github.com/mcs07/ChemSpiPy
+
+Forked from ChemSpiPy by Cameron Neylon
+https://github.com/cameronneylon/ChemSpiPy
+"""
+
+
+import urllib2
 from xml.etree import ElementTree as ET
-import unittest
 
 
-class ChemSpiderId(str):
-    """An class for holding ChemSpider IDs and enabling searches based on them.
+TOKEN  = 'YOU NEED TO INSERT YOUR OWN TOKEN HERE'
 
-    The purpose of the class is to enable a series of bound methods to be easily
-    wrapped to provide access to the ChemSpider API in Python. Currently the 
-    methods include returning the URL of a png image of the named chemical.
+
+class Compound(object):
+    """ A class for retrieving record details about a compound by CSID.
+
+    The purpose of this class is to provide access to various parts of the
+    ChemSpider API that return information about a compound given its CSID.
+    Information is loaded lazily when requested, and cached for future access.
     """
 
     def __init__(self,csid):
-        """Initialize the ChemSpiderId object with a value.
-
-        """
-
-        self.id = ''
-        self.image = ''
-        self.molwt = ''
-        self.mol = ''
-
-        if type(csid) == str and csid.isdigit() == True:
-            self.id = csid
-            
+        """ Initialize with a CSID as an int or str """
+        if type(csid) is str and csid.isdigit():
+            self.csid = csid
         elif type(csid) == int:
-            self.id = str(csid)
-
+            self.csid = str(csid)
         else:
-            raise TypeError('ChemSpiderId needs to be intialised with an int or a str')
+            raise TypeError('Compound must be initialised with a CSID as an int or str')
 
-    def __string__(self):
-        return self.id
+        self._imageurl = None
+        self._mf = None
+        self._smiles = None
+        self._inchi = None
+        self._inchikey = None
+        self._averagemass = None
+        self._molecularweight = None
+        self._monoisotopicmass = None
+        self._nominalmass = None
+        self._alogp = None
+        self._xlogp = None
+        self._commonname = None
+        self._image = None
+        self._mol = None
 
+    def __repr__(self):
+        return "Compound(%r)" % self.csid
+
+    @property
     def imageurl(self):
-        """ Return the URL of a png image for a specific Chemspider ID.
+        """ Return the URL of a png image of the 2D structure """
+        if self._imageurl is None:
+            self._imageurl = 'http://www.chemspider.com/ImagesHandler.ashx?id=%s' % self.csid
+        return self._imageurl
 
-        The actual ChemSpider API returns the binary of the PNG wrapped in XML. The
-        purpose of constructing a URL to the image is to enable easy insertion into
-        webservices etc by serving the address for the image rather than the image.
-        """
+    @property
+    def mf(self):
+        """ Retrieve molecular formula from ChemSpider """
+        if self._mf is None:
+            self.loadextendedcompoundinfo()
+        return self._mf
 
-        assert self != '', 'ChemSpiderId not initialised with value'
+    @property
+    def smiles(self):
+        """ Retrieve SMILES string from ChemSpider """
+        if self._smiles is None:
+            self.loadextendedcompoundinfo()
+        return self._smiles
 
-        if self.image == '':
-            baseurl = 'http://www.chemspider.com/'
-            url = baseurl + 'ImagesHandler.ashx?id=%s' % self
-            self.image = url
-            return url
+    @property
+    def inchi(self):
+        """ Retrieve InChi string from ChemSpider """
+        if self._inchi is None:
+            self.loadextendedcompoundinfo()
+        return self._inchi
 
-        else:
-            return self.image
+    @property
+    def inchikey(self):
+        """ Retrieve InChi string from ChemSpider """
+        if self._inchikey is None:
+            self.loadextendedcompoundinfo()
+        return self._inchikey
 
-    def molweight(self):
-        """Poll the ChemSpider MS API for average mol wt for a specific Chemspider ID."""
+    @property
+    def averagemass(self):
+        """ Retrieve average mass from ChemSpider """
+        if self._averagemass is None:
+            self.loadextendedcompoundinfo()
+        return self._averagemass
 
-        assert self != '', 'ChemSpiderID not initialised with value'
- 
-        if self.molwt == '':
-            baseurl = 'http://www.chemspider.com/'
-            token  = '3a19d00d-874f-4879-adc0-3013dbecbbc9'
+    @property
+    def molecularweight(self):
+        """ Retrieve molecular weight from ChemSpider """
+        if self._molecularweight is None:
+            self.loadextendedcompoundinfo()
+        return self._molecularweight
 
-            # Construct a search URL and poll Chemspider for the XML result
-            searchurl = baseurl + 'MassSpecAPI.asmx/GetExtendedCompoundInfo?CSID=' + self.id + '&token=' + token
+    @property
+    def monoisotopicmass(self):
+        """ Retrieve monoisotropic mass from ChemSpider """
+        if self._monoisotopicmass is None:
+            self.loadextendedcompoundinfo()
+        return self._monoisotopicmass
 
-            response = urllib.urlopen(searchurl)
+    @property
+    def nominalmass(self):
+        """ Retrieve nominal mass from ChemSpider """
+        if self._nominalmass is None:
+            self.loadextendedcompoundinfo()
+        return self._nominalmass
 
-            tree = ET.parse(response) #parse the CS XML response
-            molwttag = tree.find('{http://www.chemspider.com/}MolecularWeight')
-            molecularweight = float(molwttag.text)
+    @property
+    def alogp(self):
+        """ Retrieve ALogP from ChemSpider """
+        if self._alogp is None:
+            self.loadextendedcompoundinfo()
+        return self._alogp
 
-            self.molwt = molecularweight
-            return molecularweight
+    @property
+    def xlogp(self):
+        """ Retrieve XLogP from ChemSpider """
+        if self._xlogp is None:
+            self.loadextendedcompoundinfo()
+        return self._xlogp
 
-    def getMolFile(self):
-        """Poll the ChemSpider MS API for the mol descriptor for a specific Chemspider ID."""
+    @property
+    def commonname(self):
+        """ Retrieve common name from ChemSpider """
+        if self._commonname is None:
+            self.loadextendedcompoundinfo()
+        return self._commonname
 
-        assert self != '', 'ChemSpiderID not initialised with value'
+    def loadextendedcompoundinfo(self):
+        """ Load extended compound info from the Mass Spec API """
+        apiurl = 'http://www.chemspider.com/MassSpecAPI.asmx/GetExtendedCompoundInfo?CSID=%s&token=%s' % (self.csid,TOKEN)
+        response = urllib2.urlopen(apiurl)
+        tree = ET.parse(response)
+        self._mf = tree.find('{http://www.chemspider.com/}MF').text
+        self._smiles = tree.find('{http://www.chemspider.com/}SMILES').text
+        self._inchi = tree.find('{http://www.chemspider.com/}InChI').text
+        self._inchikey = tree.find('{http://www.chemspider.com/}InChIKey').text
+        self._averagemass = float(tree.find('{http://www.chemspider.com/}AverageMass').text)
+        self._molecularweight = float(tree.find('{http://www.chemspider.com/}MolecularWeight').text)
+        self._monoisotopicmass = float(tree.find('{http://www.chemspider.com/}MonoisotopicMass').text)
+        self._nominalmass = float(tree.find('{http://www.chemspider.com/}NominalMass').text)
+        self._alogp = float(tree.find('{http://www.chemspider.com/}ALogP').text)
+        self._xlogp = float(tree.find('{http://www.chemspider.com/}XLogP').text)
+        self._commonname = tree.find('{http://www.chemspider.com/}CommonName').text
 
-        #if self.molfile == None:
-        baseurl = 'http://www.chemspider.com/'
-        token  = '3a19d00d-874f-4879-adc0-3013dbecbbc9'
+    @property
+    def image(self):
+        """ Return string containing PNG binary image data of 2D structure image """
+        if self._image is None:
+            apiurl = 'http://www.chemspider.com/Search.asmx/GetCompoundThumbnail?id=%s&token=%s' % (self.csid,TOKEN)
+            response = urllib2.urlopen(apiurl)
+            tree = ET.parse(response)
+            self._image = tree.getroot().text
+        return self._image
 
-            # Construct a search URL and poll Chemspider for the XML result
-        searchurl = baseurl + 'MassSpecAPI.asmx/GetRecordMol?csid=' + self.id + '&calc3d=true&token=' + token
-
-        response = urllib.urlopen(searchurl)
-        
-        tree = ET.parse(response) #Parse the CS XML response
-        moltag = tree.getroot()
-        molfiletext = moltag.text
-
-        self.molfile = molfiletext
-        return molfiletext 
-
-        #else:
-         #   return self.molfile
+    @property
+    def mol(self):
+        """ Return record in MOL format """
+        if self._mol == None:
+            apiurl = 'http://www.chemspider.com/MassSpecAPI.asmx/GetRecordMol?csid=%s&calc3d=true&token=%s' % (self.csid,TOKEN)
+            response = urllib2.urlopen(apiurl)
+            tree = ET.parse(response)
+            self._mol = tree.getroot().text
+        return self._mol
 
 
-def simplesearch(query):
-    """Returns ChemSpiderId string from a simple search for query.
-
-    SimpleSearch on the Chempspider API provides a list of objects which this
-    routine is currently capturing but not returning back. At the moment it 
-    simply returns a single object of the type ChemSpiderID
-    """
-
+def find(query):
+    """ Search by Name, SMILES, InChI, InChIKey, etc. Returns first 100 Compounds """
     assert type(query) == str or type(query) == unicode, 'query not a string object'
-
-    baseurl = 'http://www.chemspider.com/'
-    token  = '3a19d00d-874f-4879-adc0-3013dbecbbc9'
-
-    # Construct a search URL and poll Chemspider for the XML result
-    searchurl = baseurl + 'Search.asmx/SimpleSearch?query=' + query + '&token=' + token
-
-    response = urllib.urlopen(searchurl)
-
-    tree = ET.parse(response) #parse the CS XML response
+    searchurl = 'http://www.chemspider.com/Search.asmx/SimpleSearch?query=%s&token=%s' % (query, TOKEN)
+    response = urllib2.urlopen(searchurl)
+    tree = ET.parse(response)
     elem = tree.getroot()
     csid_tags = elem.getiterator('{http://www.chemspider.com/}int')
+    compoundlist = []
+    for tag in csid_tags:
+        compoundlist.append(Compound(tag.text))
+    return compoundlist if compoundlist else None
 
-    csidlist = []
-    for tags in csid_tags:
-      csidlist.append(tags.text)
-    
-    returned_id = ChemSpiderId(csidlist[0])
 
-    return returned_id
+def find_one(query):
+    """ Search by Name, SMILES, InChI, InChIKey, etc. Returns a single Compound """
+    compoundlist = find(query)
+    return compoundlist[0] if compoundlist else None
 
-########################################
-#
-# Unit tests
-#
-########################################
-
-class TestChemSpiPy(unittest.TestCase):
- 
-    def setUp(self):
-        self.testint = 236
-        self.teststring = '236'
-        self.testquery = 'benzene'
-        self.testimageurl = 'http://www.chemspider.com/ImagesHandler.ashx?id=236'
-        self.testmolwt = 78.1118
-        self.testmol = """241
-  -OEChem-10200920453D
-
-  6  6  0     0  0  0  0  0  0999 V2000
-   -0.7040   -1.2194   -0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
-    0.7040   -1.2194   -0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
-   -1.4081   -0.0000   -0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
-    1.4081    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
-   -0.7040    1.2194    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
-    0.7040    1.2194   -0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
-  1  2  2  0  0  0  0
-  1  3  1  0  0  0  0
-  2  4  1  0  0  0  0
-  3  5  2  0  0  0  0
-  4  6  2  0  0  0  0
-  5  6  1  0  0  0  0
-M  END
-"""
- 
-    def testchemspiderid(self):
-        self.assertRaises(TypeError, ChemSpiderId, 1.2)
-        self.assertEqual(ChemSpiderId(self.teststring), self.teststring)
-        self.assertEqual(ChemSpiderId(self.testint), self.teststring)
-        self.assertEqual(ChemSpiderId(self.teststring).imageurl(), self.testimageurl)
-        self.assertEqual(ChemSpiderId(self.teststring).molweight(), self.testmolwt)
-        self.assertEqual(ChemSpiderId(self.teststring).mol, self.testmol)
-
- 
-    def testsimplesearch(self):
-        self.assertEqual(simplesearch(self.testquery), self.teststring)
- 
- 
-if __name__ == '__main__':
-    unittest.main()
- 
