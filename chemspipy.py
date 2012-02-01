@@ -138,17 +138,28 @@ class Compound(object):
         apiurl = 'http://www.chemspider.com/MassSpecAPI.asmx/GetExtendedCompoundInfo?CSID=%s&token=%s' % (self.csid,TOKEN)
         response = urllib2.urlopen(apiurl)
         tree = ET.parse(response)
-        self._mf = tree.find('{http://www.chemspider.com/}MF').text
-        self._smiles = tree.find('{http://www.chemspider.com/}SMILES').text
-        self._inchi = tree.find('{http://www.chemspider.com/}InChI').text
-        self._inchikey = tree.find('{http://www.chemspider.com/}InChIKey').text
-        self._averagemass = float(tree.find('{http://www.chemspider.com/}AverageMass').text)
-        self._molecularweight = float(tree.find('{http://www.chemspider.com/}MolecularWeight').text)
-        self._monoisotopicmass = float(tree.find('{http://www.chemspider.com/}MonoisotopicMass').text)
-        self._nominalmass = float(tree.find('{http://www.chemspider.com/}NominalMass').text)
-        self._alogp = float(tree.find('{http://www.chemspider.com/}ALogP').text)
-        self._xlogp = float(tree.find('{http://www.chemspider.com/}XLogP').text)
-        self._commonname = tree.find('{http://www.chemspider.com/}CommonName').text
+        mf = tree.find('{http://www.chemspider.com/}MF')
+        self._mf = mf.text if mf is not None else None
+        smiles = tree.find('{http://www.chemspider.com/}SMILES')
+        self._smiles = smiles.text if smiles is not None else None
+        inchi = tree.find('{http://www.chemspider.com/}InChI')
+        self._inchi = inchi.text if inchi is not None else None
+        inchikey = tree.find('{http://www.chemspider.com/}InChIKey')
+        self._inchikey = inchikey.text if inchikey is not None else None
+        averagemass = tree.find('{http://www.chemspider.com/}AverageMass')
+        self._averagemass = float(averagemass.text) if averagemass is not None else None
+        molecularweight = tree.find('{http://www.chemspider.com/}MolecularWeight')
+        self._molecularweight = float(molecularweight.text) if molecularweight is not None else None
+        monoisotopicmass = tree.find('{http://www.chemspider.com/}MonoisotopicMass')
+        self._monoisotopicmass = float(monoisotopicmass.text) if monoisotopicmass is not None else None
+        nominalmass = tree.find('{http://www.chemspider.com/}NominalMass')
+        self._nominalmass = float(nominalmass.text) if nominalmass is not None else None
+        alogp = tree.find('{http://www.chemspider.com/}ALogP')
+        self._alogp = float(alogp.text) if alogp is not None else None
+        xlogp = tree.find('{http://www.chemspider.com/}XLogP')
+        self._xlogp = float(xlogp.text) if xlogp is not None else None
+        commonname = tree.find('{http://www.chemspider.com/}CommonName')
+        self._commonname = commonname.text if commonname is not None else None
 
     @property
     def image(self):
