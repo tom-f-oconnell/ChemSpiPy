@@ -45,6 +45,7 @@ class Compound(object):
         self._commonname = None
         self._image = None
         self._mol = None
+        self._mol3d = None
 
     def __repr__(self):
         return "Compound(%r)" % self.csid
@@ -175,11 +176,21 @@ class Compound(object):
     def mol(self):
         """ Return record in MOL format """
         if self._mol is None:
-            apiurl = 'http://www.chemspider.com/MassSpecAPI.asmx/GetRecordMol?csid=%s&calc3d=true&token=%s' % (self.csid,TOKEN)
+            apiurl = 'http://www.chemspider.com/MassSpecAPI.asmx/GetRecordMol?csid=%s&calc3d=false&token=%s' % (self.csid,TOKEN)
             response = urllib2.urlopen(apiurl)
             tree = ET.parse(response)
             self._mol = tree.getroot().text
         return self._mol
+
+    @property
+    def mol3d(self):
+        """ Return record in MOL format with 3D coordinates calculated """
+        if self._mol3d is None:
+            apiurl = 'http://www.chemspider.com/MassSpecAPI.asmx/GetRecordMol?csid=%s&calc3d=true&token=%s' % (self.csid,TOKEN)
+            response = urllib2.urlopen(apiurl)
+            tree = ET.parse(response)
+            self._mol3d = tree.getroot().text
+        return self._mol3d
 
 
 def find(query):
