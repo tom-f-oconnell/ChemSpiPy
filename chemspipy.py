@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-""" Python wrapper for the ChemSpider API.
+"""
+ChemSpiPy
+
+Python wrapper for the ChemSpider API.
 https://github.com/mcs07/ChemSpiPy
 
 Forked from ChemSpiPy by Cameron Neylon
@@ -11,7 +14,13 @@ import urllib2
 from xml.etree import ElementTree as ET
 
 
-TOKEN  = 'YOU NEED TO INSERT YOUR OWN TOKEN HERE'
+__author__ = 'Matt Swain'
+__email__ = 'm.swain@me.com'
+__version__ = '1.0'
+__license__ = 'MIT'
+
+
+TOKEN = 'YOU NEED TO INSERT YOUR OWN TOKEN HERE'
 
 
 class Compound(object):
