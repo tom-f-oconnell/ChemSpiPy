@@ -20,8 +20,7 @@ __version__ = '1.0'
 __license__ = 'MIT'
 
 
-TOKEN = 'YOU NEED TO INSERT YOUR OWN TOKEN HERE'
-
+from private_token import TOKEN
 
 class Compound(object):
     """ A class for retrieving record details about a compound by CSID.
