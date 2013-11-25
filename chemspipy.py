@@ -20,8 +20,7 @@ __version__ = '1.0'
 __license__ = 'MIT'
 
 
-TOKEN = 'YOU NEED TO INSERT YOUR OWN TOKEN HERE'
-
+from private_token import TOKEN
 
 class Compound(object):
     """ A class for retrieving record details about a compound by CSID.
@@ -149,27 +148,27 @@ class Compound(object):
         response = urllib2.urlopen(apiurl)
         tree = ET.parse(response)
         mf = tree.find('{http://www.chemspider.com/}MF')
-        self._mf = mf.text if mf is not None else None
+        self._mf = mf.text.encode('utf-8') if mf is not None else None
         smiles = tree.find('{http://www.chemspider.com/}SMILES')
-        self._smiles = smiles.text if smiles is not None else None
+        self._smiles = smiles.text.encode('utf-8') if smiles is not None else None
         inchi = tree.find('{http://www.chemspider.com/}InChI')
-        self._inchi = inchi.text if inchi is not None else None
+        self._inchi = inchi.text.encode('utf-8') if inchi is not None else None
         inchikey = tree.find('{http://www.chemspider.com/}InChIKey')
-        self._inchikey = inchikey.text if inchikey is not None else None
+        self._inchikey = inchikey.text.encode('utf-8') if inchikey is not None else None
         averagemass = tree.find('{http://www.chemspider.com/}AverageMass')
-        self._averagemass = float(averagemass.text) if averagemass is not None else None
+        self._averagemass = float(averagemass.text.encode('utf-8')) if averagemass is not None else None
         molecularweight = tree.find('{http://www.chemspider.com/}MolecularWeight')
-        self._molecularweight = float(molecularweight.text) if molecularweight is not None else None
+        self._molecularweight = float(molecularweight.text.encode('utf-8')) if molecularweight is not None else None
         monoisotopicmass = tree.find('{http://www.chemspider.com/}MonoisotopicMass')
-        self._monoisotopicmass = float(monoisotopicmass.text) if monoisotopicmass is not None else None
+        self._monoisotopicmass = float(monoisotopicmass.text.encode('utf-8')) if monoisotopicmass is not None else None
         nominalmass = tree.find('{http://www.chemspider.com/}NominalMass')
-        self._nominalmass = float(nominalmass.text) if nominalmass is not None else None
+        self._nominalmass = float(nominalmass.text.encode('utf-8')) if nominalmass is not None else None
         alogp = tree.find('{http://www.chemspider.com/}ALogP')
-        self._alogp = float(alogp.text) if alogp is not None else None
+        self._alogp = float(alogp.text.encode('utf-8')) if alogp is not None else None
         xlogp = tree.find('{http://www.chemspider.com/}XLogP')
-        self._xlogp = float(xlogp.text) if xlogp is not None else None
+        self._xlogp = float(xlogp.text.encode('utf-8')) if xlogp is not None else None
         commonname = tree.find('{http://www.chemspider.com/}CommonName')
-        self._commonname = commonname.text if commonname is not None else None
+        self._commonname = commonname.text.encode('utf-8') if commonname is not None else None
 
     @property
     def image(self):
