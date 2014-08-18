@@ -19,8 +19,8 @@ __email__ = 'm.swain@me.com'
 __version__ = '1.0'
 __license__ = 'MIT'
 
+TOKEN = 'YOUR-TOKEN-HERE'
 
-from private_token import TOKEN
 
 class Compound(object):
     """ A class for retrieving record details about a compound by CSID.
@@ -144,7 +144,7 @@ class Compound(object):
 
     def loadextendedcompoundinfo(self):
         """ Load extended compound info from the Mass Spec API """
-        apiurl = 'http://www.chemspider.com/MassSpecAPI.asmx/GetExtendedCompoundInfo?CSID=%s&token=%s' % (self.csid,TOKEN)
+        apiurl = 'http://www.chemspider.com/MassSpecAPI.asmx/GetExtendedCompoundInfo?CSID=%s&token=%s' % (self.csid, TOKEN)
         response = urllib2.urlopen(apiurl)
         tree = ET.parse(response)
         mf = tree.find('{http://www.chemspider.com/}MF')
@@ -174,7 +174,7 @@ class Compound(object):
     def image(self):
         """ Return string containing PNG binary image data of 2D structure image """
         if self._image is None:
-            apiurl = 'http://www.chemspider.com/Search.asmx/GetCompoundThumbnail?id=%s&token=%s' % (self.csid,TOKEN)
+            apiurl = 'http://www.chemspider.com/Search.asmx/GetCompoundThumbnail?id=%s&token=%s' % (self.csid, TOKEN)
             response = urllib2.urlopen(apiurl)
             tree = ET.parse(response)
             self._image = tree.getroot().text
@@ -184,7 +184,7 @@ class Compound(object):
     def mol(self):
         """ Return record in MOL format """
         if self._mol is None:
-            apiurl = 'http://www.chemspider.com/MassSpecAPI.asmx/GetRecordMol?csid=%s&calc3d=false&token=%s' % (self.csid,TOKEN)
+            apiurl = 'http://www.chemspider.com/MassSpecAPI.asmx/GetRecordMol?csid=%s&calc3d=false&token=%s' % (self.csid, TOKEN)
             response = urllib2.urlopen(apiurl)
             tree = ET.parse(response)
             self._mol = tree.getroot().text
@@ -194,7 +194,7 @@ class Compound(object):
     def mol3d(self):
         """ Return record in MOL format with 3D coordinates calculated """
         if self._mol3d is None:
-            apiurl = 'http://www.chemspider.com/MassSpecAPI.asmx/GetRecordMol?csid=%s&calc3d=true&token=%s' % (self.csid,TOKEN)
+            apiurl = 'http://www.chemspider.com/MassSpecAPI.asmx/GetRecordMol?csid=%s&calc3d=true&token=%s' % (self.csid, TOKEN)
             response = urllib2.urlopen(apiurl)
             tree = ET.parse(response)
             self._mol3d = tree.getroot().text

@@ -18,12 +18,12 @@ class TestChemSpiPy(unittest.TestCase):
         self.test_string = '236'
         self.test_imageurl = 'http://www.chemspider.com/ImagesHandler.ashx?id=236'
         self.test_mf = 'C_{6}H_{6}'
-        self.test_smiles = 'c1ccccc1'
+        self.test_smiles = 'C1=CC=CC=C1'
         self.test_inchi = 'InChI=1/C6H6/c1-2-4-6-5-3-1/h1-6H'
         self.test_inchikey = 'UHOVQNZJYSORNB-UHFFFAOYAH'
-        self.test_averagemass = 78.112
-        self.test_molecularweight = 78.1118
-        self.test_monoisotopicmass = 78.0469970703125
+        self.test_averagemass = 78.1118
+        self.test_molecularweight = 78.11184
+        self.test_monoisotopicmass = 78.046951
         self.test_nominalmass = 78
         self.test_alogp = 0
         self.test_xlogp = 0
