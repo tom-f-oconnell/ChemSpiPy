@@ -1,7 +1,7 @@
 ChemSpiPy
 =========
 
-ChemSpiPy provides a way to interact with PubChem in Python. It allows chemical searches, chemical file downloads, 
+ChemSpiPy provides a way to interact with ChemSpider in Python. It allows chemical searches, chemical file downloads,
 depiction and retrieval of chemical properties::
 
     >>> from chemspipy import ChemSpider
