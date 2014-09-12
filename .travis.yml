@@ -5,7 +5,7 @@ python:
   - "3.3"
   - "3.4"
 install:
-  - pip install coveralls lxml nose requests
+  - pip install coveralls lxml nose requests six
 script:
   - coverage run --source=chemspipy setup.py test
 after_success:
