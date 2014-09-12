@@ -1,6 +1,18 @@
 ChemSpiPy
 =========
 
+.. image:: http://img.shields.io/pypi/v/ChemSpiPy.svg?style=flat
+    :target: https://pypi.python.org/pypi/ChemSpiPy
+
+.. image:: http://img.shields.io/pypi/l/ChemSpiPy.svg?style=flat
+    :target: https://github.com/mcs07/ChemSpiPy/blob/master/LICENSE
+
+.. image:: http://img.shields.io/travis/mcs07/ChemSpiPy/master.svg?style=flat
+    :target: https://travis-ci.org/mcs07/ChemSpiPy
+
+.. image:: http://img.shields.io/coveralls/mcs07/ChemSpiPy/master.svg?style=flat
+    :target: https://coveralls.io/r/mcs07/ChemSpiPy?branch=master
+
 ChemSpiPy provides a way to interact with ChemSpider in Python. It allows chemical searches, chemical file downloads,
 depiction and retrieval of chemical properties::
 
