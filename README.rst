@@ -4,14 +4,10 @@ ChemSpiPy
 ChemSpiPy provides a way to interact with PubChem in Python. It allows chemical searches, chemical file downloads, 
 depiction and retrieval of chemical properties::
 
-    import chemspipy
-    
-    # Specify compound by ChemSpider ID
-    c = Compound('236')
-    
-    # Search using name, SMILES, InChI, InChIKey, etc.
-    c = chemspipy.find_one('benzene')
-    c = chemspipy.find('benzene')[0]
+    >>> from chemspipy import ChemSpider
+    >>> cs = ChemSpider('<YOUR-SECURITY-TOKEN>')
+    >>> c = cs.get_compound('236')  # Specify compound by ChemSpider ID
+    >>> c = cs.search('benzene')  # Search using name, SMILES, InChI, InChIKey, etc.
 
 Installation
 ------------
