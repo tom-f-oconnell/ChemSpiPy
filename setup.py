@@ -23,6 +23,8 @@ setup(
     keywords='chemistry cheminformatics chemspider rsc rest api',
     zip_safe=False,
     test_suite='nose.collector',
+    install_requires=['requests', 'six'],
+    tests_require=['nose'],
     extras_require={'lxml': ['lxml']},
     classifiers=[
         'Environment :: Console',
