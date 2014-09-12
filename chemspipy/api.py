@@ -317,7 +317,7 @@ class SearchApi(BaseChemSpider):
         :rtype: bytes
         """
         response = self.request('Search', 'GetCompoundThumbnail', id=csid)
-        return b64decode(response.text)
+        return b64decode(response.text.encode('utf-8'))
 
     def simple_search(self, query):
         """Search ChemSpider with arbitrary query.
