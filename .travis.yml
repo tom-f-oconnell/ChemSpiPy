@@ -10,3 +10,4 @@ script:
   - coverage run --source=chemspipy setup.py test
 after_success:
   - coveralls
+secure: "QQlGoUF2W9DDvdhXhMMfJyA2nSlj8J0QH31b9A1JlbSoIf89H5cjEcYYWqP4WF5sVyBdTm6vbjqQijWSJAjMZkxJduUMYYsHGQZDFuYoyKherS6JbhbJOZH7TmbcepSbBkDf1IJ/JxTMw2yZdXXMO/YmGq6Tc5dmch2XKOGm4f0="
