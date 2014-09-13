@@ -16,7 +16,7 @@ setup(
     author='Matt Swain',
     author_email='m.swain@me.com',
     license='MIT',
-    url='https://github.com/mcs07/MolVS',
+    url='https://github.com/mcs07/ChemSpiPy',
     packages=['chemspipy'],
     description='A simple Python wrapper around the ChemSpider Web Services.',
     long_description=long_description,
