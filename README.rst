@@ -18,13 +18,13 @@ depiction and retrieval of chemical properties::
 
     >>> from chemspipy import ChemSpider
     >>> cs = ChemSpider('<YOUR-SECURITY-TOKEN>')
-    >>> c = cs.get_compound('236')  # Specify compound by ChemSpider ID
-    >>> c = cs.search('benzene')  # Search using name, SMILES, InChI, InChIKey, etc.
+    >>> c1 = cs.get_compound(236)  # Specify compound by ChemSpider ID
+    >>> c2 = cs.search('benzene')  # Search using name, SMILES, InChI, InChIKey, etc.
 
 Installation
 ------------
 
-Install ChemSpiPy using::
+Install ChemSpiPy using pip::
 
     pip install chemspipy
 
