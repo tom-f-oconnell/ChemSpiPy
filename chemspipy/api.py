@@ -373,12 +373,25 @@ class InchiApi(BaseChemSpider):
 class CustomApi(BaseChemSpider):
 
     def get_compound(self, csid):
+        """Return a Compound object for a given ChemSpider ID. Security token is required.
+
+        :param string|int csid: ChemSpider ID.
+        :returns: The Compound with the specified ChemSpider ID.
+        :rtype: Compound
+        """
         return Compound(self, csid)
 
     def get_compounds(self, csids):
+        """Return a list of Compound objects, given a list ChemSpider IDs. Security token is required.
+
+        :param list[string|int] csids: List of ChemSpider IDs.
+        :returns: List of Compounds with the specified ChemSpider IDs.
+        :rtype: list[Compound]
+        """
         return [Compound(self, csid) for csid in csids]
 
     def search(self, query):
+        """Search ChemSpider for the specified query and return the results. Security token is required."""
         return Results(self, self.async_simple_search, (query,))
 
     # TODO: Wrappers for subscriber role asynchronous searches

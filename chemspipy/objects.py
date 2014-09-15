@@ -58,64 +58,80 @@ class Compound(object):
 
     @property
     def molecular_formula(self):
+        """Return the molecular formula for this Compound."""
         return self._extended_compound_info['molecular_formula']
 
     @property
     def smiles(self):
+        """Return the SMILES for this Compound."""
         return self._extended_compound_info['smiles']
 
     @property
     def inchi(self):
+        """Return the InChI for this Compound."""
         return self._extended_compound_info['inchi']
 
     @property
     def inchikey(self):
+        """Return the InChIKey for this Compound."""
         return self._extended_compound_info['inchikey']
 
     @property
     def average_mass(self):
+        """Return the average mass of this Compound."""
         return self._extended_compound_info['average_mass']
 
     @property
     def molecular_weight(self):
+        """Return the molecular weight of this Compound."""
         return self._extended_compound_info['molecular_weight']
 
     @property
     def monoisotopic_mass(self):
+        """Return the monoisotopic mass of this Compound."""
         return self._extended_compound_info['monoisotopic_mass']
 
     @property
     def nominal_mass(self):
+        """Return the nominal mass of this Compound."""
         return self._extended_compound_info['nominal_mass']
 
     @property
     def alogp(self):
+        """Return the calculated AlogP for this Compound."""
         return self._extended_compound_info['alogp']
 
     @property
     def xlogp(self):
+        """Return the calculated XlogP for this Compound."""
         return self._extended_compound_info['xlogp']
 
     @property
     def common_name(self):
+        """Return the common name for this Compound."""
         return self._extended_compound_info['common_name']
 
     @memoized_property
     def mol_2d(self):
+        """Return the MOL file for this Compound with 2D coordinates."""
         return self._cs.get_record_mol(self.csid, calc3d=False)
 
     @memoized_property
     def mol_3d(self):
+        """Return the MOL file for this Compound with 3D coordinates."""
         return self._cs.get_record_mol(self.csid, calc3d=True)
 
     @memoized_property
     def mol_raw(self):
+        """Return unprocessed MOL file for this Compound."""
         return self._cs.get_original_mol(self.csid)
 
     @memoized_property
     def image(self):
+        """Return a 2D depiction of this Compound."""
         return self._cs.get_compound_thumbnail(self.csid)
 
     @memoized_property
     def spectra(self):
+        """Return all the available spectral data for this Compound."""
         return self._cs.get_spectra_info_list([self.csid])
