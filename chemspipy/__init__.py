@@ -16,7 +16,7 @@ from __future__ import division
 
 __author__ = 'Matt Swain'
 __email__ = 'm.swain@me.com'
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 __license__ = 'MIT'
 
 
