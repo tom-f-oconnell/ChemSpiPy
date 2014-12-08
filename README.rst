@@ -38,6 +38,8 @@ Documentation
 
 Full documentation is available at http://chemspipy.readthedocs.org.
 
+The `general documentation for the ChemSpider API`_ is also a useful resource.
+
 Contribute
 ----------
 
@@ -56,7 +58,4 @@ This project was originally forked from `ChemSpiPy by Cameron Neylon`_, which ha
 .. _`Issue Tracker`: https://github.com/mcs07/ChemSpiPy/issues
 .. _`MIT license`: https://github.com/mcs07/ChemSpiPy/blob/master/LICENSE
 .. _`ChemSpiPy by Cameron Neylon`: https://github.com/cameronneylon/ChemSpiPy
-
-
-
-
+.. _`general documentation for the ChemSpider API`: http://www.chemspider.com/AboutServices.aspx
