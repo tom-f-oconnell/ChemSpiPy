@@ -120,8 +120,8 @@ def test_search_by_formula():
 
 def test_search_by_mass():
     """Test search_by_mass returns a list of CSIDs."""
-    eq_([c.csid for c in cs.search_by_mass(17, 0.1)], [217, 936, 12148, 94766, 138477, 4574057, 4574088, 4925349,
-                                                       8305396, 8466194, 9237452, 21864986])
+    csids = [c.csid for c in cs.search_by_mass(17, 0.1)]
+    ok_(all(csid in csids for csid in [217, 936, 12148, 94766, 138477, 4925349, 8305396, 8466194, 9237452, 21864986]))
 
 
 # Search
