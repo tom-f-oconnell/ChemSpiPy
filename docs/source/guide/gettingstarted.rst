@@ -22,7 +22,7 @@ Then connect to ChemSpider by creating a ``ChemSpider`` instance using your secu
 
     >>> cs = ChemSpider('<YOUR-SECURITY-TOKEN>')
 
-All your interaction with the ChemSpider database should now happen through this ChemSpider object.
+All your interaction with the ChemSpider database should now happen through this ChemSpider object, ``cs``.
 
 Retrieve a Compound
 -------------------

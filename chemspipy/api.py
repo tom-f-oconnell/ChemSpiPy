@@ -44,6 +44,7 @@ class BaseChemSpider(object):
 
         :param string security_token: (Optional) Your ChemSpider security token.
         :param string user_agent: (Optional) Identify your application to ChemSpider servers.
+        :param string api_url: (Optional) Alternative API server.
         """
         log.debug('Initializing ChemSpider')
         self.api_url = api_url if api_url else 'http://www.chemspider.com'
@@ -397,13 +398,11 @@ class CustomApi(BaseChemSpider):
         return Results(self, self.async_simple_search, (query,))
 
     # TODO: Wrappers for subscriber role asynchronous searches
+    # TODO: Ordered results
 
 
 class ChemSpider(CustomApi, MassSpecApi, SearchApi, SpectraApi, InchiApi):
-    """Provides access to the ChemSpider API.
-
-    See :class:`BaseChemSpider` further information.
-    """
+    """Provides access to the ChemSpider API."""
 
     def __repr__(self):
         return 'ChemSpider(%r)' % self.security_token

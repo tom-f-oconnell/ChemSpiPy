@@ -160,3 +160,9 @@ class Results(object):
             return 'Results(%r)' % self._results
         else:
             return 'Results(%r)' % self.status
+
+
+# TODO: fetch method that gets the property values for every Compound in the list of results.
+# Do this by running get_extended_mol_compound_info_list and then inserting info into Compounds
+# Do multiple requests in chuncks of 250 Compounds if necessary
+# Compound will need a method to insert info from JSON response
