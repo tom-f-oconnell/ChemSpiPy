@@ -26,8 +26,6 @@ logging.getLogger('chemspipy').setLevel(logging.DEBUG)
 
 # Security token is retrieved from environment variables
 CHEMSPIDER_SECURITY_TOKEN = os.environ['CHEMSPIDER_SECURITY_TOKEN']
-
-# Chemspider instances with and without a security token
 cs = ChemSpider(security_token=CHEMSPIDER_SECURITY_TOKEN)
 
 
