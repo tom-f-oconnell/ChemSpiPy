@@ -61,8 +61,8 @@ class BaseChemSpider(object):
         :rtype: xml tree
         """
         url = '%s/%s.asmx/%s' % (self.api_url, api, endpoint)
-        params['token'] = self.security_token
         log.debug('Request: %s %s', url, params)
+        params['token'] = self.security_token
         try:
             response = self.http.post(url, data=params)
         except requests.RequestException as e:
@@ -405,4 +405,4 @@ class ChemSpider(CustomApi, MassSpecApi, SearchApi, SpectraApi, InchiApi):
     """Provides access to the ChemSpider API."""
 
     def __repr__(self):
-        return 'ChemSpider(%r)' % self.security_token
+        return 'ChemSpider()'
