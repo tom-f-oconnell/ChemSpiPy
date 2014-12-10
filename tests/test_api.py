@@ -18,6 +18,7 @@ import re
 
 import nose
 from nose.tools import eq_, ok_, raises
+import requests
 import six
 
 from chemspipy import ChemSpider
@@ -218,6 +219,14 @@ def test_get_original_mol():
     ok_('V2000' in mol)
     ok_('M  END' in mol)
 
+
+# Misc
+
+def test_construct_api_url():
+    """Test construction of API URLs."""
+    url = cs.construct_api_url('MassSpecAPI', 'GetExtendedCompoundInfo', csid=2157)
+    response = requests.get(url)
+    eq_(response.status_code, 200)
 
 
 # Errors
