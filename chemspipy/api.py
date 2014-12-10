@@ -86,14 +86,16 @@ class BaseChemSpider(object):
     def construct_api_url(self, api, endpoint, **params):
         """Construct a Chemspider API url, encoded, with parameters as a GET querystring.
 
-        :param string api: The specific ChemSpider API to call (MassSpec, Search, Spectra, InChI).
+        :param string api: The specific ChemSpider API to call (MassSpecAPI, Search, Spectra, InChI).
         :param string endpoint: ChemSpider API endpoint.
         :param params: (optional) Parameters for the ChemSpider endpoint as keyword arguments.
         :rtype: string
         """
         querystring = []
         for k, v in params.items():
-            querystring.append('%s=%s' % (k, six.moves.urllib.parse.quote_plus(v)))
+            querystring.append('%s=%s' % (k, six.moves.urllib.parse.quote_plus(str(v))))
+        if self.security_token:
+            querystring.append('token=%s' % self.security_token)
         return '%s/%s.asmx/%s?%s' % (self.api_url, api, endpoint, '&'.join(querystring))
 
 
