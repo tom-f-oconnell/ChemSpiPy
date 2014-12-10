@@ -5,9 +5,14 @@ python:
   - "3.3"
   - "3.4"
 env:
-  - secure: "QQlGoUF2W9DDvdhXhMMfJyA2nSlj8J0QH31b9A1JlbSoIf89H5cjEcYYWqP4WF5sVyBdTm6vbjqQijWSJAjMZkxJduUMYYsHGQZDFuYoyKherS6JbhbJOZH7TmbcepSbBkDf1IJ/JxTMw2yZdXXMO/YmGq6Tc5dmch2XKOGm4f0="
+  global:
+    - secure: "QQlGoUF2W9DDvdhXhMMfJyA2nSlj8J0QH31b9A1JlbSoIf89H5cjEcYYWqP4WF5sVyBdTm6vbjqQijWSJAjMZkxJduUMYYsHGQZDFuYoyKherS6JbhbJOZH7TmbcepSbBkDf1IJ/JxTMw2yZdXXMO/YmGq6Tc5dmch2XKOGm4f0="
+  matrix:
+    - OPTIONAL_DEPS=true
+    - OPTIONAL_DEPS=false
 install:
-  - pip install coveralls lxml nose requests six
+  - pip install coveralls nose requests six
+  - if [ "OPTIONAL_DEPS" = true ]; then pip install lxml; fi
 script:
   - coverage run --source=chemspipy setup.py test
 after_success:
