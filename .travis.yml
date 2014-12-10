@@ -12,7 +12,7 @@ env:
     - OPTIONAL_DEPS=false
 install:
   - pip install coveralls nose requests six
-  - if [ "OPTIONAL_DEPS" = true ]; then pip install lxml; fi
+  - if [ "$OPTIONAL_DEPS" = true ]; then pip install lxml; fi
 script:
   - coverage run --source=chemspipy setup.py test
 after_success:
