@@ -393,9 +393,9 @@ class CustomApi(BaseChemSpider):
         """
         return [Compound(self, csid) for csid in csids]
 
-    def search(self, query):
+    def search(self, query, raise_errors=False):
         """Search ChemSpider for the specified query and return the results. Security token is required."""
-        return Results(self, self.async_simple_search, (query,))
+        return Results(self, self.async_simple_search, (query,), raise_errors=raise_errors)
 
     # TODO: Wrappers for subscriber role asynchronous searches
     # TODO: Ordered results

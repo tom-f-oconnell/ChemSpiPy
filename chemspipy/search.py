@@ -36,17 +36,17 @@ log = logging.getLogger(__name__)
 class Results(object):
     """Container class to perform a search on a background thread and hold the results when ready."""
 
-    def __init__(self, cs, searchfunc, searchargs, propagate=True, max_requests=40):
+    def __init__(self, cs, searchfunc, searchargs, raise_errors=False, max_requests=40):
         """Generally shouldn't be instantiated directly. See :meth:`~chemspipy.api.ChemSpider.search` instead.
 
         :param ChemSpider cs: ``ChemSpider`` session.
         :param function searchfunc: Search function that returns a transaction ID.
         :param tuple searchargs: Arguments for the search function.
-        :param bool propagate: If True, raise exceptions. If False, store on ``exception`` property.
+        :param bool raise_errors: If True, raise exceptions. If False, store on ``exception`` property.
         :param int max_requests: Maximum number of times to check if search results are ready.
         """
         log.debug('Results init')
-        self._propagate = propagate
+        self._raise_errors = raise_errors
         self._max_requests = max_requests
         self._status = 'Created'
         self._exception = None
@@ -102,7 +102,7 @@ class Results(object):
         """Block until the search has completed and optionally raise any resulting exception."""
         log.debug('Waiting for search to finish')
         self._searchthread.join()
-        if self._exception and self._propagate:
+        if self._exception and self._raise_errors:
             raise self._exception
 
     @property
@@ -116,7 +116,7 @@ class Results(object):
     @property
     def exception(self):
         """Any Exception raised during the search. Blocks until the search is finished."""
-        self.wait()  # TODO: If propagate=True this will raise the exception when trying to access it?
+        self.wait()  # TODO: If raise_errors=True this will raise the exception when trying to access it?
         return self._exception
 
     @property
@@ -166,5 +166,5 @@ class Results(object):
 
 # TODO: fetch method that gets the property values for every Compound in the list of results.
 # Do this by running get_extended_mol_compound_info_list and then inserting info into Compounds
-# Do multiple requests in chuncks of 250 Compounds if necessary
+# Do multiple requests in chunks of 250 Compounds if necessary
 # Compound will need a method to insert info from JSON response
