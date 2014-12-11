@@ -16,7 +16,7 @@ import logging
 import os
 
 import nose
-from nose.tools import eq_, ok_, raises, assert_not_equal
+from nose.tools import eq_, ok_, assert_not_equal
 import requests
 
 from chemspipy import ChemSpider, Compound
@@ -38,6 +38,13 @@ def test_get_compound():
     compound = cs.get_compound('2157')
     ok_(isinstance(compound, Compound))
     eq_(compound.csid, 2157)
+
+
+def test_get_compounds():
+    """Test getting multiple compounds by ChemSpider ID."""
+    compounds = cs.get_compounds([2157, 13837760])
+    eq_([c.csid for c in compounds], [2157, 13837760])
+    ok_([c.image_url for c in compounds])
 
 
 def test_compound_init():
