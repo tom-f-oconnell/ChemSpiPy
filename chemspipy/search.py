@@ -15,6 +15,7 @@ from __future__ import division
 import logging
 import threading
 import time
+import datetime
 
 try:
     from lxml import etree
@@ -64,7 +65,10 @@ class Results(object):
             for i in six.moves.range(self._max_requests):
                 log.debug('Checking status: %s' % rid)
                 status = cs.get_async_search_status_and_count(rid)
+                dt = datetime.datetime.strptime(status['elapsed'], '%H:%M:%S.%f')
                 self._status = status['status']
+                self._message = status.get('message')
+                self._duration = datetime.timedelta(hours=dt.hour, minutes=dt.minute, seconds=dt.second, microseconds=dt.microsecond)
                 log.debug(status)
                 time.sleep(0.2)
                 if status['status'] == 'ResultReady':
@@ -77,8 +81,6 @@ class Results(object):
             else:
                 raise ChemSpiPyTimeoutError('Search took too long')
             log.debug('Search success!')
-            self._message = status.get('message')
-            self._duration = status['elapsed']
             if status['count'] > 0:
                 self._results = cs.get_async_search_result(rid)
                 log.debug('Results: %s', self._results)
