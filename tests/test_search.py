@@ -19,6 +19,7 @@ import nose
 from nose.tools import eq_, ok_, raises
 
 from chemspipy import ChemSpider
+from chemspipy.errors import ChemSpiPyServerError
 
 
 logging.basicConfig(level=logging.WARN, format='%(levelname)s:%(name)s:(%(threadName)-10s):%(message)s')
@@ -37,6 +38,7 @@ def test_search_smiles():
     eq_(results.ready(), True)
     eq_(results.message, 'Found by conversion query string to chemical structure (full match)')
     eq_(results[0].csid, 8525)
+    ok_(results.duration.microseconds > 0)
 
 
 def test_search_csid():
@@ -71,8 +73,25 @@ def test_too_high_index():
     result = cs.search('glucose')[7843]
 
 
+def test_search_failed():
+    """Test ChemSpiPyServerError is raised for an invalid SMILES."""
+    results = cs.search('O=C(OCC)C*')
+    results.wait()
+    ok_(isinstance(results.exception, ChemSpiPyServerError))
+    eq_(results.status, 'Failed')
+    eq_(results.count, 0)
+    ok_(results.duration.microseconds > 0)
+
+
+@raises(ChemSpiPyServerError)
+def test_search_exception():
+    """Test ChemSpiPyServerError is raised for an invalid SMILES."""
+    results = cs.search('O=C(OCC)C*', raise_errors=True)
+    results.wait()
+
+
+
 # ordered search - ascending/descending, different sort orders
-# Error behaviours
 
 
 if __name__ == '__main__':
