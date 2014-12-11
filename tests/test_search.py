@@ -38,7 +38,7 @@ def test_search_smiles():
     eq_(results.ready(), True)
     eq_(results.message, 'Found by conversion query string to chemical structure (full match)')
     eq_(results[0].csid, 8525)
-    ok_(results.duration.microseconds > 0)
+    ok_(results.duration.total_seconds() > 0)
 
 
 def test_search_csid():
@@ -61,11 +61,13 @@ def test_search_iter():
     for result in cs.search('glucose'):
         ok_(result.csid in [5589, 58238, 71358, 96749, 9312824, 9484839])
 
+
 def test_search_no_results():
     """Test name input to search."""
     results = cs.search('aergherguyaelrgiaubrfawyef')
     eq_(results.message, 'No results found')
     eq_(len(results), 0)
+
 
 @raises(IndexError)
 def test_too_high_index():
@@ -80,7 +82,7 @@ def test_search_failed():
     ok_(isinstance(results.exception, ChemSpiPyServerError))
     eq_(results.status, 'Failed')
     eq_(results.count, 0)
-    ok_(results.duration.microseconds > 0)
+    ok_(results.duration.total_seconds() > 0)
 
 
 @raises(ChemSpiPyServerError)

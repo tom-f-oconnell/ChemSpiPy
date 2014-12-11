@@ -65,7 +65,10 @@ class Results(object):
             for i in six.moves.range(self._max_requests):
                 log.debug('Checking status: %s' % rid)
                 status = cs.get_async_search_status_and_count(rid)
-                dt = datetime.datetime.strptime(status['elapsed'], '%H:%M:%S.%f')
+                if '.' in status['elapsed']:
+                    dt = datetime.datetime.strptime(status['elapsed'], '%H:%M:%S.%f')
+                else:
+                    dt = datetime.datetime.strptime(status['elapsed'], '%H:%M:%S')
                 self._status = status['status']
                 self._message = status.get('message')
                 self._duration = datetime.timedelta(hours=dt.hour, minutes=dt.minute, seconds=dt.second, microseconds=dt.microsecond)
