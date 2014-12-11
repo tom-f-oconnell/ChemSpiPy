@@ -62,7 +62,7 @@ class Results(object):
         try:
             rid = searchfunc(*searchargs)
             log.debug('Setting rid: %s' % rid)
-            for i in six.moves.range(self._max_requests):
+            for _ in six.moves.range(self._max_requests):
                 log.debug('Checking status: %s' % rid)
                 status = cs.get_async_search_status_and_count(rid)
                 if '.' in status['elapsed']:
