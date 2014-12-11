@@ -44,7 +44,9 @@ def test_get_compounds():
     """Test getting multiple compounds by ChemSpider ID."""
     compounds = cs.get_compounds([2157, 13837760])
     eq_([c.csid for c in compounds], [2157, 13837760])
-    ok_([c.image_url for c in compounds])
+    for c in compounds:
+        ok_('http://' in c.image_url)
+        ok_(c.average_mass > 0)
 
 
 def test_compound_init():
