@@ -70,15 +70,14 @@ class Results(object):
                 else:
                     dt = datetime.datetime.strptime(status['elapsed'], '%H:%M:%S')
                 self._status = status['status']
-                self._message = status.get('message')
+                self._message = status.get('message', '')
                 self._duration = datetime.timedelta(hours=dt.hour, minutes=dt.minute, seconds=dt.second, microseconds=dt.microsecond)
                 log.debug(status)
                 time.sleep(0.2)
                 if status['status'] == 'ResultReady':
                     break
                 elif status['status'] in {'Failed', 'Unknown', 'Suspended'}:
-                    # TODO: Does status['message'] contain an error message to use in the ChemSpiPyServerError?
-                    raise ChemSpiPyServerError('Search Failed')
+                    raise ChemSpiPyServerError('Search Failed: %s' % status.get('message', ''))
                 elif status['status'] == 'TooManyRecords':
                     raise ChemSpiPyServerError('Too many results')
             else:
