@@ -50,6 +50,26 @@ def test_get_spectrum():
     eq_(s.submitted_date, datetime.datetime(2007, 8, 8, 20, 18, 36, 593000))
 
 
+def test_get_spectra():
+    """Test getting multiple spectra by spectrum ID."""
+    spectra = cs.get_spectra([36, 65])
+    eq_(len(spectra), 2)
+    for s in spectra:
+        ok_(isinstance(s, Spectrum))
+        ok_(s.spectrum_id in [36, 65])
+        ok_(s.csid in [235, 172])
+
+
+def test_get_compound_spectra():
+    """Test getting all spectra for a specific ChemSpider ID."""
+    spectra = cs.get_compound_spectra(2157)
+    ok_(len(spectra) > 0)
+    for s in spectra:
+        ok_(isinstance(s, Spectrum))
+        ok_(isinstance(s.spectrum_id, int))
+        eq_(s.csid, 2157)
+
+
 def test_spectrum_init():
     """Test instantiating a Spectrum directly."""
     s = Spectrum(cs, 36)
