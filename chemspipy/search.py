@@ -15,7 +15,6 @@ from __future__ import division
 import logging
 import threading
 import time
-import datetime
 
 try:
     from lxml import etree
@@ -28,6 +27,7 @@ except ImportError:
 import six
 
 from .errors import ChemSpiPyServerError, ChemSpiPyTimeoutError
+from .utils import duration
 
 
 log = logging.getLogger(__name__)
@@ -65,13 +65,9 @@ class Results(object):
             for _ in six.moves.range(self._max_requests):
                 log.debug('Checking status: %s' % rid)
                 status = cs.get_async_search_status_and_count(rid)
-                if '.' in status['elapsed']:
-                    dt = datetime.datetime.strptime(status['elapsed'], '%H:%M:%S.%f')
-                else:
-                    dt = datetime.datetime.strptime(status['elapsed'], '%H:%M:%S')
                 self._status = status['status']
                 self._message = status.get('message', '')
-                self._duration = datetime.timedelta(hours=dt.hour, minutes=dt.minute, seconds=dt.second, microseconds=dt.microsecond)
+                self._duration = duration(status['elapsed'])
                 log.debug(status)
                 time.sleep(0.2)
                 if status['status'] == 'ResultReady':

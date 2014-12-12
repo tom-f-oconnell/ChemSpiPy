@@ -30,7 +30,12 @@ def memoized_property(fget):
 
 def timestamp(ts):
     """Create a datetime object from a timestamp string."""
-    if '.' in ts:
-        return datetime.datetime.strptime(ts, '%Y-%m-%dT%H:%M:%S.%f')
-    else:
-        return datetime.datetime.strptime(ts, '%Y-%m-%dT%H:%M:%S')
+    fmt = '%Y-%m-%dT%H:%M:%S.%f' if '.' in ts else '%Y-%m-%dT%H:%M:%S'
+    return datetime.datetime.strptime(ts, fmt)
+
+
+def duration(ts):
+    """Create a timedelta object from a duration string."""
+    fmt = '%H:%M:%S.%f' if '.' in ts else '%H:%M:%S'
+    dt = datetime.datetime.strptime(ts, fmt)
+    return datetime.timedelta(hours=dt.hour, minutes=dt.minute, seconds=dt.second, microseconds=dt.microsecond)
