@@ -58,82 +58,130 @@ class Compound(object):
 
     @property
     def molecular_formula(self):
-        """Return the molecular formula for this Compound."""
+        """Return the molecular formula for this Compound.
+
+        :rtype: string
+        """
         return self._extended_compound_info['molecular_formula']
 
     @property
     def smiles(self):
-        """Return the SMILES for this Compound."""
+        """Return the SMILES for this Compound.
+
+        :rtype: string
+        """
         return self._extended_compound_info['smiles']
 
     @property
     def inchi(self):
-        """Return the InChI for this Compound."""
+        """Return the InChI for this Compound.
+
+        :rtype: string
+        """
         return self._extended_compound_info['inchi']
 
     @property
     def inchikey(self):
-        """Return the InChIKey for this Compound."""
+        """Return the InChIKey for this Compound.
+
+        :rtype: string
+        """
         return self._extended_compound_info['inchikey']
 
     @property
     def average_mass(self):
-        """Return the average mass of this Compound."""
+        """Return the average mass of this Compound.
+
+        :rtype: float
+        """
         return self._extended_compound_info['average_mass']
 
     @property
     def molecular_weight(self):
-        """Return the molecular weight of this Compound."""
+        """Return the molecular weight of this Compound.
+
+        :rtype: float
+        """
         return self._extended_compound_info['molecular_weight']
 
     @property
     def monoisotopic_mass(self):
-        """Return the monoisotopic mass of this Compound."""
+        """Return the monoisotopic mass of this Compound.
+
+        :rtype: float
+        """
         return self._extended_compound_info['monoisotopic_mass']
 
     @property
     def nominal_mass(self):
-        """Return the nominal mass of this Compound."""
+        """Return the nominal mass of this Compound.
+
+        :rtype: float
+        """
         return self._extended_compound_info['nominal_mass']
 
     @property
     def alogp(self):
-        """Return the calculated AlogP for this Compound."""
+        """Return the calculated AlogP for this Compound.
+
+        :rtype: float
+        """
         return self._extended_compound_info['alogp']
 
     @property
     def xlogp(self):
-        """Return the calculated XlogP for this Compound."""
+        """Return the calculated XlogP for this Compound.
+
+        :rtype: float
+        """
         return self._extended_compound_info['xlogp']
 
     @property
     def common_name(self):
-        """Return the common name for this Compound."""
+        """Return the common name for this Compound.
+
+        :rtype: string
+        """
         return self._extended_compound_info['common_name']
 
     @memoized_property
     def mol_2d(self):
-        """Return the MOL file for this Compound with 2D coordinates."""
+        """Return the MOL file for this Compound with 2D coordinates.
+
+        :rtype: string
+        """
         return self._cs.get_record_mol(self.csid, calc3d=False)
 
     @memoized_property
     def mol_3d(self):
-        """Return the MOL file for this Compound with 3D coordinates."""
+        """Return the MOL file for this Compound with 3D coordinates.
+
+        :rtype: string
+        """
         return self._cs.get_record_mol(self.csid, calc3d=True)
 
     @memoized_property
     def mol_raw(self):
-        """Return unprocessed MOL file for this Compound."""
+        """Return unprocessed MOL file for this Compound.
+
+        :rtype: string
+        """
         return self._cs.get_original_mol(self.csid)
 
     @memoized_property
     def image(self):
-        """Return a 2D depiction of this Compound."""
+        """Return a 2D depiction of this Compound.
+
+        :rtype: bytes
+        """
         return self._cs.get_compound_thumbnail(self.csid)
 
     @memoized_property
     def spectra(self):
-        """Return all the available spectral data for this Compound."""
+        """Return all the available spectral data for this Compound.
+
+        :rtype: list[:class:`~chemspipy.Spectrum`]
+        """
         return [Spectrum.from_info_dict(self, info) for info in self._cs.get_spectra_info_list([self.csid])]
 
 
@@ -144,7 +192,7 @@ class Spectrum(object):
         """Initializing a Spectrum from a spectrum ID requires a subscriber role security token.
 
         :param ChemSpider cs: ``ChemSpider`` session.
-        :param int|string csid: ChemSpider ID.
+        :param int|string spectrum_id: Spectrum ID.
         """
         self._cs = cs
         self._spectrum_id = int(spectrum_id)
@@ -191,6 +239,9 @@ class Spectrum(object):
     @property
     def spectrum_type(self):
         """Spectrum type.
+
+        Possible values include HNMR, CNMR, IR, UV-Vis, NIR, EI, 2D1H1HCOSY, 2D1H13CD, APCI+, R, MALDI+, 2D1H13CLR,
+        APPI-, CI+ve, ESI+, 2D1H1HOESY, FNMR, CI-ve, ESI-, PNMR.
 
         :rtype: string
         """

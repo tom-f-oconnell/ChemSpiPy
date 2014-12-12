@@ -85,7 +85,7 @@ def test_search_failed():
     results.wait()
     ok_(isinstance(results.exception, ChemSpiPyServerError))
     eq_(results.status, 'Failed')
-    eq_(repr(results), 'Results(u\'Failed\')')
+    eq_(repr(results), 'Results(Failed)')
     eq_(results.ready(), True)
     eq_(results.success(), False)
     eq_(results.count, 0)

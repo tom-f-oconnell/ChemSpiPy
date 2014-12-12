@@ -89,11 +89,17 @@ class Results(object):
             self._exception = e
 
     def ready(self):
-        """Return True if the search finished."""
+        """Return True if the search finished.
+
+        :rtype: bool
+        """
         return not self._searchthread.is_alive()
 
     def success(self):
-        """Return True if the search finished with no errors."""
+        """Return True if the search finished with no errors.
+
+        :rtype: bool
+        """
         return self.ready() and not self._exception
 
     def wait(self):
@@ -107,7 +113,9 @@ class Results(object):
     def status(self):
         """Current status string returned by ChemSpider.
 
-        One of: 'Unknown', 'Created', 'Scheduled', 'Processing', 'Suspended', 'PartialResultReady', 'ResultReady'
+
+        :returns: 'Unknown', 'Created', 'Scheduled', 'Processing', 'Suspended', 'PartialResultReady', 'ResultReady'
+        :rtype: string
         """
         return self._status
 
@@ -119,18 +127,27 @@ class Results(object):
 
     @property
     def message(self):
-        """A contextual message about the search. Blocks until the search is finished."""
+        """A contextual message about the search. Blocks until the search is finished.
+
+        :rtype: string
+        """
         self.wait()
         return self._message
 
     @property
     def count(self):
-        """The number of search results. Blocks until the search is finished."""
+        """The number of search results. Blocks until the search is finished.
+
+        :rtype: int
+        """
         return len(self)
 
     @property
     def duration(self):
-        """The time taken to perform the search. Blocks until the search is finished."""
+        """The time taken to perform the search. Blocks until the search is finished.
+
+        :rtype: :py:class:`datetime.timedelta`
+        """
         self.wait()
         return self._duration
 
@@ -157,9 +174,9 @@ class Results(object):
 
     def __repr__(self):
         if self.success():
-            return 'Results(%r)' % self._results
+            return 'Results(%s)' % self._results
         else:
-            return 'Results(%r)' % self.status
+            return 'Results(%s)' % self.status
 
 
 # TODO: fetch method that gets the property values for every Compound in the list of results.

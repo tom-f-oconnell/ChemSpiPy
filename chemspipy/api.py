@@ -207,7 +207,7 @@ class MassSpecApi(BaseChemSpider):
 
         :param string formula: Molecular formula
         :returns: A list of Compounds.
-        :rtype: list[Compound]
+        :rtype: list[:class:`~chemspipy.Compound`]
         """
         response = self.request('MassSpecApi', 'SearchByFormula2', formula=formula)
         return [Compound(self, el.text) for el in response]
@@ -218,7 +218,7 @@ class MassSpecApi(BaseChemSpider):
         :param float mass: The mass to search for.
         :param float mass_range: The +/- mass range to allow.
         :returns: A list of Compounds.
-        :rtype: list[Compound]
+        :rtype: list[:class:`~chemspipy.Compound`]
         """
         response = self.request('MassSpecApi', 'SearchByMass2', mass=mass, range=mass_range)
         return [Compound(self, el.text) for el in response]
@@ -291,7 +291,7 @@ class SearchApi(BaseChemSpider):
 
         :param string rid: A transaction ID, returned by an asynchronous search method.
         :returns: A list of Compounds.
-        :rtype: list[Compound]
+        :rtype: list[:class:`~chemspipy.Compound`]
         """
         response = self.request('Search', 'GetAsyncSearchResult', rid=rid)
         return [Compound(self, el.text) for el in response]
@@ -303,7 +303,7 @@ class SearchApi(BaseChemSpider):
         :param int start: The number of results to skip.
         :param int count: The number of results to return. -1 returns all through to end.
         :returns: A list of Compounds.
-        :rtype: list[Compound]
+        :rtype: list[:class:`~chemspipy.Compound`]
         """
         response = self.request('Search', 'GetAsyncSearchResultPart', rid=rid, start=start, count=count)
         return [Compound(self, el.text) for el in response]
@@ -332,8 +332,8 @@ class SearchApi(BaseChemSpider):
         A maximum of 100 results are returned. Security token is required.
 
         :param string query: Search query - a name, SMILES, InChI, InChIKey, CSID, etc.
-        :returns: List of Compounds.
-        :rtype: list[Compound]
+        :returns: List of :class:`Compounds <chemspipy.Compound>`.
+        :rtype: list[:class:`~chemspipy.Compound`]
         """
         response = self.request('Search', 'SimpleSearch', query=query)
         return [Compound(self, el.text) for el in response]
@@ -412,7 +412,7 @@ class CustomApi(BaseChemSpider):
 
         :param string|int csid: ChemSpider ID.
         :returns: The Compound with the specified ChemSpider ID.
-        :rtype: Compound
+        :rtype: :class:`~chemspipy.Compound`
         """
         return Compound(self, csid)
 
@@ -421,49 +421,54 @@ class CustomApi(BaseChemSpider):
 
         :param list[string|int] csids: List of ChemSpider IDs.
         :returns: List of Compounds with the specified ChemSpider IDs.
-        :rtype: list[Compound]
+        :rtype: list[:class:`~chemspipy.Compound`]
         """
         return [Compound(self, csid) for csid in csids]
 
     def get_spectrum(self, spectrum_id):
-        """Return a Spectrum object for a given spectrum ID. Subscriber role security token is required.
+        """Return a :class:`~chemspipy.Spectrum` object for a given spectrum ID. Subscriber role security token is required.
 
         :param string|int spectrum_id: Spectrum ID.
         :returns: The Spectrum with the specified spectrum ID.
-        :rtype: Spectrum
+        :rtype: :class:`~chemspipy.Spectrum`
         """
         return Spectrum(self, spectrum_id)
 
     def get_spectra(self, spectrum_ids):
-        """Return a Spectrum object for a given spectrum ID. Subscriber role security token is required.
+        """Return a :class:`~chemspipy.Spectrum` object for a given spectrum ID. Subscriber role security token is required.
 
         :param list[string|int] spectrum_ids: List of spectrum IDs.
         :returns: List of spectra with the specified spectrum IDs.
-        :rtype: list[Spectrum]
+        :rtype: list[:class:`~chemspipy.Spectrum`]
         """
         return [Spectrum(self, spectrum_id) for spectrum_id in spectrum_ids]
 
     def get_compound_spectra(self, csid):
-        """Return Spectrum objects for all the spectra associated with a ChemSpider ID.
+        """Return :class:`~chemspipy.Spectrum` objects for all the spectra associated with a ChemSpider ID.
 
         :param csid: string|int csid: ChemSpider ID.
         :returns: List of spectra for the specified ChemSpider ID.
-        :rtype: list[Spectrum]
+        :rtype: list[:class:`~chemspipy.Spectrum`]
         """
         return [Spectrum.from_info_dict(self, info) for info in self.get_spectra_info_list([csid])]
 
     def get_all_spectra(self):
-        """Return a full list of Spectrum objects for all spectra in ChemSpider.
+        """Return a full list of :class:`~chemspipy.Spectrum` objects for all spectra in ChemSpider.
 
         Subscriber role security token is required.
 
         :returns: Full list of spectra in ChemSpider.
-        :rtype: list[Spectrum]
+        :rtype: list[:class:`~chemspipy.Spectrum`]
         """
         return [Spectrum.from_info_dict(self, info) for info in self.get_all_spectra_info()]
 
     def search(self, query, raise_errors=False):
-        """Search ChemSpider for the specified query and return the results. Security token is required."""
+        """Search ChemSpider for the specified query and return the results. Security token is required.
+
+        :param string query: Search query.
+        :returns: Search Results list.
+        :rtype: Results
+        """
         return Results(self, self.async_simple_search, (query,), raise_errors=raise_errors)
 
     # TODO: Wrappers for subscriber role asynchronous searches
@@ -471,7 +476,14 @@ class CustomApi(BaseChemSpider):
 
 
 class ChemSpider(CustomApi, MassSpecApi, SearchApi, SpectraApi, InchiApi):
-    """Provides access to the ChemSpider API."""
+    """Provides access to the ChemSpider API.
+
+    Usage::
+
+        >>> from chemspipy import ChemSpider
+        >>> cs = ChemSpider('<YOUR-SECURITY-TOKEN>')
+
+    """
 
     def __repr__(self):
         return 'ChemSpider()'
