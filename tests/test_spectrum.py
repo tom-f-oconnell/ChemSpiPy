@@ -17,7 +17,7 @@ import logging
 import os
 
 import nose
-from nose.tools import eq_, ok_
+from nose.tools import eq_, ok_, assert_not_equal
 import six
 
 from chemspipy import ChemSpider, Spectrum
@@ -61,6 +61,20 @@ def test_spectrum_init():
     eq_(s.submitted_date, datetime.datetime(2007, 8, 8, 20, 18, 36, 593000))
 
 
+def test_spectrum_equality():
+    """Test equality test by spectrum ID."""
+    s1 = cs.get_spectrum(65)
+    s2 = cs.get_compound(87)
+    s3 = cs.get_compound(87)
+    assert_not_equal(s1, s2)
+    eq_(s2, s3)
+
+
+def test_spectrum_repr():
+    """Test Spectrum object repr."""
+    eq_(repr(cs.get_spectrum(65)), 'Spectrum(65)')
+
+
 def test_comments():
     """Test retrieving comments about a spectrum."""
     s = cs.get_spectrum(36)
@@ -85,11 +99,6 @@ def test_no_original_url():
     """Test spectrum with no original_url."""
     s = cs.get_spectrum(36)
     eq_(s.original_url, None)
-
-
-def test_spectrum_repr():
-    """Test Spectrum object repr."""
-    eq_(repr(cs.get_spectrum(65)), 'Spectrum(65)')
 
 
 if __name__ == '__main__':

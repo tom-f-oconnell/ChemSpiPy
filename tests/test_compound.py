@@ -64,6 +64,11 @@ def test_compound_equality():
     eq_(c2, c3)
 
 
+def test_compound_repr():
+    """Test Compound object repr."""
+    eq_(repr(cs.get_compound(1234)), 'Compound(1234)')
+
+
 def test_image_url():
     """Test image_url returns a valid URL."""
     url = cs.get_compound(2157).image_url
@@ -149,11 +154,6 @@ def test_spectra():
         ok_(isinstance(s.spectrum_id, int))
     compound = cs.get_compound(263)
     eq_(compound.spectra, [])
-
-
-def test_compound_repr():
-    """Test Compound object repr."""
-    eq_(repr(cs.get_compound(1234)), 'Compound(1234)')
 
 
 if __name__ == '__main__':
