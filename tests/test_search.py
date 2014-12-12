@@ -36,6 +36,7 @@ def test_search_smiles():
     eq_(results.ready(), False)
     results.wait()
     eq_(results.ready(), True)
+    eq_(results.success(), True)
     eq_(results.message, 'Found by conversion query string to chemical structure (full match)')
     eq_(results[0].csid, 8525)
     ok_(results.duration.total_seconds() > 0)
@@ -46,6 +47,7 @@ def test_search_csid():
     results = cs.search(8525)
     eq_(results.message, 'Found by CSID')
     eq_(len(results), 1)
+    eq_(repr(results), 'Results([Compound(8525)])')
     eq_(results[0].csid, 8525)
 
 
@@ -66,6 +68,8 @@ def test_search_no_results():
     """Test name input to search."""
     results = cs.search('aergherguyaelrgiaubrfawyef')
     eq_(results.message, 'No results found')
+    eq_(results.ready(), True)
+    eq_(results.success(), True)
     eq_(len(results), 0)
 
 
@@ -81,6 +85,9 @@ def test_search_failed():
     results.wait()
     ok_(isinstance(results.exception, ChemSpiPyServerError))
     eq_(results.status, 'Failed')
+    eq_(repr(results), 'Results(u\'Failed\')')
+    eq_(results.ready(), True)
+    eq_(results.success(), False)
     eq_(results.count, 0)
     ok_(results.duration.total_seconds() > 0)
 
