@@ -46,6 +46,12 @@ def test_security_token():
     eq_(cs.security_token, CHEMSPIDER_SECURITY_TOKEN)
 
 
+def test_chemspider_repr():
+    """Test ChemSpider object repr."""
+    eq_(repr(cs), 'ChemSpider()')
+    eq_(repr(cs2), 'ChemSpider()')
+
+
 # MassSpecAPI
 
 def test_get_databases():

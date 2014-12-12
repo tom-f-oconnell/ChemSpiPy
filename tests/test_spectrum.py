@@ -87,5 +87,10 @@ def test_no_original_url():
     eq_(s.original_url, None)
 
 
+def test_spectrum_repr():
+    """Test Spectrum object repr."""
+    eq_(repr(cs.get_spectrum(65)), 'Spectrum(65)')
+
+
 if __name__ == '__main__':
     nose.main()

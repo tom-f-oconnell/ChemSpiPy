@@ -149,6 +149,12 @@ class Spectrum(object):
         self._cs = cs
         self._spectrum_id = int(spectrum_id)
 
+    def __eq__(self, other):
+        return isinstance(other, Spectrum) and self.spectrum_id == other.spectrum_id
+
+    def __repr__(self):
+        return 'Spectrum(%r)' % self.spectrum_id
+
     @classmethod
     def from_info_dict(cls, cs, info):
         """Initialize a Spectrum from an info dict that has already been retrieved."""

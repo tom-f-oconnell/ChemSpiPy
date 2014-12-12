@@ -151,5 +151,10 @@ def test_spectra():
     eq_(compound.spectra, [])
 
 
+def test_compound_repr():
+    """Test Compound object repr."""
+    eq_(repr(cs.get_compound(1234)), 'Compound(1234)')
+
+
 if __name__ == '__main__':
     nose.main()
