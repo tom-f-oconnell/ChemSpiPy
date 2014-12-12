@@ -270,19 +270,19 @@ def test_token_needed():
 
 
 @raises(ChemSpiPyServerError)
-def test_token_needed():
+def test_invalid_rid():
     """Test ChemSpiPyServerError is raised when an invalid transaction ID is used."""
     cs.get_async_search_status('xxxxxx')
 
 
 @raises(ChemSpiPyServerError)
-def test_token_needed():
+def test_expired_rid():
     """Test ChemSpiPyServerError is raised when a valid but expired transaction ID is used."""
     cs.get_async_search_status('1a93ee87-acbe-4caa-bc3b-23c3ff39be0f')
 
 
 @raises(ChemSpiPyServerError)
-def test_token_needed():
+def test_fictional_rid():
     """Test ChemSpiPyServerError is raised when a valid but made up transaction ID is used."""
     cs.get_async_search_status('1a93ee87-acbe-4caa-bc3b-23c3ff39be0a')
 
