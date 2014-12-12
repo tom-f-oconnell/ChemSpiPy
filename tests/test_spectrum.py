@@ -84,8 +84,8 @@ def test_spectrum_init():
 def test_spectrum_equality():
     """Test equality test by spectrum ID."""
     s1 = cs.get_spectrum(65)
-    s2 = cs.get_compound(87)
-    s3 = cs.get_compound(87)
+    s2 = cs.get_spectrum(87)
+    s3 = cs.get_spectrum(87)
     assert_not_equal(s1, s2)
     eq_(s2, s3)
 
