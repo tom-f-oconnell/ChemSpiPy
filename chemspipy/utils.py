@@ -12,6 +12,7 @@ Miscellaneous utility functions.
 from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
+import datetime
 import functools
 
 
@@ -25,3 +26,11 @@ def memoized_property(fget):
             setattr(self, attr_name, fget(self))
         return getattr(self, attr_name)
     return property(fget_memoized)
+
+
+def timestamp(ts):
+    """Create a datetime object from a timestamp string."""
+    if '.' in ts:
+        return datetime.datetime.strptime(ts, '%Y-%m-%dT%H:%M:%S.%f')
+    else:
+        return datetime.datetime.strptime(ts, '%Y-%m-%dT%H:%M:%S')

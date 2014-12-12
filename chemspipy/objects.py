@@ -13,7 +13,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
-from .utils import memoized_property
+from .utils import memoized_property, timestamp
 
 
 class Compound(object):
@@ -134,4 +134,90 @@ class Compound(object):
     @memoized_property
     def spectra(self):
         """Return all the available spectral data for this Compound."""
-        return self._cs.get_spectra_info_list([self.csid])
+        return [Spectrum.from_info_dict(self, info) for info in self._cs.get_spectra_info_list([self.csid])]
+
+
+class Spectrum(object):
+    """ A class for retrieving and caching details about a Spectrum."""
+
+    def __init__(self, cs, spectrum_id):
+        """Initializing a Spectrum from a spectrum ID requires a subscriber role security token.
+
+        :param ChemSpider cs: ``ChemSpider`` session.
+        :param int|string csid: ChemSpider ID.
+        """
+        self._cs = cs
+        self._spectrum_id = int(spectrum_id)
+
+    @classmethod
+    def from_info_dict(cls, cs, info):
+        """Initialize a Spectrum from an info dict that has already been retrieved."""
+        s = cls(cs, info['spectrum_id'])
+        s._info = info
+        return s
+
+    @property
+    def _spectrum_info(self):
+        """Full spectrum info.
+
+        :rtype: dict
+        """
+        if not hasattr(self, '_info'):
+            self._info = self._cs.get_spectrum_info(self._spectrum_id)
+        return self._info
+
+    @property
+    def spectrum_id(self):
+        """Spectrum ID.
+
+        :rtype: int
+        """
+        return self._spectrum_id
+
+    @property
+    def csid(self):
+        """ChemSpider ID of related compound.
+
+        :rtype: int
+        """
+        return self._spectrum_info['csid']
+
+    @property
+    def spectrum_type(self):
+        """Spectrum type.
+
+        :rtype: string
+        """
+        return self._spectrum_info['spectrum_type']
+
+    @property
+    def file_name(self):
+        """Spectrum file name.
+
+        :rtype: string
+        """
+        return self._spectrum_info['file_name']
+
+    @property
+    def comments(self):
+        """Spectrum comments. Can be None.
+
+        :rtype: string
+        """
+        return self._spectrum_info.get('comments')
+
+    @property
+    def original_url(self):
+        """Original spectrum URL. Can be None.
+
+        :rtype: string
+        """
+        return self._spectrum_info.get('original_url')
+
+    @property
+    def submitted_date(self):
+        """Spectrum submitted date.
+
+        :rtype: :py:class:`datetime.datetime`
+        """
+        return timestamp(self._spectrum_info['submitted_date'])

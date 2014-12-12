@@ -19,7 +19,7 @@ import nose
 from nose.tools import eq_, ok_, assert_not_equal
 import requests
 
-from chemspipy import ChemSpider, Compound
+from chemspipy import ChemSpider, Compound, Spectrum
 
 
 logging.basicConfig(level=logging.WARN, format='%(levelname)s:%(name)s:(%(threadName)-10s):%(message)s')
@@ -143,7 +143,10 @@ def test_image():
 def test_spectra():
     """Test Compound property spectra."""
     compound = cs.get_compound(2157)
-    eq_(compound.spectra[0]['csid'], 2157)
+    for s in compound.spectra:
+        ok_(isinstance(s, Spectrum))
+        eq_(s.csid, 2157)
+        ok_(isinstance(s.spectrum_id, int))
     compound = cs.get_compound(263)
     eq_(compound.spectra, [])
 

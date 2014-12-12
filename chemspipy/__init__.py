@@ -21,5 +21,5 @@ __license__ = 'MIT'
 
 
 from .api import ChemSpider
-from .objects import Compound
+from .objects import Compound, Spectrum
 from .search import Results

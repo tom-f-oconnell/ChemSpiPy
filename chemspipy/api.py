@@ -30,8 +30,8 @@ import six
 from . import __version__
 from .errors import ChemSpiPyError, ChemSpiPyParseError, ChemSpiPyAuthError, ChemSpiPyServerError
 from .errors import ChemSpiPyNotFoundError
+from .objects import Compound, Spectrum
 from .search import Results
-from .objects import Compound
 
 
 log = logging.getLogger(__name__)
@@ -109,7 +109,7 @@ FIELDS = {
     'InChIKey': ('inchikey', six.text_type),
     'AverageMass': ('average_mass', float),
     'MolecularWeight': ('molecular_weight', float),
-    'MonoisotopicMass': ('monoisotopic_mass',float),
+    'MonoisotopicMass': ('monoisotopic_mass', float),
     'NominalMass': ('nominal_mass', float),
     'ALogP': ('alogp', float),
     'XLogP': ('xlogp', float),
@@ -131,6 +131,10 @@ FIELDS = {
     'Elapsed': ('elapsed', six.text_type),
     'spc_id': ('spectrum_id', int),
     'spc_type': ('spectrum_type', six.text_type),
+    'file_name': ('file_name', six.text_type),
+    'comments': ('comments', six.text_type),
+    'original_url': ('original_url', six.text_type),
+    'submitted_date': ('submitted_date', six.text_type),
 }
 
 
@@ -144,7 +148,7 @@ def xml_to_dict(t):
             d[tag] = [xml_to_dict(grandchild) for grandchild in child]
         elif rtype == dict:
             d[tag] = xml_to_dict(child)
-        else:
+        elif child.text is not None:
             d[tag] = rtype(child.text.strip())
     return d
 
@@ -337,8 +341,36 @@ class SearchApi(BaseChemSpider):
 
 class SpectraApi(BaseChemSpider):
 
+    def get_all_spectra_info(self):
+        """Get full list of all spectra in ChemSpider. Subscriber role security token is required.
+
+        rtype: list[dict]
+        """
+        response = self.request('Spectra', 'GetAllSpectraInfo')
+        return [xml_to_dict(result) for result in response]
+
+    def get_spectrum_info(self, spectrum_id):
+        """Get information for a specific spectrum ID. Subscriber role security token is required.
+
+        :param string|int spectrum_id: spectrum ID.
+        :returns: Spectrum info.
+        :rtype: dict
+        """
+        response = self.request('Spectra', 'GetSpectrumInfo', spc_id=spectrum_id)
+        return xml_to_dict(response)
+
+    def get_compound_spectra_info(self, csid):
+        """Get information about all the spectra for a ChemSpider ID. Subscriber role security token is required.
+
+        :param string|int csid: ChemSpider ID.
+        :returns: List of spectrum info.
+        :rtype: list[dict]
+        """
+        response = self.request('Spectra', 'GetCompoundSpectraInfo', csid=csid)
+        return [xml_to_dict(result) for result in response]
+
     def get_spectra_info_list(self, csids):
-        """Get information about all the spectra for a list of CSIDs.
+        """Get information about all the spectra for a list of ChemSpider IDs.
 
         :param list[string|int] csids: ChemSpider IDs.
         :returns: List of spectrum info.
@@ -392,6 +424,43 @@ class CustomApi(BaseChemSpider):
         :rtype: list[Compound]
         """
         return [Compound(self, csid) for csid in csids]
+
+    def get_spectrum(self, spectrum_id):
+        """Return a Spectrum object for a given spectrum ID. Subscriber role security token is required.
+
+        :param string|int spectrum_id: Spectrum ID.
+        :returns: The Spectrum with the specified spectrum ID.
+        :rtype: Spectrum
+        """
+        return Spectrum(self, spectrum_id)
+
+    def get_spectra(self, spectrum_ids):
+        """Return a Spectrum object for a given spectrum ID. Subscriber role security token is required.
+
+        :param list[string|int] spectrum_ids: List of spectrum IDs.
+        :returns: List of spectra with the specified spectrum IDs.
+        :rtype: list[Spectrum]
+        """
+        return [Spectrum(self, spectrum_id) for spectrum_id in spectrum_ids]
+
+    def get_compound_spectra(self, csid):
+        """Return Spectrum objects for all the spectra associated with a ChemSpider ID.
+
+        :param csid: string|int csid: ChemSpider ID.
+        :returns: List of spectra for the specified ChemSpider ID.
+        :rtype: list[Spectrum]
+        """
+        return [Spectrum.from_info_dict(self, info) for info in self.get_spectra_info_list([csid])]
+
+    def get_all_spectra(self):
+        """Return a full list of Spectrum objects for all spectra in ChemSpider.
+
+        Subscriber role security token is required.
+
+        :returns: Full list of spectra in ChemSpider.
+        :rtype: list[Spectrum]
+        """
+        return [Spectrum.from_info_dict(self, info) for info in self.get_all_spectra_info()]
 
     def search(self, query, raise_errors=False):
         """Search ChemSpider for the specified query and return the results. Security token is required."""

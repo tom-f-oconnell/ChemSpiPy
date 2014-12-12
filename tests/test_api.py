@@ -204,11 +204,37 @@ def test_simple_search():
 
 # Spectra
 
+def test_get_all_spectra_info():
+    """Test get_all_spectra_info returns all spectra info."""
+    spectra = cs.get_all_spectra_info()
+    ok_(len(spectra) > 8000)
+    ok_('spectrum_id' in spectrum for spectrum in spectra)
+
+
+def test_get_spectrum_info():
+    """Test get_spectrum_info returns info for the given spectrum ID."""
+    info = cs.get_spectrum_info(36)
+    eq_(info['spectrum_id'], 36)
+    eq_(info['csid'], 235)
+    eq_(info['spectrum_type'], 'HNMR')
+    eq_(info['file_name'], 'BenzaldehydeHNMR.jdx')
+    eq_(info['submitted_date'], '2007-08-08T20:18:36.593')
+
+
+def test_get_compound_spectra_info():
+    """Test get_compound_spectra_info returns list of spectra info for the given ChemSpider ID."""
+    for s in cs.get_compound_spectra_info(2157):
+        ok_(isinstance(s, dict))
+        eq_(s['csid'], 2157)
+        ok_(isinstance(s['spectrum_id'], int))
+
+
 def test_get_spectra_info_list():
-    """Test get_spectra_info_list returns spectra info for a list of CSIDs."""
-    spectra = cs.get_spectra_info_list([6084])
-    eq_(spectra[0]['csid'], 6084)
+    """Test get_spectra_info_list returns list of spectra info for a list of CSIDs."""
     eq_(cs.get_spectra_info_list([263]), [])  # No spectra for this compound
+    for s in cs.get_spectra_info_list([2157, 6084]):
+        ok_(s['csid'] in [2157, 6084])
+        ok_(isinstance(s['spectrum_id'], int))
 
 
 # InChI
