@@ -151,6 +151,18 @@ class Results(object):
         self.wait()
         return self._duration
 
+    # @memoized_property
+    # def sdf(self):
+    #     """Get an SDF containing all the search results.
+    #
+    #     Warning: The SDF API endpoints don't seem to work properly.
+    #
+    #     :rtype: string
+    #     :returns: SDF containing the search results.
+    #     """
+    #     self.wait()
+    #     return self._cs.get_records_sdf(self._rid)
+
     def __getitem__(self, index):
         """Get a single result or a slice of results. Blocks until the search is finished.
 
