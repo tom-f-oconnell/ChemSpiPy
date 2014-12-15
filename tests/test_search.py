@@ -18,7 +18,7 @@ import os
 import nose
 from nose.tools import eq_, ok_, raises
 
-from chemspipy import ChemSpider
+from chemspipy import ChemSpider, ASCENDING, DESCENDING, CSID, REFERENCE_COUNT, MOLECULAR_WEIGHT
 from chemspipy.errors import ChemSpiPyServerError
 
 
@@ -59,9 +59,33 @@ def test_search_name():
 
 
 def test_search_iter():
-    """Test iteration of search results"""
+    """Test iteration of search results."""
     for result in cs.search('glucose'):
         ok_(result.csid in [5589, 58238, 71358, 96749, 9312824, 9484839])
+
+
+def test_search_ordered_csid():
+    """Test search results ordered by CSID."""
+    results = cs.search('glucose', order=CSID)
+    eq_([result.csid for result in results], [5589, 58238, 71358, 96749, 9312824, 9484839])
+
+
+def test_search_ordered_csid_descending():
+    """Test search results ordered by CSID and direction descending."""
+    results = cs.search('glucose', order=CSID, direction=DESCENDING)
+    eq_([result.csid for result in results], [9484839, 9312824, 96749, 71358, 58238, 5589])
+
+
+def test_search_ordered_ref_descending():
+    """Test search results ordered by CSID and direction descending."""
+    results = cs.search('glucose', order=REFERENCE_COUNT, direction=DESCENDING)
+    eq_([result.csid for result in results], [96749, 5589, 58238, 9484839, 71358, 9312824])
+
+
+def test_search_ordered_weight_ascending():
+    """Test search results ordered by CSID and direction descending."""
+    results = cs.search('P', order=MOLECULAR_WEIGHT, direction=ASCENDING)
+    eq_([result.csid for result in results], [4574144, 1010, 128566, 21111774, 14319])
 
 
 def test_search_no_results():

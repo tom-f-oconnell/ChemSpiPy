@@ -148,7 +148,7 @@ class BaseChemSpider(object):
 
         :param string api: The specific ChemSpider API to call (MassSpec, Search, Spectra, InChI).
         :param string endpoint: ChemSpider API endpoint.
-        :param params: (optional) Parameters for the ChemSpider endpoint as keyword arguments.
+        :param params: (Optional) Parameters for the ChemSpider endpoint as keyword arguments.
         :rtype: xml tree
         """
         url = '%s/%s.asmx/%s' % (self.api_url, api, endpoint)
@@ -180,7 +180,7 @@ class BaseChemSpider(object):
 
         :param string api: The specific ChemSpider API to call (MassSpecAPI, Search, Spectra, InChI).
         :param string endpoint: ChemSpider API endpoint.
-        :param params: (optional) Parameters for the ChemSpider endpoint as keyword arguments.
+        :param params: (Optional) Parameters for the ChemSpider endpoint as keyword arguments.
         :rtype: string
         """
         querystring = []
@@ -336,7 +336,7 @@ class SearchApi(BaseChemSpider):
         :param string query: Search query - a name, SMILES, InChI, InChIKey, CSID, etc.
         :param string order: :data:`~chemspipy.api.CSID`, :data:`~chemspipy.api.MASS_DEFECT`,
                              :data:`~chemspipy.api.MOLECULAR_WEIGHT`, :data:`~chemspipy.api.REFERENCE_COUNT`,
-                             :data:`~chemspipy.api.DATASOURCE_COUNT`, :data:`~chemspipy.api.PUBMED_COUNT`,
+                             :data:`~chemspipy.api.DATASOURCE_COUNT`, :data:`~chemspipy.api.PUBMED_COUNT` or
                              :data:`~chemspipy.api.RSC_COUNT`.
         :param string direction: :data:`~chemspipy.api.ASCENDING` or :data:`~chemspipy.api.DESCENDING`.
         :returns: Transaction ID.
@@ -546,17 +546,25 @@ class CustomApi(BaseChemSpider):
         """
         return [Spectrum.from_info_dict(self, info) for info in self.get_all_spectra_info()]
 
-    def search(self, query, raise_errors=False):
+    def search(self, query, order=None, direction=ASCENDING, raise_errors=False):
         """Search ChemSpider for the specified query and return the results. Security token is required.
 
         :param string|int query: Search query.
+        :param string order: (Optional) :data:`~chemspipy.api.CSID`, :data:`~chemspipy.api.MASS_DEFECT`,
+                             :data:`~chemspipy.api.MOLECULAR_WEIGHT`, :data:`~chemspipy.api.REFERENCE_COUNT`,
+                             :data:`~chemspipy.api.DATASOURCE_COUNT`, :data:`~chemspipy.api.PUBMED_COUNT` or
+                             :data:`~chemspipy.api.RSC_COUNT`.
+        :param string direction: (Optional) :data:`~chemspipy.api.ASCENDING` or :data:`~chemspipy.api.DESCENDING`.
+        :param bool raise_errors: If True, raise exceptions. If False, store on Results ``exception`` property.
         :returns: Search Results list.
         :rtype: Results
         """
-        return Results(self, self.async_simple_search, (query,), raise_errors=raise_errors)
+        if order and direction:
+            return Results(self, self.async_simple_search_ordered, (query, order, direction), raise_errors=raise_errors)
+        else:
+            return Results(self, self.async_simple_search, (query,), raise_errors=raise_errors)
 
     # TODO: Wrappers for subscriber role asynchronous searches
-    # TODO: Ordered results
 
 
 class ChemSpider(CustomApi, MassSpecApi, SearchApi, SpectraApi, InchiApi):

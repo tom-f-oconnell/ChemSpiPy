@@ -18,7 +18,7 @@ This part of the documentation is automatically generated from the ChemSpiPy sou
    .. automethod:: get_spectra(spectrum_ids)
    .. automethod:: get_compound_spectra(csid)
    .. automethod:: get_all_spectra()
-   .. automethod:: search(query, raise_errors=False)
+   .. automethod:: search(query, order=None, direction=ASCENDING, raise_errors=False)
    .. automethod:: simple_search(query)
    .. automethod:: get_record_mol(csid, calc3d=False)
    .. automethod:: get_original_mol(csid)
