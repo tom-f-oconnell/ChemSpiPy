@@ -15,6 +15,7 @@ from __future__ import division
 from base64 import b64decode
 import logging
 import sys
+import warnings
 
 try:
     from lxml import etree
@@ -35,6 +36,96 @@ from .search import Results
 
 
 log = logging.getLogger(__name__)
+
+#: 2D coordinate dimensions
+MOL2D = '2d'
+#: 3D coordinate dimensions
+MOL3D = '3d'
+#: Both coordinate dimensions
+BOTH = 'both'
+
+#: Ascending sort direction
+ASCENDING = 'ascending'
+#: Descending sort direction
+DESCENDING = 'descending'
+
+#: CSID sort order
+CSID = 'csid'
+#: Mass defect sort order
+MASS_DEFECT = 'mass_defect'
+#: Molecular weight sort order
+MOLECULAR_WEIGHT = 'molecular_weight'
+#: Reference count sort order
+REFERENCE_COUNT = 'reference_count'
+#: Datasource count sort order
+DATASOURCE_COUNT = 'datasource_count'
+#: Pubmed count sort order
+PUBMED_COUNT = 'pubmed_count'
+#: RSC count sort order
+RSC_COUNT = 'rsc_count'
+
+
+#: Coordinate dimensions
+DIMENSIONS = {
+    MOL2D: 'e2D',
+    MOL3D: 'e3D',
+    BOTH: 'eBoth'
+}
+
+#: Sort directions
+DIRECTIONS = {
+    ASCENDING: 'eAscending',
+    DESCENDING: 'eDescending'
+}
+
+#: Sort orders
+ORDERS = {
+    CSID: 'eCSID',
+    MASS_DEFECT: 'eMassDefect',
+    MOLECULAR_WEIGHT: 'eMolecularWeight',
+    REFERENCE_COUNT: 'eReferenceCount',
+    DATASOURCE_COUNT: 'eDataSourceCount',
+    PUBMED_COUNT: 'ePubMedCount',
+    RSC_COUNT: 'eRscCount'
+}
+
+#: API to python field mappings
+FIELDS = {
+    'CSID': ('csid', int),
+    'csid': ('csid', int),
+    'MF': ('molecular_formula', six.text_type),
+    'SMILES': ('smiles', six.text_type),
+    'InChI': ('inchi', six.text_type),
+    'InChIKey': ('inchikey', six.text_type),
+    'AverageMass': ('average_mass', float),
+    'MolecularWeight': ('molecular_weight', float),
+    'MonoisotopicMass': ('monoisotopic_mass', float),
+    'NominalMass': ('nominal_mass', float),
+    'ALogP': ('alogp', float),
+    'XLogP': ('xlogp', float),
+    'CommonName': ('common_name', six.text_type),
+    'MOL2d': ('mol_2d', six.text_type),
+    'MOL3d': ('mol_3d', six.text_type),
+    'ReferenceCount': ('reference_count', int),
+    'DataSourceCount': ('datasource_count', int),
+    'PubMedCount': ('pubmed_count', int),
+    'RSCCount': ('rsc_count', int),
+    'ExternalReferences': ('external_references', list),
+    'ds_name': ('datasource_name', six.text_type),
+    'ds_url': ('datasource_url', six.text_type),
+    'ext_id': ('external_id', six.text_type),
+    'ext_url': ('external_url', six.text_type),
+    'Status': ('status', six.text_type),
+    'Count': ('count', int),
+    'Message': ('message', six.text_type),
+    'Elapsed': ('elapsed', six.text_type),
+    'spc_id': ('spectrum_id', int),
+    'spc_type': ('spectrum_type', six.text_type),
+    'file_name': ('file_name', six.text_type),
+    'comments': ('comments', six.text_type),
+    'original_url': ('original_url', six.text_type),
+    'submitted_date': ('submitted_date', six.text_type),
+}
 
 
 class BaseChemSpider(object):
@@ -100,44 +191,6 @@ class BaseChemSpider(object):
         return '%s/%s.asmx/%s?%s' % (self.api_url, api, endpoint, '&'.join(querystring))
 
 
-FIELDS = {
-    'CSID': ('csid', int),
-    'csid': ('csid', int),
-    'MF': ('molecular_formula', six.text_type),
-    'SMILES': ('smiles', six.text_type),
-    'InChI': ('inchi', six.text_type),
-    'InChIKey': ('inchikey', six.text_type),
-    'AverageMass': ('average_mass', float),
-    'MolecularWeight': ('molecular_weight', float),
-    'MonoisotopicMass': ('monoisotopic_mass', float),
-    'NominalMass': ('nominal_mass', float),
-    'ALogP': ('alogp', float),
-    'XLogP': ('xlogp', float),
-    'CommonName': ('common_name', six.text_type),
-    'MOL2d': ('mol_2d', six.text_type),
-    'MOL3d': ('mol_3d', six.text_type),
-    'ReferenceCount': ('reference_count', int),
-    'DataSourceCount': ('datasource_count', int),
-    'PubMedCount': ('pubmed_count', int),
-    'RSCCount': ('rsc_count', int),
-    'ExternalReferences': ('external_references', list),
-    'ds_name': ('datasource_name', six.text_type),
-    'ds_url': ('datasource_url', six.text_type),
-    'ext_id': ('external_id', six.text_type),
-    'ext_url': ('external_url', six.text_type),
-    'Status': ('status', six.text_type),
-    'Count': ('count', int),
-    'Message': ('message', six.text_type),
-    'Elapsed': ('elapsed', six.text_type),
-    'spc_id': ('spectrum_id', int),
-    'spc_type': ('spectrum_type', six.text_type),
-    'file_name': ('file_name', six.text_type),
-    'comments': ('comments', six.text_type),
-    'original_url': ('original_url', six.text_type),
-    'submitted_date': ('submitted_date', six.text_type),
-}
-
-
 def xml_to_dict(t):
     """Convert a ChemSpider XML response to a python dict."""
     d = {}
@@ -176,20 +229,21 @@ class MassSpecApi(BaseChemSpider):
         response = self.request('MassSpecApi', 'GetExtendedCompoundInfoArray', csids=csids)
         return [xml_to_dict(result) for result in response]
 
-    def get_extended_mol_compound_info_list(self, csids, mol_type='e2D', include_reference_counts=False,
+    def get_extended_mol_compound_info_list(self, csids, mol_type=MOL2D, include_reference_counts=False,
                                             include_external_references=False):
         """Get extended record details (including MOL) for a list of CSIDs.
 
         A maximum of 250 CSIDs can be fetched per request. Security token is required.
 
         :param list[string|int] csids: ChemSpider IDs.
-        :param string mol_type: 2d, 3d or both.
+        :param string mol_type: :data:`~chemspipy.api.MOL2D`, :data:`~chemspipy.api.MOL3D` or
+                                :data:`~chemspipy.api.BOTH`.
         :param bool include_reference_counts: Whether to include reference counts.
         :param bool include_external_references: Whether to include external references.
         """
-        dims = {'2d': 'e2D', '3d': 'e3D', 'both': 'eBoth'}
         response = self.request('MassSpecApi', 'GetExtendedMolCompoundInfoArray', csids=csids,
-                                eMolType=dims.get(mol_type, mol_type), includeReferenceCounts=include_reference_counts,
+                                eMolType=DIMENSIONS.get(mol_type, mol_type),
+                                includeReferenceCounts=include_reference_counts,
                                 includeExternalReferences=include_external_references)
         return [xml_to_dict(result) for result in response]
 
@@ -202,17 +256,18 @@ class MassSpecApi(BaseChemSpider):
         response = self.request('MassSpecApi', 'GetRecordMol', csid=csid, calc3d=calc3d)
         return response.text
 
-    def search_by_formula(self, formula):
+    def simple_search_by_formula(self, formula):
         """Search ChemSpider by molecular formula.
 
         :param string formula: Molecular formula
         :returns: A list of Compounds.
         :rtype: list[:class:`~chemspipy.Compound`]
         """
+        warnings.warn("Use search_by_formula instead of simple_search_by_formula.", DeprecationWarning)
         response = self.request('MassSpecApi', 'SearchByFormula2', formula=formula)
         return [Compound(self, el.text) for el in response]
 
-    def search_by_mass(self, mass, mass_range):
+    def simple_search_by_mass(self, mass, mass_range):
         """Search ChemSpider by mass +/- range.
 
         :param float mass: The mass to search for.
@@ -220,6 +275,7 @@ class MassSpecApi(BaseChemSpider):
         :returns: A list of Compounds.
         :rtype: list[:class:`~chemspipy.Compound`]
         """
+        warnings.warn("Use search_by_mass instead of simple_search_by_mass.", DeprecationWarning)
         response = self.request('MassSpecApi', 'SearchByMass2', mass=mass, range=mass_range)
         return [Compound(self, el.text) for el in response]
 
@@ -270,7 +326,7 @@ class SearchApi(BaseChemSpider):
         response = self.request('Search', 'AsyncSimpleSearch', query=query)
         return response.text
 
-    def async_simple_search_ordered(self, query, order='csid', direction='ascending'):
+    def async_simple_search_ordered(self, query, order=CSID, direction=ASCENDING):
         """Search ChemSpider with arbitrary query, returning results with a custom order.
 
         This method returns a transaction ID which can be used with other methods to get search status and results.
@@ -278,18 +334,16 @@ class SearchApi(BaseChemSpider):
         Security token is required.
 
         :param string query: Search query - a name, SMILES, InChI, InChIKey, CSID, etc.
-        :param string order: 'csid', 'mass_defect', 'molecular_weight', 'reference_count', 'datasource_count',
-                             'pubmed_count' or 'rsc_count'.
-        :param string direction: 'ascending' or 'descending'.
+        :param string order: :data:`~chemspipy.api.CSID`, :data:`~chemspipy.api.MASS_DEFECT`,
+                             :data:`~chemspipy.api.MOLECULAR_WEIGHT`, :data:`~chemspipy.api.REFERENCE_COUNT`,
+                             :data:`~chemspipy.api.DATASOURCE_COUNT`, :data:`~chemspipy.api.PUBMED_COUNT`,
+                             :data:`~chemspipy.api.RSC_COUNT`.
+        :param string direction: :data:`~chemspipy.api.ASCENDING` or :data:`~chemspipy.api.DESCENDING`.
         :returns: Transaction ID.
         :rtype: string
         """
-        ords = {'csid': 'eCSID', 'mass_defect': 'eMassDefect', 'molecular_weight': 'eMolecularWeight',
-                'reference_count': 'eReferenceCount', 'datasource_count': 'eDataSourceCount',
-                'pubmed_count': 'ePubMedCount', 'rsc_count': 'eRscCount'}
-        dirs = {'ascending': 'eAscending', 'descending': 'eDescending'}
-        response = self.request('Search', 'AsyncSimpleSearchOrdered', query=query, orderBy=ords[order],
-                                orderDirection=dirs[direction])
+        response = self.request('Search', 'AsyncSimpleSearchOrdered', query=query, orderBy=ORDERS[order],
+                                orderDirection=DIRECTIONS[direction])
         return response.text
 
     def get_async_search_status(self, rid):

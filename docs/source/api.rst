@@ -19,8 +19,6 @@ This part of the documentation is automatically generated from the ChemSpiPy sou
    .. automethod:: get_compound_spectra(csid)
    .. automethod:: get_all_spectra()
    .. automethod:: search(query, raise_errors=False)
-   .. automethod:: search_by_formula(formula)
-   .. automethod:: search_by_mass(mass, mass_range)
    .. automethod:: simple_search(query)
    .. automethod:: get_record_mol(csid, calc3d=False)
    .. automethod:: get_original_mol(csid)
@@ -29,7 +27,7 @@ This part of the documentation is automatically generated from the ChemSpiPy sou
    .. automethod:: get_compound_info(csid)
    .. automethod:: get_extended_compound_info(csid)
    .. automethod:: get_extended_compound_info_list(csids)
-   .. automethod:: get_extended_mol_compound_info_list(csids, mol_type=u'e2D', include_reference_counts=False, include_external_references=False)
+   .. automethod:: get_extended_mol_compound_info_list(csids, mol_type=MOL2D, include_reference_counts=False, include_external_references=False)
    .. automethod:: get_compound_spectra_info(csid)
    .. automethod:: get_spectrum_info(spectrum_id)
    .. automethod:: get_spectra_info_list(csids)
@@ -37,11 +35,26 @@ This part of the documentation is automatically generated from the ChemSpiPy sou
    .. automethod:: request(api, endpoint, **params)
    .. automethod:: construct_api_url(api, endpoint, **params)
    .. automethod:: async_simple_search(query)
-   .. automethod:: async_simple_search_ordered(query, order=u'csid', direction=u'ascending')
+   .. automethod:: async_simple_search_ordered(query, order=CSID, direction=ASCENDING)
    .. automethod:: get_async_search_status(rid)
    .. automethod:: get_async_search_status_and_count(rid)
    .. automethod:: get_async_search_result(rid)
    .. automethod:: get_async_search_result_part(rid, start=0, count=-1)
+   .. automethod:: simple_search_by_formula(formula)
+   .. automethod:: simple_search_by_mass(mass, mass_range)
+
+.. autodata:: chemspipy.api.MOL2D
+.. autodata:: chemspipy.api.MOL3D
+.. autodata:: chemspipy.api.BOTH
+.. autodata:: chemspipy.api.ASCENDING
+.. autodata:: chemspipy.api.DESCENDING
+.. autodata:: chemspipy.api.CSID
+.. autodata:: chemspipy.api.MASS_DEFECT
+.. autodata:: chemspipy.api.MOLECULAR_WEIGHT
+.. autodata:: chemspipy.api.REFERENCE_COUNT
+.. autodata:: chemspipy.api.DATASOURCE_COUNT
+.. autodata:: chemspipy.api.PUBMED_COUNT
+.. autodata:: chemspipy.api.RSC_COUNT
 
 .. automodule:: chemspipy.objects
 .. autoclass:: chemspipy.Compound()

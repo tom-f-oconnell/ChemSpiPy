@@ -20,6 +20,7 @@ __version__ = '1.0.1'
 __license__ = 'MIT'
 
 
-from .api import ChemSpider
+from .api import ChemSpider, MOL2D, MOL3D, BOTH, ASCENDING, DESCENDING, CSID, MASS_DEFECT, MOLECULAR_WEIGHT
+from .api import REFERENCE_COUNT, DATASOURCE_COUNT, PUBMED_COUNT, RSC_COUNT
 from .objects import Compound, Spectrum
 from .search import Results

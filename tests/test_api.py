@@ -21,7 +21,7 @@ from nose.tools import eq_, ok_, raises
 import requests
 import six
 
-from chemspipy import ChemSpider
+from chemspipy import ChemSpider, MOL2D, MOL3D, BOTH
 from chemspipy.errors import ChemSpiPyAuthError, ChemSpiPyServerError
 
 
@@ -104,11 +104,11 @@ def test_get_extended_mol_compound_info_list():
 
 def test_get_extended_mol_compound_info_list_dimensions():
     """Test get_extended_mol_compound_info_list returns 2D/3D/both MOL."""
-    info = cs.get_extended_mol_compound_info_list([1236], mol_type='2d')
+    info = cs.get_extended_mol_compound_info_list([1236], mol_type=MOL2D)
     ok_('mol_2d' in info[0])
-    info = cs.get_extended_mol_compound_info_list([1236], mol_type='3d')
+    info = cs.get_extended_mol_compound_info_list([1236], mol_type=MOL3D)
     ok_('mol_3d' in info[0])
-    info = cs.get_extended_mol_compound_info_list([1236], mol_type='both')
+    info = cs.get_extended_mol_compound_info_list([1236], mol_type=BOTH)
     ok_('mol_2d' in info[0])
     ok_('mol_3d' in info[0])
 
@@ -120,14 +120,14 @@ def test_get_record_mol():
     ok_('M  END' in mol)
 
 
-def test_search_by_formula():
-    """Test search_by_formula returns a list of CSIDs."""
-    eq_([c.csid for c in cs.search_by_formula('C2H6')], [6084])
+def test_simple_search_by_formula():
+    """Test simple_search_by_formula returns a list of CSIDs."""
+    eq_([c.csid for c in cs.simple_search_by_formula('C2H6')], [6084])
 
 
-def test_search_by_mass():
-    """Test search_by_mass returns a list of CSIDs."""
-    csids = [c.csid for c in cs.search_by_mass(17, 0.1)]
+def test_simple_search_by_mass():
+    """Test simple_search_by_mass returns a list of CSIDs."""
+    csids = [c.csid for c in cs.simple_search_by_mass(17, 0.1)]
     ok_(all(csid in csids for csid in [217, 936, 12148, 94766, 138477, 4925349, 8305396, 8466194, 9237452, 21864986]))
 
 
