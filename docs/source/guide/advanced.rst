@@ -27,7 +27,7 @@ You can specify a custom User Agent through ChemSpiPy through the optional ``use
 class::
 
     >>> from chemspipy import ChemSpider
-    >>> cs = ChemSpider('<YOUR-SECURITY-TOKEN>', user_agent='My program 1.3, ChemSpiPy 1.0.1, Python 2.7')
+    >>> cs = ChemSpider('<YOUR-SECURITY-TOKEN>', user_agent='My program 1.3, ChemSpiPy 1.0.2, Python 2.7')
 
 Logging
 -------

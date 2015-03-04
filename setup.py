@@ -12,7 +12,7 @@ else:
 
 setup(
     name='ChemSpiPy',
-    version='1.0.1',
+    version='1.0.2',
     author='Matt Swain',
     author_email='m.swain@me.com',
     license='MIT',
