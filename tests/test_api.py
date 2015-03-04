@@ -182,10 +182,10 @@ def test_get_async_search_result_part():
         status = cs.get_async_search_status(rid)
         if status in {'Created', 'Scheduled', 'Processing'}:
             continue
-        eq_([c.csid for c in cs.get_async_search_result_part(rid)], [5589, 58238, 71358, 96749, 9312824, 9484839])
-        eq_([c.csid for c in cs.get_async_search_result_part(rid, start=2)], [71358, 96749, 9312824, 9484839])
-        eq_([c.csid for c in cs.get_async_search_result_part(rid, start=2, count=2)], [71358, 96749])
-        eq_([c.csid for c in cs.get_async_search_result_part(rid, start=2, count=99)], [71358, 96749, 9312824, 9484839])
+        ok_(len(cs.get_async_search_result_part(rid)) > 6)
+        ok_(len(cs.get_async_search_result_part(rid, start=2)) > 2)
+        eq_(len(cs.get_async_search_result_part(rid, start=2, count=2)), 2)
+        ok_(len(cs.get_async_search_result_part(rid, start=2, count=99)) > 2)
         break
 
 
@@ -205,7 +205,7 @@ def test_get_compound_thumbnail():
 
 def test_simple_search():
     """Test simple_search returns a list of CSIDs."""
-    eq_([c.csid for c in cs.simple_search('glucose')], [5589, 58238, 71358, 96749, 9312824, 9484839])
+    ok_(all(csid in [c.csid for c in cs.simple_search('glucose')] for csid in [5589, 58238, 71358, 96749, 9312824, 9484839]))
 
 
 # Spectra
