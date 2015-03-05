@@ -39,6 +39,10 @@ class Compound(object):
     def __repr__(self):
         return 'Compound(%r)' % self.csid
 
+    def _repr_png_(self):
+        """For IPython notebook, display 2D image."""
+        return self.image
+
     @property
     def csid(self):
         """ChemSpider ID."""
