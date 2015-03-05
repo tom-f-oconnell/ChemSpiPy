@@ -182,7 +182,7 @@ class Compound(object):
 
         :rtype: list[:class:`~chemspipy.Spectrum`]
         """
-        return [Spectrum.from_info_dict(self, info) for info in self._cs.get_spectra_info_list([self.csid])]
+        return [Spectrum.from_info_dict(self._cs, info) for info in self._cs.get_spectra_info_list([self.csid])]
 
 
 class Spectrum(object):
@@ -262,6 +262,23 @@ class Spectrum(object):
         :rtype: string
         """
         return self._spectrum_info.get('comments')
+
+    @property
+    def url(self):
+        """Spectrum URL.
+
+        :rtype: string
+        """
+        return 'http://www.chemspider.com/FilesHandler.ashx?type=blob&disp=1&id=%s' % self.spectrum_id
+
+    @memoized_property
+    def data(self):
+        """Spectrum data file contents. Requires an additional request. Result is cached.
+
+        :rtype: string
+        """
+        r = self._cs.http.get(self.url)
+        return r.text
 
     @property
     def original_url(self):
