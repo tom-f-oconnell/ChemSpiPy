@@ -38,6 +38,7 @@ A step-by-step guide to getting started with ChemSpiPy.
    guide/gettingstarted
    guide/compound
    guide/searching
+   guide/spectra
    guide/misc
    guide/advanced
    guide/contributing
