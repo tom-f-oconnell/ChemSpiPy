@@ -62,7 +62,7 @@ def test_get_databases():
 
 def test_get_extended_compound_info():
     """Test get_extended_compound_info returns info for a CSID."""
-    info = cs.get_extended_compound_info(263)
+    info = cs.get_extended_compound_info(6543)
     ok_(all(field in info for field in ['csid', 'molecular_formula', 'smiles', 'inchi', 'inchikey', 'average_mass',
                                         'molecular_weight', 'monoisotopic_mass', 'nominal_mass', 'alogp', 'xlogp',
                                         'common_name']))
@@ -75,7 +75,7 @@ def test_get_extended_compound_info():
 
 def test_get_extended_compound_info_list():
     """Test get_extended_compound_info_list returns info for a list of CSIDs."""
-    info = cs.get_extended_compound_info_list([263, 1235, 6084])
+    info = cs.get_extended_compound_info_list([6543, 1235, 6084])
     eq_(len(info), 3)
     ok_(all(field in info[0] for field in ['csid', 'molecular_formula', 'smiles', 'inchi', 'inchikey', 'average_mass',
                                         'molecular_weight', 'monoisotopic_mass', 'nominal_mass', 'alogp', 'xlogp',
@@ -210,11 +210,12 @@ def test_simple_search():
 
 # Spectra
 
-def test_get_all_spectra_info():
-    """Test get_all_spectra_info returns all spectra info."""
-    spectra = cs.get_all_spectra_info()
-    ok_(len(spectra) > 8000)
-    ok_('spectrum_id' in spectrum for spectrum in spectra)
+# This is slow...
+# def test_get_all_spectra_info():
+#     """Test get_all_spectra_info returns all spectra info."""
+#     spectra = cs.get_all_spectra_info()
+#     ok_(len(spectra) > 8000)
+#     ok_('spectrum_id' in spectrum for spectrum in spectra)
 
 
 def test_get_spectrum_info():
