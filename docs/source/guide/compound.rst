@@ -46,6 +46,8 @@ Compound properties
 - ``image_url``: URL of a PNG image of the 2D chemical structure.
 - ``molecular_formula``: Molecular formula.
 - ``smiles``: SMILES string.
+- ``stdinchi``: Standard InChI string.
+- ``stdinchikey``: Standard InChIKey.
 - ``inchi``: InChI string.
 - ``inchikey``: InChIKey.
 - ``average_mass``: Average mass.
