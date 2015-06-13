@@ -65,8 +65,9 @@ Implementation details
 ----------------------
 
 Each :class:`~chemspipy.Compound` object is a simple wrapper around a ChemSpider ID. Behind the scenes, the property
-methods use the ``get_extended_compound_info``, ``get_record_mol`` and  ``get_compound_thumbnail`` API methods
-to retrieve the relevant information. It is possible to use these API methods directly if required::
+methods use the ``get_compound_info``, ``get_extended_compound_info``, ``get_record_mol`` and
+``get_compound_thumbnail`` API methods to retrieve the relevant information. It is possible to use these API methods
+directly if required::
 
     >>> info = cs.get_extended_compound_info(2157)
     {u'smiles': u'CC(=O)Oc1ccccc1C(=O)O', u'common_name': u'Aspirin', u'nominal_mass': 180.0, u'molecular_formula': u'C_{9}H_{8}O_{4}', u'inchikey': u'BSYNRYMUTXBXSQ-UHFFFAOYAW', u'molecular_weight': 180.1574, u'inchi': u'InChI=1/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)', u'average_mass': 180.1574, u'csid': 2157, u'alogp': 0.0, u'xlogp': 0.0, u'monoisotopic_mass': 180.042252}
