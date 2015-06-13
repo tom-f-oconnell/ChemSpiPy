@@ -56,6 +56,11 @@ class Compound(object):
         return 'http://www.chemspider.com/ImagesHandler.ashx?id=%s' % self.csid
 
     @memoized_property
+    def _compound_info(self):
+        """Request compound info and cache the result."""
+        return self._cs.get_compound_info(self.csid)
+
+    @memoized_property
     def _extended_compound_info(self):
         """Request extended compound info and cache the result."""
         return self._cs.get_extended_compound_info(self.csid)
@@ -74,7 +79,23 @@ class Compound(object):
 
         :rtype: string
         """
-        return self._extended_compound_info['smiles']
+        return self._compound_info['smiles']
+
+    @property
+    def stdinchi(self):
+        """Return the Standard InChI for this Compound.
+
+        :rtype: string
+        """
+        return self._compound_info['inchi']
+
+    @property
+    def stdinchikey(self):
+        """Return the Standard InChIKey for this Compound.
+
+        :rtype: string
+        """
+        return self._compound_info['inchikey']
 
     @property
     def inchi(self):

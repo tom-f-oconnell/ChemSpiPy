@@ -101,12 +101,28 @@ def test_inchi():
     eq_(compound.inchi, 'InChI=1/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)')
 
 
+def test_stdinchi():
+    """Test Compound property stdinchi."""
+    compound = cs.get_compound(2157)
+    eq_(compound.stdinchi, 'InChI=1S/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)')
+    # Ensure value is the same on subsequent access from cache
+    eq_(compound.stdinchi, 'InChI=1S/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)')
+
+
 def test_inchikey():
     """Test Compound property inchikey."""
     compound = cs.get_compound(2157)
     eq_(compound.inchikey, 'BSYNRYMUTXBXSQ-UHFFFAOYAW')
     # Ensure value is the same on subsequent access from cache
     eq_(compound.inchikey, 'BSYNRYMUTXBXSQ-UHFFFAOYAW')
+
+
+def test_stdinchikey():
+    """Test Compound property stdinchikey."""
+    compound = cs.get_compound(2157)
+    eq_(compound.stdinchikey, 'BSYNRYMUTXBXSQ-UHFFFAOYSA-N')
+    # Ensure value is the same on subsequent access from cache
+    eq_(compound.stdinchikey, 'BSYNRYMUTXBXSQ-UHFFFAOYSA-N')
 
 
 def test_masses():
