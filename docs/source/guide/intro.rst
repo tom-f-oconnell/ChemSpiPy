@@ -25,6 +25,12 @@ then sign in to ChemSpider. Once you have done this, you can find your security 
 Some operations require a further "Service Subscriber" role. Contact the ChemSpider team to discuss upgrading your user
 account for access to these features.
 
+.. warning::
+
+   Make sure you copy the entire token from the Chemspider profile page. The text field is quite narrow so you may have
+   to drag across to the right to select the entire token. The token format should be
+   ``xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx``.
+
 ChemSpiPy license
 -----------------
 
