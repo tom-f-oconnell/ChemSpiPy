@@ -161,6 +161,12 @@ class BaseChemSpider(object):
         if response.status_code == 500:
             if 'Missing parameter: token.' in response.text:
                 raise ChemSpiPyAuthError('Endpoint requires a security token.')
+            elif 'Error converting data type nvarchar to uniqueidentifier' in response.text:
+                # Generally when supplying a security token with incorrect format
+                raise ChemSpiPyAuthError('Invalid security token. Did you copy the entire token?')
+            elif 'Unauthorized web service usage' in response.text:
+                # Fake/incorrect token (but in correct format)
+                raise ChemSpiPyAuthError(response.text)
             elif 'Unable to get record details' in response.text:
                 # Generally when requesting a non-existent CSID
                 raise ChemSpiPyNotFoundError(response.text)

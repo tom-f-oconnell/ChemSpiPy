@@ -270,6 +270,18 @@ def test_token_needed():
     cs2.get_extended_compound_info(263)
 
 
+@raises(ChemSpiPyAuthError)
+def test_invalid_token():
+    """Test ChemSpiPyAuthError is raised if a token with invalid format is used."""
+    mf = ChemSpider('abcde1-1346fa-934a').get_compound(2157).molecular_formula
+
+
+@raises(ChemSpiPyAuthError)
+def test_invalid_token():
+    """Test ChemSpiPyAuthError is raised if a fake token with correct format is used."""
+    mf = ChemSpider('a1e22457-c835-1234-b141-347bf12fa31c').get_compound(2157).molecular_formula
+
+
 @raises(ChemSpiPyServerError)
 def test_invalid_rid():
     """Test ChemSpiPyServerError is raised when an invalid transaction ID is used."""
