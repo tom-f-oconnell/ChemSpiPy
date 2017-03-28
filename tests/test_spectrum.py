@@ -124,10 +124,10 @@ def test_no_original_url():
 def test_url():
     """Test retrieving spectrum url."""
     s = cs.get_spectrum(3558)
-    eq_(s.url, 'http://www.chemspider.com/FilesHandler.ashx?type=blob&disp=1&id=3558')
+    eq_(s.url, 'https://www.chemspider.com/FilesHandler.ashx?type=blob&disp=1&id=3558')
     for compound in cs.search('Aspirin'):
         for spectrum in compound.spectra:
-            ok_(spectrum.url.startswith('http://www.chemspider.com/FilesHandler.ashx?type=blob&disp=1&id='))
+            ok_(spectrum.url.startswith('https://www.chemspider.com/FilesHandler.ashx?type=blob&disp=1&id='))
 
 
 def test_data():
