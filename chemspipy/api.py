@@ -157,7 +157,7 @@ class BaseChemSpider(object):
         try:
             response = self.http.post(url, data=params)
         except requests.RequestException as e:
-            raise ChemSpiPyError(str(e))
+            raise ChemSpiPyError(six.text_type(e))
         if response.status_code == 500:
             if 'Missing parameter: token.' in response.text:
                 raise ChemSpiPyAuthError('Endpoint requires a security token.')
@@ -191,7 +191,7 @@ class BaseChemSpider(object):
         """
         querystring = []
         for k, v in params.items():
-            querystring.append('%s=%s' % (k, six.moves.urllib.parse.quote_plus(str(v))))
+            querystring.append('%s=%s' % (k, six.moves.urllib.parse.quote_plus(six.text_type(v))))
         if self.security_token:
             querystring.append('token=%s' % self.security_token)
         return '%s/%s.asmx/%s?%s' % (self.api_url, api, endpoint, '&'.join(querystring))
