@@ -294,7 +294,7 @@ class Spectrum(object):
 
         :rtype: string
         """
-        return 'http://www.chemspider.com/FilesHandler.ashx?type=blob&disp=1&id=%s' % self.spectrum_id
+        return 'https://www.chemspider.com/FilesHandler.ashx?type=blob&disp=1&id=%s' % self.spectrum_id
 
     @memoized_property
     def data(self):

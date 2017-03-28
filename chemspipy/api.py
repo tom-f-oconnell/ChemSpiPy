@@ -138,7 +138,7 @@ class BaseChemSpider(object):
         :param string api_url: (Optional) Alternative API server.
         """
         log.debug('Initializing ChemSpider')
-        self.api_url = api_url if api_url else 'http://www.chemspider.com'
+        self.api_url = api_url if api_url else 'https://www.chemspider.com'
         self.http = requests.session()
         self.http.headers['User-Agent'] = user_agent if user_agent else 'ChemSpiPy/%s Python/%s ' % (__version__, sys.version.split()[0])
         self.security_token = security_token
