@@ -1,0 +1,8 @@
+name: chemspipy
+channels:
+- mcs07
+- defaults
+dependencies:
+- lxml=3.7.3
+- requests=2.13.0
+- six=1.10.0
