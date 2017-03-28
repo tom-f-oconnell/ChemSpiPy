@@ -16,8 +16,7 @@ import logging
 import os
 import re
 
-import nose
-from nose.tools import eq_, ok_, raises
+import pytest
 import requests
 import six
 
@@ -38,18 +37,18 @@ cs2 = ChemSpider()
 
 def test_no_security_token():
     """Test ChemSpider can be initialized with no parameters."""
-    eq_(cs2.security_token, None)
+    assert cs2.security_token == None
 
 
 def test_security_token():
     """Test security token is set correctly when initializing ChemSpider"""
-    eq_(cs.security_token, CHEMSPIDER_SECURITY_TOKEN)
+    assert cs.security_token == CHEMSPIDER_SECURITY_TOKEN
 
 
 def test_chemspider_repr():
     """Test ChemSpider object repr."""
-    eq_(repr(cs), 'ChemSpider()')
-    eq_(repr(cs2), 'ChemSpider()')
+    assert repr(cs) == 'ChemSpider()'
+    assert repr(cs2) == 'ChemSpider()'
 
 
 # MassSpecAPI
@@ -57,78 +56,88 @@ def test_chemspider_repr():
 def test_get_databases():
     """Test get_databases returns the list of ChemSpider data sources."""
     dbs = cs.get_databases()
-    ok_(all(source in dbs for source in ['Wikipedia', 'ZINC', 'PubChem']))
+    assert all(source in dbs for source in ['Wikipedia', 'ZINC', 'PubChem'])
 
 
 def test_get_extended_compound_info():
     """Test get_extended_compound_info returns info for a CSID."""
     info = cs.get_extended_compound_info(6543)
-    ok_(all(field in info for field in ['csid', 'molecular_formula', 'smiles', 'inchi', 'inchikey', 'average_mass',
-                                        'molecular_weight', 'monoisotopic_mass', 'nominal_mass', 'alogp', 'xlogp',
-                                        'common_name']))
-    ok_(all(isinstance(info[field], float) for field in ['average_mass', 'molecular_weight', 'monoisotopic_mass',
-                                                         'nominal_mass', 'alogp', 'xlogp']))
-    ok_(isinstance(info['csid'], int))
-    ok_(all(isinstance(info[field], six.text_type) for field in ['molecular_formula', 'smiles', 'inchi', 'inchikey',
-                                                                 'common_name']))
+    assert all(field in info for field in [
+        'csid', 'molecular_formula', 'smiles', 'inchi', 'inchikey', 'average_mass', 'molecular_weight',
+        'monoisotopic_mass', 'nominal_mass', 'alogp', 'xlogp', 'common_name'
+    ])
+    assert all(isinstance(info[field], float) for field in [
+        'average_mass', 'molecular_weight', 'monoisotopic_mass', 'nominal_mass', 'alogp', 'xlogp'
+    ])
+    assert isinstance(info['csid'], int)
+    assert all(isinstance(info[field], six.text_type) for field in [
+        'molecular_formula', 'smiles', 'inchi', 'inchikey', 'common_name'
+    ])
 
 
 def test_get_extended_compound_info_list():
     """Test get_extended_compound_info_list returns info for a list of CSIDs."""
     info = cs.get_extended_compound_info_list([6543, 1235, 6084])
-    eq_(len(info), 3)
-    ok_(all(field in info[0] for field in ['csid', 'molecular_formula', 'smiles', 'inchi', 'inchikey', 'average_mass',
-                                        'molecular_weight', 'monoisotopic_mass', 'nominal_mass', 'alogp', 'xlogp',
-                                        'common_name']))
-    ok_(all(isinstance(info[0][field], float) for field in ['average_mass', 'molecular_weight', 'monoisotopic_mass',
-                                                         'nominal_mass', 'alogp', 'xlogp']))
-    ok_(isinstance(info[0]['csid'], int))
-    ok_(all(isinstance(info[0][field], six.text_type) for field in ['molecular_formula', 'smiles', 'inchi', 'inchikey',
-                                                                 'common_name']))
+    assert len(info) == 3
+    assert all(field in info[0] for field in [
+        'csid', 'molecular_formula', 'smiles', 'inchi', 'inchikey', 'average_mass', 'molecular_weight',
+        'monoisotopic_mass', 'nominal_mass', 'alogp', 'xlogp', 'common_name'
+    ])
+    assert all(isinstance(info[0][field], float) for field in [
+        'average_mass', 'molecular_weight', 'monoisotopic_mass', 'nominal_mass', 'alogp', 'xlogp'
+    ])
+    assert isinstance(info[0]['csid'], int)
+    assert all(isinstance(info[0][field], six.text_type) for field in [
+        'molecular_formula', 'smiles', 'inchi', 'inchikey', 'common_name'
+    ])
 
 
 def test_get_extended_mol_compound_info_list():
     """Test get_extended_mol_compound_info_list returns info for a list of CSIDs."""
     info = cs.get_extended_mol_compound_info_list([1236], include_external_references=True,
                                                   include_reference_counts=True)
-    eq_(len(info), 1)
-    ok_(all(field in info[0] for field in ['csid', 'molecular_formula', 'smiles', 'inchi', 'inchikey', 'average_mass',
-                                        'molecular_weight', 'monoisotopic_mass', 'nominal_mass', 'alogp', 'xlogp',
-                                        'common_name', 'reference_count', 'datasource_count', 'mol_2d']))
-    ok_(all(isinstance(info[0][field], float) for field in ['average_mass', 'molecular_weight', 'monoisotopic_mass',
-                                                         'nominal_mass', 'alogp', 'xlogp']))
-    ok_(all(isinstance(info[0][field], int) for field in ['csid', 'reference_count', 'datasource_count']))
-    ok_(all(isinstance(info[0][field], six.text_type) for field in ['molecular_formula', 'smiles', 'inchi', 'inchikey',
-                                                                 'common_name', 'mol_2d']))
+    assert len(info) == 1
+    assert all(field in info[0] for field in [
+        'csid', 'molecular_formula', 'smiles', 'inchi', 'inchikey', 'average_mass', 'molecular_weight',
+        'monoisotopic_mass', 'nominal_mass', 'alogp', 'xlogp', 'common_name', 'reference_count', 'datasource_count',
+        'mol_2d'
+    ])
+    assert all(isinstance(info[0][field], float) for field in [
+        'average_mass', 'molecular_weight', 'monoisotopic_mass', 'nominal_mass', 'alogp', 'xlogp'
+    ])
+    assert all(isinstance(info[0][field], int) for field in ['csid', 'reference_count', 'datasource_count'])
+    assert all(isinstance(info[0][field], six.text_type) for field in [
+        'molecular_formula', 'smiles', 'inchi', 'inchikey', 'common_name', 'mol_2d'
+    ])
 
 
 def test_get_extended_mol_compound_info_list_dimensions():
     """Test get_extended_mol_compound_info_list returns 2D/3D/both MOL."""
     info = cs.get_extended_mol_compound_info_list([1236], mol_type=MOL2D)
-    ok_('mol_2d' in info[0])
+    assert 'mol_2d' in info[0]
     info = cs.get_extended_mol_compound_info_list([1236], mol_type=MOL3D)
-    ok_('mol_3d' in info[0])
+    assert 'mol_3d' in info[0]
     info = cs.get_extended_mol_compound_info_list([1236], mol_type=BOTH)
-    ok_('mol_2d' in info[0])
-    ok_('mol_3d' in info[0])
+    assert 'mol_2d' in info[0]
+    assert 'mol_3d' in info[0]
 
 
 def test_get_record_mol():
     """Test get_record_mol returns a MOL file."""
     mol = cs.get_record_mol(6084)
-    ok_('V2000' in mol)
-    ok_('M  END' in mol)
+    assert 'V2000' in mol
+    assert 'M  END' in mol
 
 
 def test_simple_search_by_formula():
     """Test simple_search_by_formula returns a list of CSIDs."""
-    eq_([c.csid for c in cs.simple_search_by_formula('C2H6')], [6084])
+    assert [c.csid for c in cs.simple_search_by_formula('C2H6')] == [6084]
 
 
 def test_simple_search_by_mass():
     """Test simple_search_by_mass returns a list of CSIDs."""
     csids = [c.csid for c in cs.simple_search_by_mass(17, 0.1)]
-    ok_(len(csids) > 8)
+    assert len(csids) > 8
 
 
 # Search
@@ -136,20 +145,20 @@ def test_simple_search_by_mass():
 def test_async_simple_search():
     """Test async_simple_search returns a transaction ID."""
     rid = cs.async_simple_search('benzene')
-    ok_(re.compile(r'[a-f0-9\-]{20,50}').search(rid))
+    assert re.compile(r'[a-f0-9\-]{20,50}').search(rid)
 
 
 def test_async_simple_search_ordered():
     """Test async_simple_search returns a transaction ID."""
     rid = cs.async_simple_search_ordered('glucose')
-    ok_(re.compile(r'[a-f0-9\-]{20,50}').search(rid))
+    assert re.compile(r'[a-f0-9\-]{20,50}').search(rid)
 
 
 def test_get_async_search_status():
     """Test get_async_search_status returns the status for a transaction ID."""
     rid = cs.async_simple_search('benzene')
     status = cs.get_async_search_status(rid)
-    ok_(status in {'Unknown', 'Created', 'Scheduled', 'Processing', 'Suspended', 'PartialResultReady', 'ResultReady'})
+    assert status in {'Unknown', 'Created', 'Scheduled', 'Processing', 'Suspended', 'PartialResultReady', 'ResultReady'}
 
 
 def test_get_async_search_status_and_count():
@@ -159,8 +168,8 @@ def test_get_async_search_status_and_count():
         status = cs.get_async_search_status_and_count(rid)
         if status['status'] in {'Created', 'Scheduled', 'Processing'}:
             continue
-        eq_(status['count'], 1)
-        eq_(status['message'], 'Found by approved synonym')
+        assert status['count'] == 1
+        assert status['message'] == 'Found by approved synonym'
         break
 
 
@@ -171,7 +180,7 @@ def test_get_async_search_result():
         status = cs.get_async_search_status(rid)
         if status in {'Created', 'Scheduled', 'Processing'}:
             continue
-        eq_([c.csid for c in cs.get_async_search_result(rid)], [236])
+        assert [c.csid for c in cs.get_async_search_result(rid)] == [236]
         break
 
 
@@ -182,30 +191,30 @@ def test_get_async_search_result_part():
         status = cs.get_async_search_status(rid)
         if status in {'Created', 'Scheduled', 'Processing'}:
             continue
-        ok_(len(cs.get_async_search_result_part(rid)) > 6)
-        ok_(len(cs.get_async_search_result_part(rid, start=2)) > 2)
-        eq_(len(cs.get_async_search_result_part(rid, start=2, count=2)), 2)
-        ok_(len(cs.get_async_search_result_part(rid, start=2, count=99)) > 2)
+        assert len(cs.get_async_search_result_part(rid)) > 6
+        assert len(cs.get_async_search_result_part(rid, start=2)) > 2
+        assert len(cs.get_async_search_result_part(rid, start=2, count=2)) == 2
+        assert len(cs.get_async_search_result_part(rid, start=2, count=99)) > 2
         break
 
 
 def test_get_compound_info():
     """Test get_compound_info returns info for a CSID."""
     info = cs.get_compound_info(263)
-    ok_(all(field in info for field in ['csid', 'smiles', 'inchi', 'inchikey']))
-    ok_(isinstance(info['csid'], int))
-    ok_(all(isinstance(info[field], six.text_type) for field in ['smiles', 'inchi', 'inchikey']))
+    assert all(field in info for field in ['csid', 'smiles', 'inchi', 'inchikey'])
+    assert isinstance(info['csid'], int)
+    assert all(isinstance(info[field], six.text_type) for field in ['smiles', 'inchi', 'inchikey'])
 
 
 def test_get_compound_thumbnail():
     """Test get_compound_thumbnail returns image data for a CSID."""
     img = cs.get_compound_thumbnail(263)
-    eq_(img[:8], b'\x89PNG\x0d\x0a\x1a\x0a')  # PNG magic number
+    assert img[:8] == b'\x89PNG\x0d\x0a\x1a\x0a'  # PNG magic number
 
 
 def test_simple_search():
     """Test simple_search returns a list of CSIDs."""
-    ok_(all(csid in [c.csid for c in cs.simple_search('glucose')] for csid in [5589, 58238, 71358, 96749, 9312824, 9484839]))
+    assert all(csid in [c.csid for c in cs.simple_search('glucose')] for csid in [5589, 58238, 71358, 96749, 9312824, 9484839])
 
 
 # Spectra
@@ -221,27 +230,27 @@ def test_simple_search():
 def test_get_spectrum_info():
     """Test get_spectrum_info returns info for the given spectrum ID."""
     info = cs.get_spectrum_info(36)
-    eq_(info['spectrum_id'], 36)
-    eq_(info['csid'], 235)
-    eq_(info['spectrum_type'], 'HNMR')
-    eq_(info['file_name'], 'BenzaldehydeHNMR.jdx')
-    eq_(info['submitted_date'], '2007-08-08T20:18:36.593')
+    assert info['spectrum_id'] == 36
+    assert info['csid'] == 235
+    assert info['spectrum_type'] == 'HNMR'
+    assert info['file_name'] == 'BenzaldehydeHNMR.jdx'
+    assert info['submitted_date'] == '2007-08-08T20:18:36.593'
 
 
 def test_get_compound_spectra_info():
     """Test get_compound_spectra_info returns list of spectra info for the given ChemSpider ID."""
     for s in cs.get_compound_spectra_info(2157):
-        ok_(isinstance(s, dict))
-        eq_(s['csid'], 2157)
-        ok_(isinstance(s['spectrum_id'], int))
+        assert isinstance(s, dict)
+        assert s['csid'] == 2157
+        assert isinstance(s['spectrum_id'], int)
 
 
 def test_get_spectra_info_list():
     """Test get_spectra_info_list returns list of spectra info for a list of CSIDs."""
-    eq_(cs.get_spectra_info_list([263]), [])  # No spectra for this compound
+    assert cs.get_spectra_info_list([263]) == []  # No spectra for this compound
     for s in cs.get_spectra_info_list([2157, 6084]):
-        ok_(s['csid'] in [2157, 6084])
-        ok_(isinstance(s['spectrum_id'], int))
+        assert s['csid'] in [2157, 6084]
+        assert isinstance(s['spectrum_id'], int)
 
 
 # InChI
@@ -249,8 +258,8 @@ def test_get_spectra_info_list():
 def test_get_original_mol():
     """Test get_original_mol returns a MOL file."""
     mol = cs.get_original_mol(6084)
-    ok_('V2000' in mol)
-    ok_('M  END' in mol)
+    assert 'V2000' in mol
+    assert 'M  END' in mol
 
 
 # Misc
@@ -259,46 +268,42 @@ def test_construct_api_url():
     """Test construction of API URLs."""
     url = cs.construct_api_url('MassSpecAPI', 'GetExtendedCompoundInfo', csid=2157)
     response = requests.get(url)
-    eq_(response.status_code, 200)
+    assert response.status_code == 200
 
 
 # Errors
 
-@raises(ChemSpiPyAuthError)
 def test_token_needed():
     """Test ChemSpiPyAuthError is raised for certain endpoints if no security_token provided."""
-    cs2.get_extended_compound_info(263)
+    with pytest.raises(ChemSpiPyAuthError):
+        cs2.get_extended_compound_info(263)
 
 
-@raises(ChemSpiPyAuthError)
 def test_invalid_token():
     """Test ChemSpiPyAuthError is raised if a token with invalid format is used."""
-    mf = ChemSpider('abcde1-1346fa-934a').get_compound(2157).molecular_formula
+    with pytest.raises(ChemSpiPyAuthError):
+        mf = ChemSpider('abcde1-1346fa-934a').get_compound(2157).molecular_formula
 
 
-@raises(ChemSpiPyAuthError)
-def test_invalid_token():
+def test_invalid_token2():
     """Test ChemSpiPyAuthError is raised if a fake token with correct format is used."""
-    mf = ChemSpider('a1e22457-c835-1234-b141-347bf12fa31c').get_compound(2157).molecular_formula
+    with pytest.raises(ChemSpiPyAuthError):
+        mf = ChemSpider('a1e22457-c835-1234-b141-347bf12fa31c').get_compound(2157).molecular_formula
 
 
-@raises(ChemSpiPyServerError)
 def test_invalid_rid():
     """Test ChemSpiPyServerError is raised when an invalid transaction ID is used."""
-    cs.get_async_search_status('xxxxxx')
+    with pytest.raises(ChemSpiPyServerError):
+        cs.get_async_search_status('xxxxxx')
 
 
-@raises(ChemSpiPyServerError)
 def test_expired_rid():
     """Test ChemSpiPyServerError is raised when a valid but expired transaction ID is used."""
-    cs.get_async_search_status('1a93ee87-acbe-4caa-bc3b-23c3ff39be0f')
+    with pytest.raises(ChemSpiPyServerError):
+        cs.get_async_search_status('1a93ee87-acbe-4caa-bc3b-23c3ff39be0f')
 
 
-@raises(ChemSpiPyServerError)
 def test_fictional_rid():
     """Test ChemSpiPyServerError is raised when a valid but made up transaction ID is used."""
-    cs.get_async_search_status('1a93ee87-acbe-4caa-bc3b-23c3ff39be0a')
-
-
-if __name__ == '__main__':
-    nose.main()
+    with pytest.raises(ChemSpiPyServerError):
+        cs.get_async_search_status('1a93ee87-acbe-4caa-bc3b-23c3ff39be0a')
