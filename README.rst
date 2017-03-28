@@ -33,7 +33,7 @@ Alternatively, try one of the other `installation options`_.
 Documentation
 -------------
 
-Full documentation is available at http://chemspipy.readthedocs.org.
+Full documentation is available at http://chemspipy.readthedocs.io.
 
 The `general documentation for the ChemSpider API`_ is also a useful resource.
 
@@ -50,7 +50,7 @@ ChemSpiPy is licensed under the `MIT license`_.
 
 This project was originally forked from `ChemSpiPy by Cameron Neylon`_, which has been released into the public domain.
 
-.. _`installation options`: http://chemspipy.readthedocs.org/en/latest/guide/install.html
+.. _`installation options`: http://chemspipy.readthedocs.io/en/latest/guide/install.html
 .. _`source code`: https://github.com/mcs07/ChemSpiPy
 .. _`Issue Tracker`: https://github.com/mcs07/ChemSpiPy/issues
 .. _`MIT license`: https://github.com/mcs07/ChemSpiPy/blob/master/LICENSE
