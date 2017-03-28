@@ -26,7 +26,7 @@ Quick guide to contributing
 2. Install the development requirements::
 
     cd chemspipy
-    pip install -r requirements/development.txt
+    pip install -r requirements/dev.txt
 
 3. Create a new branch for your changes::
 
@@ -34,7 +34,7 @@ Quick guide to contributing
 
 4. Make your changes or additions. Ideally add some tests and ensure they pass by running::
 
-    nosetests
+    pytest
 
    The final line of the output should be ``OK``.
 

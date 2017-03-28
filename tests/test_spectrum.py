@@ -16,8 +16,6 @@ import datetime
 import logging
 import os
 
-import nose
-from nose.tools import eq_, ok_, assert_not_equal
 import six
 
 from chemspipy import ChemSpider, Spectrum
@@ -35,50 +33,50 @@ def test_get_all_spectra():
     """Test getting all spectra in ChemSpider."""
     spectra = cs.get_all_spectra()
     for s in spectra:
-        ok_(isinstance(s, Spectrum))
-        ok_(isinstance(s.spectrum_id, int))
+        assert isinstance(s, Spectrum)
+        assert isinstance(s.spectrum_id, int)
 
 
 def test_get_spectrum():
     """Test getting a spectrum by spectrum ID."""
     s = cs.get_spectrum(36)
-    ok_(isinstance(s, Spectrum))
-    eq_(s.spectrum_id, 36)
-    eq_(s.csid, 235)
-    eq_(s.spectrum_type, 'HNMR')
-    eq_(s.file_name, 'BenzaldehydeHNMR.jdx')
-    eq_(s.submitted_date, datetime.datetime(2007, 8, 8, 20, 18, 36, 593000))
+    assert isinstance(s, Spectrum)
+    assert s.spectrum_id == 36
+    assert s.csid == 235
+    assert s.spectrum_type == 'HNMR'
+    assert s.file_name == 'BenzaldehydeHNMR.jdx'
+    assert s.submitted_date, datetime.datetime(2007, 8, 8, 20, 18, 36 == 593000)
 
 
 def test_get_spectra():
     """Test getting multiple spectra by spectrum ID."""
     spectra = cs.get_spectra([36, 65])
-    eq_(len(spectra), 2)
+    assert len(spectra) == 2
     for s in spectra:
-        ok_(isinstance(s, Spectrum))
-        ok_(s.spectrum_id in [36, 65])
-        ok_(s.csid in [235, 172])
+        assert isinstance(s, Spectrum)
+        assert s.spectrum_id in [36, 65]
+        assert s.csid in [235, 172]
 
 
 def test_get_compound_spectra():
     """Test getting all spectra for a specific ChemSpider ID."""
     spectra = cs.get_compound_spectra(2157)
-    ok_(len(spectra) > 0)
+    assert len(spectra) > 0
     for s in spectra:
-        ok_(isinstance(s, Spectrum))
-        ok_(isinstance(s.spectrum_id, int))
-        eq_(s.csid, 2157)
+        assert isinstance(s, Spectrum)
+        assert isinstance(s.spectrum_id, int)
+        assert s.csid == 2157
 
 
 def test_spectrum_init():
     """Test instantiating a Spectrum directly."""
     s = Spectrum(cs, 36)
-    ok_(isinstance(s, Spectrum))
-    eq_(s.spectrum_id, 36)
-    eq_(s.csid, 235)
-    eq_(s.spectrum_type, 'HNMR')
-    eq_(s.file_name, 'BenzaldehydeHNMR.jdx')
-    eq_(s.submitted_date, datetime.datetime(2007, 8, 8, 20, 18, 36, 593000))
+    assert isinstance(s, Spectrum)
+    assert s.spectrum_id == 36
+    assert s.csid == 235
+    assert s.spectrum_type == 'HNMR'
+    assert s.file_name == 'BenzaldehydeHNMR.jdx'
+    assert s.submitted_date, datetime.datetime(2007, 8, 8, 20, 18, 36 == 593000)
 
 
 def test_spectrum_equality():
@@ -86,57 +84,53 @@ def test_spectrum_equality():
     s1 = cs.get_spectrum(65)
     s2 = cs.get_spectrum(87)
     s3 = cs.get_spectrum(87)
-    assert_not_equal(s1, s2)
-    eq_(s2, s3)
+    assert s1 != s2
+    assert s2 == s3
 
 
 def test_spectrum_repr():
     """Test Spectrum object repr."""
-    eq_(repr(cs.get_spectrum(65)), 'Spectrum(65)')
+    assert repr(cs.get_spectrum(65)) == 'Spectrum(65)'
 
 
 def test_comments():
     """Test retrieving comments about a spectrum."""
     s = cs.get_spectrum(36)
-    ok_(isinstance(s.comments, six.text_type))
-    ok_('Benzaldehyde' in s.comments)
+    assert isinstance(s.comments, six.text_type)
+    assert 'Benzaldehyde' in s.comments
 
 
 def test_no_comments():
     """Test spectrum with no comments."""
     s = cs.get_spectrum(87)
-    eq_(s.comments, None)
+    assert s.comments is None
 
 
 def test_original_url():
     """Test retrieving original_url for spectrum."""
     s = cs.get_spectrum(65)
-    ok_(isinstance(s.original_url, six.text_type))
-    ok_('http://' in s.original_url)
+    assert isinstance(s.original_url, six.text_type)
+    assert 'http://' in s.original_url
 
 
 def test_no_original_url():
     """Test spectrum with no original_url."""
     s = cs.get_spectrum(36)
-    eq_(s.original_url, None)
+    assert s.original_url is None
 
 
 def test_url():
     """Test retrieving spectrum url."""
     s = cs.get_spectrum(3558)
-    eq_(s.url, 'https://www.chemspider.com/FilesHandler.ashx?type=blob&disp=1&id=3558')
+    assert s.url == 'https://www.chemspider.com/FilesHandler.ashx?type=blob&disp=1&id=3558'
     for compound in cs.search('Aspirin'):
         for spectrum in compound.spectra:
-            ok_(spectrum.url.startswith('https://www.chemspider.com/FilesHandler.ashx?type=blob&disp=1&id='))
+            assert spectrum.url.startswith('https://www.chemspider.com/FilesHandler.ashx?type=blob&disp=1&id=')
 
 
 def test_data():
     """Test downloading spectrum."""
     s = cs.get_spectrum(3558)
-    ok_('JCAMP-DX' in s.data)
-    ok_('NMR SPECTRUM' in s.data)
-    ok_(len(s.data) > 500)
-
-
-if __name__ == '__main__':
-    nose.main()
+    assert 'JCAMP-DX' in s.data
+    assert 'NMR SPECTRUM' in s.data
+    assert len(s.data) > 500
