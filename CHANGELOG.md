@@ -1,8 +1,7 @@
 # Change Log
 
-## [Unreleased](https://github.com/mcs07/ChemSpiPy/releases/tag/HEAD)
-
-[Full Changelog](https://github.com/mcs07/ChemSpiPy/compare/v1.0.4...HEAD)
+## [v1.0.5](https://github.com/mcs07/ChemSpiPy/releases/tag/v1.0.5) (2017-03-29)
+[Full Changelog](https://github.com/mcs07/ChemSpiPy/compare/v1.0.4...v1.0.5)
 
 **Closed issues:**
 
