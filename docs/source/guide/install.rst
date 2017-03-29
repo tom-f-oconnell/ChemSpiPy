@@ -27,8 +27,8 @@ Option 2: Download the latest release
 
 Alternatively, `download the latest release`_ manually and install yourself::
 
-    tar -xzvf ChemSpiPy-1.0.4.tar.gz
-    cd ChemSpiPy-1.0.4
+    tar -xzvf ChemSpiPy-1.0.5.tar.gz
+    cd ChemSpiPy-1.0.5
     python setup.py install
 
 The setup.py command will install ChemSpiPy in your `site-packages` folder so it is automatically available to all your
