@@ -259,15 +259,6 @@ def test_get_original_mol():
     assert 'M  END' in mol
 
 
-# Misc
-
-def test_construct_api_url():
-    """Test construction of API URLs."""
-    url = cs.construct_api_url('MassSpecAPI', 'GetExtendedCompoundInfo', csid=2157)
-    response = requests.get(url)
-    assert response.status_code == 200
-
-
 # Errors
 
 

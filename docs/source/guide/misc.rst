@@ -3,14 +3,6 @@
 Miscellaneous
 =============
 
-Constructing API URLs
----------------------
-
-See the `ChemSpider API documentation`_ for more details.
-
-    >>> cs.construct_api_url('MassSpec', 'GetExtendedCompoundInfo', csid='2157')
-    u'http://www.chemspider.com/MassSpec.asmx/GetExtendedCompoundInfo?csid=2157'
-
 Data sources
 ------------
 

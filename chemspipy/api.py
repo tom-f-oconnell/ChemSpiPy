@@ -187,20 +187,6 @@ class BaseChemSpider(object):
             raise ChemSpiPyParseError('Unable to parse XML response: %s' % e)
         return tree
 
-    def construct_api_url(self, api, endpoint, **params):
-        """Construct a Chemspider API url, encoded, with parameters as a GET querystring.
-
-        :param string api: The specific ChemSpider API to call (MassSpecAPI, Search, Spectra, InChI).
-        :param string endpoint: ChemSpider API endpoint.
-        :param params: (Optional) Parameters for the ChemSpider endpoint as keyword arguments.
-        :rtype: string
-        """
-        querystring = []
-        for k, v in params.items():
-            querystring.append('%s=%s' % (k, six.moves.urllib.parse.quote_plus(six.text_type(v))))
-        if self.api_key:
-            querystring.append('token=%s' % self.api_key)
-        return '%s/%s.asmx/%s?%s' % (self.api_url, api, endpoint, '&'.join(querystring))
 
 
 def xml_to_dict(t):
