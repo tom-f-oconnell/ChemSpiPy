@@ -5,8 +5,6 @@ test_search
 
 Test the search wrapper.
 
-:copyright: Copyright 2014 by Matt Swain.
-:license: MIT, see LICENSE file for more details.
 """
 
 from __future__ import print_function
