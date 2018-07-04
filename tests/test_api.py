@@ -25,28 +25,27 @@ from chemspipy.errors import ChemSpiPyAuthError, ChemSpiPyServerError
 logging.basicConfig(level=logging.WARN)
 logging.getLogger('chemspipy').setLevel(logging.DEBUG)
 
-# Security token is retrieved from environment variables
-CHEMSPIDER_SECURITY_TOKEN = os.environ['CHEMSPIDER_SECURITY_TOKEN']
+# API key is retrieved from environment variables
+CHEMSPIDER_API_KEY = os.environ['CHEMSPIDER_API_KEY']
 
-# Chemspider instances with and without a security token
-cs = ChemSpider(security_token=CHEMSPIDER_SECURITY_TOKEN)
-cs2 = ChemSpider()
-
-
-def test_no_security_token():
-    """Test ChemSpider can be initialized with no parameters."""
-    assert cs2.security_token == None
+# Chemspider instances with and without an API key
+cs = ChemSpider(CHEMSPIDER_API_KEY)
 
 
-def test_security_token():
-    """Test security token is set correctly when initializing ChemSpider"""
-    assert cs.security_token == CHEMSPIDER_SECURITY_TOKEN
+def test_no_api_key():
+    """Test ChemSpider cannot be initialized with no API key."""
+    with pytest.raises(TypeError):
+        ChemSpider()
+
+
+def test_api_key():
+    """Test API key is set correctly when initializing ChemSpider."""
+    assert cs.api_key == CHEMSPIDER_API_KEY
 
 
 def test_chemspider_repr():
     """Test ChemSpider object repr."""
     assert repr(cs) == 'ChemSpider()'
-    assert repr(cs2) == 'ChemSpider()'
 
 
 # MassSpecAPI
@@ -270,11 +269,6 @@ def test_construct_api_url():
 
 
 # Errors
-
-def test_token_needed():
-    """Test ChemSpiPyAuthError is raised for certain endpoints if no security_token provided."""
-    with pytest.raises(ChemSpiPyAuthError):
-        cs2.get_extended_compound_info(263)
 
 
 def test_invalid_token():

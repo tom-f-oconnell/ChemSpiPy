@@ -21,9 +21,9 @@ from chemspipy import ChemSpider, Compound, Spectrum
 logging.basicConfig(level=logging.WARN, format='%(levelname)s:%(name)s:(%(threadName)-10s):%(message)s')
 logging.getLogger('chemspipy').setLevel(logging.DEBUG)
 
-# Security token is retrieved from environment variables
-CHEMSPIDER_SECURITY_TOKEN = os.environ['CHEMSPIDER_SECURITY_TOKEN']
-cs = ChemSpider(security_token=CHEMSPIDER_SECURITY_TOKEN)
+# API key is retrieved from environment variables
+CHEMSPIDER_API_KEY = os.environ['CHEMSPIDER_API_KEY']
+cs = ChemSpider(CHEMSPIDER_API_KEY)
 
 
 def test_get_compound():

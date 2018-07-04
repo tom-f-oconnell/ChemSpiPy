@@ -9,7 +9,7 @@ ChemSpiPy
 downloads, depiction and retrieval of chemical properties. Here's a quick peek::
 
     >>> from chemspipy import ChemSpider
-    >>> cs = ChemSpider('<YOUR-SECURITY-TOKEN>')
+    >>> cs = ChemSpider('<YOUR-API-KEY>')
     >>> c1 = cs.get_compound(236)  # Specify compound by ChemSpider ID
     >>> c2 = cs.search('benzene')  # Search using name, SMILES, InChI, InChIKey, etc.
 

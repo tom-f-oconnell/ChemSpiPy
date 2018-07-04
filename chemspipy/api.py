@@ -131,10 +131,10 @@ FIELDS = {
 
 class BaseChemSpider(object):
 
-    def __init__(self, security_token=None, user_agent=None, api_url=API_URL):
+    def __init__(self, api_key, user_agent=None, api_url=API_URL):
         """
 
-        :param string security_token: (Optional) Your ChemSpider security token.
+        :param string api_key: Your ChemSpider API key.
         :param string user_agent: (Optional) Identify your application to ChemSpider servers.
         :param string api_url: (Optional) Alternative API server. Default https://api.rsc.org/
         """
@@ -142,7 +142,7 @@ class BaseChemSpider(object):
         self.api_url = api_url
         self.http = requests.session()
         self.http.headers['User-Agent'] = user_agent if user_agent else 'ChemSpiPy/%s Python/%s ' % (__version__, sys.version.split()[0])
-        self.security_token = security_token
+        self.api_key = api_key
 
     def request(self, api, endpoint, **params):
         """Construct API request and return the XML response.
@@ -154,17 +154,17 @@ class BaseChemSpider(object):
         """
         url = '%s/%s.asmx/%s' % (self.api_url, api, endpoint)
         log.debug('Request: %s %s', url, params)
-        params['token'] = self.security_token
+        params['token'] = self.api_key
         try:
             response = self.http.post(url, data=params)
         except requests.RequestException as e:
             raise ChemSpiPyError(six.text_type(e))
         if response.status_code == 500:
             if 'Missing parameter: token.' in response.text:
-                raise ChemSpiPyAuthError('Endpoint requires a security token.')
+                raise ChemSpiPyAuthError('Endpoint requires an API key.')
             elif 'Error converting data type nvarchar to uniqueidentifier' in response.text:
                 # Generally when supplying a security token with incorrect format
-                raise ChemSpiPyAuthError('Invalid security token. Did you copy the entire token?')
+                raise ChemSpiPyAuthError('Invalid API key.')
             elif 'Unauthorized web service usage' in response.text:
                 # Fake/incorrect token (but in correct format)
                 raise ChemSpiPyAuthError(response.text)
@@ -193,8 +193,8 @@ class BaseChemSpider(object):
         querystring = []
         for k, v in params.items():
             querystring.append('%s=%s' % (k, six.moves.urllib.parse.quote_plus(six.text_type(v))))
-        if self.security_token:
-            querystring.append('token=%s' % self.security_token)
+        if self.api_key:
+            querystring.append('token=%s' % self.api_key)
         return '%s/%s.asmx/%s?%s' % (self.api_url, api, endpoint, '&'.join(querystring))
 
 
@@ -580,7 +580,7 @@ class ChemSpider(CustomApi, MassSpecApi, SearchApi, SpectraApi, InchiApi):
     Usage::
 
         >>> from chemspipy import ChemSpider
-        >>> cs = ChemSpider('<YOUR-SECURITY-TOKEN>')
+        >>> cs = ChemSpider('<YOUR-API-KEY>')
 
     """
 

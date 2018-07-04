@@ -23,7 +23,7 @@ class ChemSpiPyParseError(ChemSpiPyError):
 
 
 class ChemSpiPyAuthError(ChemSpiPyError):
-    """Raised when the security token doesn't have access to an endpoint."""
+    """Raised when the API key doesn't have access to an endpoint."""
     pass
 
 
