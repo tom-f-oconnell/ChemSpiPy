@@ -224,42 +224,6 @@ def test_simple_search():
     assert all(csid in [c.csid for c in cs.simple_search('glucose')] for csid in [5589, 58238, 71358, 96749, 9312824, 9484839])
 
 
-# Spectra
-
-# This is slow...
-# def test_get_all_spectra_info():
-#     """Test get_all_spectra_info returns all spectra info."""
-#     spectra = cs.get_all_spectra_info()
-#     ok_(len(spectra) > 8000)
-#     ok_('spectrum_id' in spectrum for spectrum in spectra)
-
-
-def test_get_spectrum_info():
-    """Test get_spectrum_info returns info for the given spectrum ID."""
-    info = cs.get_spectrum_info(36)
-    assert info['spectrum_id'] == 36
-    assert info['csid'] == 235
-    assert info['spectrum_type'] == 'HNMR'
-    assert info['file_name'] == 'BenzaldehydeHNMR.jdx'
-    assert info['submitted_date'] == '2007-08-08T20:18:36.593'
-
-
-def test_get_compound_spectra_info():
-    """Test get_compound_spectra_info returns list of spectra info for the given ChemSpider ID."""
-    for s in cs.get_compound_spectra_info(2157):
-        assert isinstance(s, dict)
-        assert s['csid'] == 2157
-        assert isinstance(s['spectrum_id'], int)
-
-
-def test_get_spectra_info_list():
-    """Test get_spectra_info_list returns list of spectra info for a list of CSIDs."""
-    assert cs.get_spectra_info_list([263]) == []  # No spectra for this compound
-    for s in cs.get_spectra_info_list([2157, 6084]):
-        assert s['csid'] in [2157, 6084]
-        assert isinstance(s['spectrum_id'], int)
-
-
 # InChI
 
 def test_get_original_mol():

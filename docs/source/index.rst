@@ -21,7 +21,6 @@ Features
 - Get identifiers and calculated properties for any compound record in ChemSpider.
 - Download compound records as a MOL file with 2D or 3D coordinates.
 - Get a 2D compound depiction as a PNG image.
-- Retrieve all available spectral information for a specific compound.
 - Complete interface to every endpoint of the ChemSpider Web APIs.
 - Supports Python versions 2.7 – 3.4.
 
@@ -38,7 +37,6 @@ A step-by-step guide to getting started with ChemSpiPy.
    guide/gettingstarted
    guide/compound
    guide/searching
-   guide/spectra
    guide/misc
    guide/advanced
    guide/contributing

@@ -15,7 +15,7 @@ import os
 
 import requests
 
-from chemspipy import ChemSpider, Compound, Spectrum
+from chemspipy import ChemSpider, Compound
 
 
 logging.basicConfig(level=logging.WARN, format='%(levelname)s:%(name)s:(%(threadName)-10s):%(message)s')
@@ -155,14 +155,3 @@ def test_image():
     """Test Compound property image."""
     compound = cs.get_compound(2157)
     assert compound.image[:8] == b'\x89PNG\x0d\x0a\x1a\x0a'  # PNG magic number
-
-
-def test_spectra():
-    """Test Compound property spectra."""
-    compound = cs.get_compound(2157)
-    for s in compound.spectra:
-        assert isinstance(s, Spectrum)
-        assert s.csid == 2157
-        assert isinstance(s.spectrum_id, int)
-    compound = cs.get_compound(263)
-    assert compound.spectra == []
