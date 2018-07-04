@@ -48,6 +48,15 @@ def test_chemspider_repr():
     assert repr(cs) == 'ChemSpider()'
 
 
+# Lookups
+
+def test_get_datasources():
+    """Test get_datasources returns the list of ChemSpider data sources."""
+    datasources = cs.get_datasources()
+    print(datasources)
+    assert all(source in datasources for source in ['Wikipedia', 'ZINC', 'PubChem'])
+
+
 # MassSpecAPI
 
 def test_get_databases():

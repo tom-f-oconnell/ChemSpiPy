@@ -219,6 +219,22 @@ def xml_to_dict(t):
     return d
 
 
+class LookupsApi(BaseChemSpider):
+    """"""
+
+    def get_datasources(self):
+        """Get the list of datasources in ChemSpider.
+
+        Many other endpoints let you restrict which sources are used to lookup the requested query. Restricting the
+        sources makes queries faster.
+
+        :return: List of datasources.
+        :rtype: list[string]
+        """
+        response = self.get(api='compounds', namespace='lookups', endpoint='datasources')
+        return response['dataSources']
+
+
 class MassSpecApi(BaseChemSpider):
 
     def get_databases(self):
@@ -580,7 +596,7 @@ class CustomApi(BaseChemSpider):
     # TODO: Wrappers for subscriber role asynchronous searches
 
 
-class ChemSpider(CustomApi, MassSpecApi, SearchApi, SpectraApi, InchiApi):
+class ChemSpider(CustomApi, LookupsApi, MassSpecApi, SearchApi, SpectraApi, InchiApi):
     """Provides access to the ChemSpider API.
 
     Usage::
