@@ -61,8 +61,9 @@ def test_get_datasources():
 
 def test_get_databases():
     """Test get_databases returns the list of ChemSpider data sources."""
-    dbs = cs.get_databases()
-    assert all(source in dbs for source in ['Wikipedia', 'ZINC', 'PubChem'])
+    with pytest.warns(DeprecationWarning):
+        dbs = cs.get_databases()
+        assert all(source in dbs for source in ['Wikipedia', 'ZINC', 'PubChem'])
 
 
 def test_get_extended_compound_info():

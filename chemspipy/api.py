@@ -239,8 +239,8 @@ class MassSpecApi(BaseChemSpider):
 
     def get_databases(self):
         """Get the list of datasources in ChemSpider."""
-        response = self.request('MassSpecApi', 'GetDatabases')
-        return [el.text for el in response]
+        warnings.warn('Use get_datasources instead of get_databases.', DeprecationWarning)
+        return self.get_datasources()
 
     def get_extended_compound_info(self, csid):
         """Get extended record details for a CSID. Security token is required.
