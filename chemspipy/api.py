@@ -36,7 +36,10 @@ from .search import Results
 log = logging.getLogger(__name__)
 
 
+#: Default API URL.
 API_URL = 'https://api.rsc.org/'
+#: Default API version.
+API_VERSION = 'v1'
 
 #: 2D coordinate dimensions
 MOL2D = '2d'
@@ -131,18 +134,20 @@ FIELDS = {
 
 class BaseChemSpider(object):
 
-    def __init__(self, api_key, user_agent=None, api_url=API_URL):
+    def __init__(self, api_key, user_agent=None, api_url=API_URL, api_version=API_VERSION):
         """
 
         :param string api_key: Your ChemSpider API key.
         :param string user_agent: (Optional) Identify your application to ChemSpider servers.
-        :param string api_url: (Optional) Alternative API server. Default https://api.rsc.org/
+        :param string api_url: (Optional) API server. Default https://api.rsc.org/.
+        :param string api_version: (Optional) API version. Default v1.
         """
         log.debug('Initializing ChemSpider')
         self.api_url = api_url
         self.http = requests.session()
         self.http.headers['User-Agent'] = user_agent if user_agent else 'ChemSpiPy/%s Python/%s ' % (__version__, sys.version.split()[0])
         self.api_key = api_key
+        self.api_version = api_version
 
     def request(self, api, endpoint, **params):
         """Construct API request and return the XML response.
