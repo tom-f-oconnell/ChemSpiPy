@@ -15,20 +15,10 @@ import logging
 import sys
 import warnings
 
-try:
-    from lxml import etree
-except ImportError:
-    try:
-        import xml.etree.cElementTree as etree
-    except ImportError:
-        import xml.etree.ElementTree as etree
-
 import requests
 import six
 
-from . import __version__
-from .errors import ChemSpiPyError, ChemSpiPyParseError, ChemSpiPyAuthError, ChemSpiPyServerError
-from .errors import ChemSpiPyNotFoundError
+from . import __version__, errors
 from .objects import Compound, Spectrum
 from .search import Results
 
@@ -37,7 +27,7 @@ log = logging.getLogger(__name__)
 
 
 #: Default API URL.
-API_URL = 'https://api.rsc.org/'
+API_URL = 'https://api.rsc.org'
 #: Default API version.
 API_VERSION = 'v1'
 
@@ -139,54 +129,79 @@ class BaseChemSpider(object):
 
         :param string api_key: Your ChemSpider API key.
         :param string user_agent: (Optional) Identify your application to ChemSpider servers.
-        :param string api_url: (Optional) API server. Default https://api.rsc.org/.
+        :param string api_url: (Optional) API server. Default https://api.rsc.org.
         :param string api_version: (Optional) API version. Default v1.
         """
         log.debug('Initializing ChemSpider')
         self.api_url = api_url
         self.http = requests.session()
-        self.http.headers['User-Agent'] = user_agent if user_agent else 'ChemSpiPy/%s Python/%s ' % (__version__, sys.version.split()[0])
+        self.http.headers['User-Agent'] = user_agent if user_agent else 'ChemSpiPy/{} Python/{} '.format(__version__, sys.version.split()[0])
         self.api_key = api_key
         self.api_version = api_version
 
-    def request(self, api, endpoint, **params):
-        """Construct API request and return the XML response.
+    def request(self, method, api, namespace, endpoint, params=None, json=None):
+        """Make a request to the ChemSpider API.
 
-        :param string api: The specific ChemSpider API to call (MassSpec, Search, Spectra, InChI).
-        :param string endpoint: ChemSpider API endpoint.
-        :param params: (Optional) Parameters for the ChemSpider endpoint as keyword arguments.
-        :rtype: xml tree
+        :param string method: HTTP method.
+        :param string api: Top-level API, e.g. compounds.
+        :param string namespace: API namespace, e.g. filter, lookups, records, or tools.
+        :param string endpoint: Web service endpoint URL.
+        :param dict params: Query parameters to add to the URL.
+        :param dict json: JSON data to send in the request body.
+        :return: Web Service response JSON.
+        :rtype: dict
         """
-        url = '%s/%s.asmx/%s' % (self.api_url, api, endpoint)
-        log.debug('Request: %s %s', url, params)
-        params['token'] = self.api_key
-        try:
-            response = self.http.post(url, data=params)
-        except requests.RequestException as e:
-            raise ChemSpiPyError(six.text_type(e))
-        if response.status_code == 500:
-            if 'Missing parameter: token.' in response.text:
-                raise ChemSpiPyAuthError('Endpoint requires an API key.')
-            elif 'Error converting data type nvarchar to uniqueidentifier' in response.text:
-                # Generally when supplying a security token with incorrect format
-                raise ChemSpiPyAuthError('Invalid API key.')
-            elif 'Unauthorized web service usage' in response.text:
-                # Fake/incorrect token (but in correct format)
-                raise ChemSpiPyAuthError(response.text)
-            elif 'Unable to get record details' in response.text:
-                # Generally when requesting a non-existent CSID
-                raise ChemSpiPyNotFoundError(response.text)
-            elif 'Unable to get records spectra' in response.text:
-                # No spectra for a CSID, shouldn't be an exception
-                return []
-            else:
-                raise ChemSpiPyServerError(response.text)
-        try:
-            tree = etree.fromstring(response.content)
-        except etree.ParseError as e:
-            raise ChemSpiPyParseError('Unable to parse XML response: %s' % e)
-        return tree
+        # Construct request URL
+        url = '{}/{}/{}/{}/{}'.format(self.api_url, api, self.api_version, namespace, endpoint)
 
+        # Set apikey header
+        headers = {'apikey': self.api_key}
+
+        log.debug('{} : {} : {} : {}'.format(url, headers, params, json))
+
+        # Make request
+        r = self.http.request(method, url, params=params, json=json, headers=headers)
+
+        # Raise exception for HTTP errors
+        if not r.ok:
+            err = {
+                400: errors.ChemSpiPyBadRequestError,
+                401: errors.ChemSpiPyAuthError,
+                404: errors.ChemSpiPyNotFoundError,
+                405: errors.ChemSpiPyMethodError,
+                413: errors.ChemSpiPyPayloadError,
+                429: errors.ChemSpiPyRateError,
+                500: errors.ChemSpiPyServerError,
+                503: errors.ChemSpiPyUnavailableError
+            }.get(r.status_code, errors.ChemSpiPyHTTPError)
+            raise err(message=r.reason, http_code=r.status_code)
+
+        log.debug('Request duration: {}'.format(r.elapsed))
+        return r.json()
+
+    def get(self, api, namespace, endpoint, params=None):
+        """Convenience method for making GET requests.
+
+        :param string api: Top-level API, e.g. compounds.
+        :param string namespace: API namespace, e.g. filter, lookups, records, or tools.
+        :param string endpoint: Web service endpoint URL.
+        :param dict params: Query parameters to add to the URL.
+        :return: Web Service response JSON.
+        :rtype: dict
+        """
+        return self.request('GET', api=api, namespace=namespace, endpoint=endpoint, params=params)
+
+    def post(self, api, namespace, endpoint, json=None):
+        """Convenience method for making POST requests.
+
+        :param string api: Top-level API, e.g. compounds.
+        :param string namespace: API namespace, e.g. filter, lookups, records, or tools.
+        :param string endpoint: Web service endpoint URL.
+        :param dict json: JSON data to send in the request body.
+        :return: Web Service response content.
+        :rtype: dict or string
+        """
+        return self.request('POST', api=api, namespace=namespace, endpoint=endpoint, json=json)
 
 
 def xml_to_dict(t):
