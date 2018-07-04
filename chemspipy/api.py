@@ -37,6 +37,9 @@ from .search import Results
 
 log = logging.getLogger(__name__)
 
+
+API_URL = 'https://api.rsc.org/'
+
 #: 2D coordinate dimensions
 MOL2D = '2d'
 #: 3D coordinate dimensions
@@ -130,15 +133,15 @@ FIELDS = {
 
 class BaseChemSpider(object):
 
-    def __init__(self, security_token=None, user_agent=None, api_url=None):
+    def __init__(self, security_token=None, user_agent=None, api_url=API_URL):
         """
 
         :param string security_token: (Optional) Your ChemSpider security token.
         :param string user_agent: (Optional) Identify your application to ChemSpider servers.
-        :param string api_url: (Optional) Alternative API server.
+        :param string api_url: (Optional) Alternative API server. Default https://api.rsc.org/
         """
         log.debug('Initializing ChemSpider')
-        self.api_url = api_url if api_url else 'https://www.chemspider.com'
+        self.api_url = api_url
         self.http = requests.session()
         self.http.headers['User-Agent'] = user_agent if user_agent else 'ChemSpiPy/%s Python/%s ' % (__version__, sys.version.split()[0])
         self.security_token = security_token
