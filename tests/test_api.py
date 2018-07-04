@@ -15,7 +15,6 @@ import os
 import re
 
 import pytest
-import requests
 import six
 
 from chemspipy import ChemSpider, MOL2D, MOL3D, BOTH
@@ -57,6 +56,65 @@ def test_get_datasources():
     assert all(source in datasources for source in ['Wikipedia', 'ZINC', 'PubChem'])
 
 
+# Records
+
+def test_get_details():
+    """Test get_details returns details for a record ID."""
+    info = cs.get_details(6543)
+    assert all(field in info for field in [
+        'id', 'smiles', 'formula', 'averageMass', 'molecularWeight', 'monoisotopicMass', 'nominalMass',
+        'commonName', 'referenceCount', 'dataSourceCount', 'pubMedCount', 'rscCount', 'mol2D'
+    ])
+    assert all(isinstance(info[field], float) for field in [
+        'averageMass', 'molecularWeight', 'monoisotopicMass'
+    ])
+    assert isinstance(info['id'], int)
+    assert all(isinstance(info[field], six.text_type) for field in [
+        'smiles', 'formula', 'commonName', 'mol2D'
+    ])
+
+
+def test_get_details_batch():
+    """Test get_extended_compound_info_list returns info for a list of record IDs."""
+    info = cs.get_details_batch([6543, 1235, 6084])
+    assert len(info) == 3
+    assert all(field in info[0] for field in [
+        'id', 'smiles', 'formula', 'averageMass', 'molecularWeight', 'monoisotopicMass', 'nominalMass',
+        'commonName', 'referenceCount', 'dataSourceCount', 'pubMedCount', 'rscCount', 'mol2D'
+    ])
+    assert all(isinstance(info[0][field], float) for field in [
+        'averageMass', 'molecularWeight', 'monoisotopicMass'
+    ])
+    assert isinstance(info[0]['id'], int)
+    assert all(isinstance(info[0][field], six.text_type) for field in [
+        'smiles', 'formula', 'commonName', 'mol2D'
+    ])
+
+
+def test_get_external_references():
+    """Test get_external_references returns references for a record ID."""
+    refs = cs.get_external_references(125)
+    assert len(refs) > 5
+    for ref in refs:
+        assert 'source' in ref
+        assert 'sourceUrl' in ref
+        assert 'externalId' in ref
+        assert 'externalUrl' in ref
+
+
+def test_get_image():
+    """Test get_image returns image data for a record ID."""
+    img = cs.get_image(263)
+    assert img[:8] == b'\x89PNG\x0d\x0a\x1a\x0a'  # PNG magic number
+
+
+def test_get_mol():
+    """Test get_mol returns a MOLfile for a record ID."""
+    mol = cs.get_mol(6084)
+    assert 'V2000' in mol
+    assert 'M  END' in mol
+
+
 # MassSpecAPI
 
 def test_get_databases():
@@ -68,35 +126,37 @@ def test_get_databases():
 
 def test_get_extended_compound_info():
     """Test get_extended_compound_info returns info for a CSID."""
-    info = cs.get_extended_compound_info(6543)
-    assert all(field in info for field in [
-        'csid', 'molecular_formula', 'smiles', 'inchi', 'inchikey', 'average_mass', 'molecular_weight',
-        'monoisotopic_mass', 'nominal_mass', 'alogp', 'xlogp', 'common_name'
-    ])
-    assert all(isinstance(info[field], float) for field in [
-        'average_mass', 'molecular_weight', 'monoisotopic_mass', 'nominal_mass', 'alogp', 'xlogp'
-    ])
-    assert isinstance(info['csid'], int)
-    assert all(isinstance(info[field], six.text_type) for field in [
-        'molecular_formula', 'smiles', 'inchi', 'inchikey', 'common_name'
-    ])
+    with pytest.warns(DeprecationWarning):
+        info = cs.get_extended_compound_info(6543)
+        assert all(field in info for field in [
+            'id', 'smiles', 'formula', 'averageMass', 'molecularWeight', 'monoisotopicMass', 'nominalMass',
+            'commonName', 'referenceCount', 'dataSourceCount', 'pubMedCount', 'rscCount', 'mol2D'
+        ])
+        assert all(isinstance(info[field], float) for field in [
+            'averageMass', 'molecularWeight', 'monoisotopicMass'
+        ])
+        assert isinstance(info['id'], int)
+        assert all(isinstance(info[field], six.text_type) for field in [
+            'smiles', 'formula', 'commonName', 'mol2D'
+        ])
 
 
 def test_get_extended_compound_info_list():
     """Test get_extended_compound_info_list returns info for a list of CSIDs."""
-    info = cs.get_extended_compound_info_list([6543, 1235, 6084])
-    assert len(info) == 3
-    assert all(field in info[0] for field in [
-        'csid', 'molecular_formula', 'smiles', 'inchi', 'inchikey', 'average_mass', 'molecular_weight',
-        'monoisotopic_mass', 'nominal_mass', 'alogp', 'xlogp', 'common_name'
-    ])
-    assert all(isinstance(info[0][field], float) for field in [
-        'average_mass', 'molecular_weight', 'monoisotopic_mass', 'nominal_mass', 'alogp', 'xlogp'
-    ])
-    assert isinstance(info[0]['csid'], int)
-    assert all(isinstance(info[0][field], six.text_type) for field in [
-        'molecular_formula', 'smiles', 'inchi', 'inchikey', 'common_name'
-    ])
+    with pytest.warns(DeprecationWarning):
+        info = cs.get_extended_compound_info_list([6543, 1235, 6084])
+        assert len(info) == 3
+        assert all(field in info[0] for field in [
+            'id', 'smiles', 'formula', 'averageMass', 'molecularWeight', 'monoisotopicMass', 'nominalMass',
+            'commonName', 'referenceCount', 'dataSourceCount', 'pubMedCount', 'rscCount', 'mol2D'
+        ])
+        assert all(isinstance(info[0][field], float) for field in [
+            'averageMass', 'molecularWeight', 'monoisotopicMass'
+        ])
+        assert isinstance(info[0]['id'], int)
+        assert all(isinstance(info[0][field], six.text_type) for field in [
+            'smiles', 'formula', 'commonName', 'mol2D'
+        ])
 
 
 def test_get_extended_mol_compound_info_list():
@@ -131,9 +191,10 @@ def test_get_extended_mol_compound_info_list_dimensions():
 
 def test_get_record_mol():
     """Test get_record_mol returns a MOL file."""
-    mol = cs.get_record_mol(6084)
-    assert 'V2000' in mol
-    assert 'M  END' in mol
+    with pytest.warns(DeprecationWarning):
+        mol = cs.get_record_mol(6084)
+        assert 'V2000' in mol
+        assert 'M  END' in mol
 
 
 def test_simple_search_by_formula():
@@ -215,8 +276,9 @@ def test_get_compound_info():
 
 def test_get_compound_thumbnail():
     """Test get_compound_thumbnail returns image data for a CSID."""
-    img = cs.get_compound_thumbnail(263)
-    assert img[:8] == b'\x89PNG\x0d\x0a\x1a\x0a'  # PNG magic number
+    with pytest.warns(DeprecationWarning):
+        img = cs.get_compound_thumbnail(263)
+        assert img[:8] == b'\x89PNG\x0d\x0a\x1a\x0a'  # PNG magic number
 
 
 def test_simple_search():

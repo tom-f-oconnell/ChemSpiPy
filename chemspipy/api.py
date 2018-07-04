@@ -235,6 +235,93 @@ class LookupsApi(BaseChemSpider):
         return response['dataSources']
 
 
+class RecordsApi(BaseChemSpider):
+    """"""
+
+    def get_details(self, record_id, fields=None):
+        """Get details for a compound record.
+
+        The available fields are: SMILES, Formula, AverageMass, MolecularWeight, MonoisotopicMass, NominalMass,
+        CommonName, ReferenceCount, DataSourceCount, PubMedCount, RSCCount, Mol2D, Mol3D.
+
+        :param int record_id: Record ID.
+        :param list[string] fields: List of fields to include in the result.
+        :return: Record details.
+        :rtype: dict
+        """
+        # Use all fields if none are specified
+        if fields is None:
+            fields = [
+                'SMILES', 'Formula', 'AverageMass', 'MolecularWeight', 'MonoisotopicMass', 'NominalMass', 'CommonName',
+                'ReferenceCount', 'DataSourceCount', 'PubMedCount', 'RSCCount', 'Mol2D', 'Mol3D'
+            ]
+        params = {'fields': ','.join(fields)}
+        endpoint = '{}/details'.format(record_id)
+        response = self.get(api='compounds', namespace='records', endpoint=endpoint, params=params)
+        return response
+
+    def get_details_batch(self, record_ids, fields=None):
+        """Get details for a list of compound records.
+
+        The available fields are: SMILES, Formula, AverageMass, MolecularWeight, MonoisotopicMass, NominalMass,
+        CommonName, ReferenceCount, DataSourceCount, PubMedCount, RSCCount, Mol2D, Mol3D.
+
+        :param list[int] record_ids: List of record IDs (up to 100).
+        :param list[string] fields: List of fields to include in the results.
+        :return: List of record details.
+        :rtype: list[dict]
+        """
+        # Use all fields if none are specified
+        if fields is None:
+            fields = [
+                'SMILES', 'Formula', 'AverageMass', 'MolecularWeight', 'MonoisotopicMass', 'NominalMass', 'CommonName',
+                'ReferenceCount', 'DataSourceCount', 'PubMedCount', 'RSCCount', 'Mol2D', 'Mol3D'
+            ]
+        json = {'recordIds': record_ids, 'fields': fields}
+        response = self.post(api='compounds', namespace='records', endpoint='batch', json=json)
+        return response['records']
+
+    def get_external_references(self, record_id, datasources=None):
+        """Get external references for a compound record.
+
+        Optionally filter the results by data source. Use :meth:`~chemspipy.api.ChemSpider.get_datasources` to get the
+        available datasources.
+
+        :param int record_id: Record ID.
+        :param list[string] datasources: List of datasources to restrict the results to.
+        :return: External references.
+        :rtype: list[string]
+        """
+        params = {}
+        if datasources is not None:
+            params['dataSources'] = ','.join(datasources)
+        endpoint = '{}/externalreferences'.format(record_id)
+        response = self.get(api='compounds', namespace='records', endpoint=endpoint, params=params)
+        return response['externalReferences']
+
+    def get_image(self, record_id):
+        """Get image for a compound record.
+
+        :param int record_id: Record ID.
+        :return: Image.
+        :rtype: bytes
+        """
+        endpoint = '{}/image'.format(record_id)
+        response = self.get(api='compounds', namespace='records', endpoint=endpoint)
+        return b64decode(response['image'])
+
+    def get_mol(self, record_id):
+        """Get MOLfile for a compound record.
+
+        :param int record_id: Record ID.
+        :return: MOLfile.
+        :rtype: string
+        """
+        endpoint = '{}/mol'.format(record_id)
+        response = self.get(api='compounds', namespace='records', endpoint=endpoint)
+        return response['sdf']
+
+
 class MassSpecApi(BaseChemSpider):
 
     def get_databases(self):
@@ -247,16 +334,16 @@ class MassSpecApi(BaseChemSpider):
 
         :param string|int csid: ChemSpider ID.
         """
-        response = self.request('MassSpecApi', 'GetExtendedCompoundInfo', csid=csid)
-        return xml_to_dict(response)
+        warnings.warn('Use get_details instead of get_extended_compound_info.', DeprecationWarning)
+        return self.get_details(record_id=csid)
 
     def get_extended_compound_info_list(self, csids):
         """Get extended record details for a list of CSIDs. Security token is required.
 
         :param list[string|int] csids: ChemSpider IDs.
         """
-        response = self.request('MassSpecApi', 'GetExtendedCompoundInfoArray', csids=csids)
-        return [xml_to_dict(result) for result in response]
+        warnings.warn('Use get_details_batch instead of get_extended_compound_info.', DeprecationWarning)
+        return self.get_details_batch(record_ids=csids)
 
     def get_extended_mol_compound_info_list(self, csids, mol_type=MOL2D, include_reference_counts=False,
                                             include_external_references=False):
@@ -282,8 +369,8 @@ class MassSpecApi(BaseChemSpider):
         :param string|int csid: ChemSpider ID.
         :param bool calc3d: Whether 3D coordinates should be calculated before returning record data.
         """
-        response = self.request('MassSpecApi', 'GetRecordMol', csid=csid, calc3d=calc3d)
-        return response.text
+        warnings.warn('Use get_mol instead of get_record_mol.', DeprecationWarning)
+        return self.get_mol(record_id=csid)
 
     def simple_search_by_formula(self, formula):
         """Search ChemSpider by molecular formula.
@@ -436,8 +523,8 @@ class SearchApi(BaseChemSpider):
         :param string|int csid: ChemSpider ID.
         :rtype: bytes
         """
-        response = self.request('Search', 'GetCompoundThumbnail', id=csid)
-        return b64decode(response.text.encode('utf-8'))
+        warnings.warn('Use get_image instead of get_compound_thumbnail.', DeprecationWarning)
+        return self.get_image(record_id=csid)
 
     def simple_search(self, query):
         """Search ChemSpider with arbitrary query.
@@ -518,7 +605,7 @@ class CustomApi(BaseChemSpider):
     # TODO: Wrappers for subscriber role asynchronous searches
 
 
-class ChemSpider(CustomApi, LookupsApi, MassSpecApi, SearchApi, InchiApi):
+class ChemSpider(CustomApi, LookupsApi, RecordsApi, MassSpecApi, SearchApi, InchiApi):
     """Provides access to the ChemSpider API.
 
     Usage::
