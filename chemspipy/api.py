@@ -381,7 +381,7 @@ class MassSpecApi(BaseChemSpider):
         :returns: A list of Compounds.
         :rtype: list[:class:`~chemspipy.Compound`]
         """
-        warnings.warn("Use search_by_formula instead of simple_search_by_formula.", DeprecationWarning)
+        warnings.warn('Use search_by_formula instead of simple_search_by_formula.', DeprecationWarning)
         response = self.request('MassSpecApi', 'SearchByFormula2', formula=formula)
         return [Compound(self, el.text) for el in response]
 
@@ -393,7 +393,7 @@ class MassSpecApi(BaseChemSpider):
         :returns: A list of Compounds.
         :rtype: list[:class:`~chemspipy.Compound`]
         """
-        warnings.warn("Use search_by_mass instead of simple_search_by_mass.", DeprecationWarning)
+        warnings.warn('Use search_by_mass instead of simple_search_by_mass.', DeprecationWarning)
         response = self.request('MassSpecApi', 'SearchByMass2', mass=mass, range=mass_range)
         return [Compound(self, el.text) for el in response]
 
