@@ -103,7 +103,7 @@ def test_get_external_references():
 
 def test_get_image():
     """Test get_image returns image data for a record ID."""
-    img = cs.get_image(263)
+    img = cs.get_image(123)
     assert img[:8] == b'\x89PNG\x0d\x0a\x1a\x0a'  # PNG magic number
 
 
@@ -277,7 +277,7 @@ def test_get_compound_info():
 def test_get_compound_thumbnail():
     """Test get_compound_thumbnail returns image data for a CSID."""
     with pytest.warns(DeprecationWarning):
-        img = cs.get_compound_thumbnail(263)
+        img = cs.get_compound_thumbnail(123)
         assert img[:8] == b'\x89PNG\x0d\x0a\x1a\x0a'  # PNG magic number
 
 
