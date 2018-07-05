@@ -267,10 +267,11 @@ def test_get_async_search_result_part():
 
 def test_get_compound_info():
     """Test get_compound_info returns info for a CSID."""
-    info = cs.get_compound_info(263)
-    assert all(field in info for field in ['csid', 'smiles', 'inchi', 'inchikey'])
-    assert isinstance(info['csid'], int)
-    assert all(isinstance(info[field], six.text_type) for field in ['smiles', 'inchi', 'inchikey'])
+    with pytest.warns(DeprecationWarning):
+        info = cs.get_compound_info(123)
+        assert all(field in info for field in ['id', 'smiles'])
+        assert isinstance(info['id'], int)
+        assert isinstance(info['smiles'], six.text_type)
 
 
 def test_get_compound_thumbnail():

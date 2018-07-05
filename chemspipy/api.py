@@ -525,8 +525,8 @@ class SearchApi(BaseChemSpider):
         :param string|int csid: ChemSpider ID.
         :rtype: dict
         """
-        response = self.request('Search', 'GetCompoundInfo', csid=csid)
-        return xml_to_dict(response)
+        warnings.warn('Use get_details instead of get_compound_info.', DeprecationWarning)
+        return self.get_details(record_id=csid)
 
     def get_compound_thumbnail(self, csid):
         """Get PNG image as binary data.
