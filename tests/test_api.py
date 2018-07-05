@@ -17,8 +17,7 @@ import re
 import pytest
 import six
 
-from chemspipy import ChemSpider, MOL2D, MOL3D, BOTH
-from chemspipy.errors import ChemSpiPyAuthError, ChemSpiPyServerError
+from chemspipy import ChemSpider, errors
 
 
 logging.basicConfig(level=logging.WARN)
@@ -289,31 +288,31 @@ def test_simple_search():
 # Errors
 
 
-def test_invalid_token():
+def test_invalid_api_key():
     """Test ChemSpiPyAuthError is raised if a token with invalid format is used."""
-    with pytest.raises(ChemSpiPyAuthError):
+    with pytest.raises(errors.ChemSpiPyAuthError):
         mf = ChemSpider('abcde1-1346fa-934a').get_compound(2157).molecular_formula
 
 
-def test_invalid_token2():
+def test_invalid_api_key2():
     """Test ChemSpiPyAuthError is raised if a fake token with correct format is used."""
-    with pytest.raises(ChemSpiPyAuthError):
-        mf = ChemSpider('a1e22457-c835-1234-b141-347bf12fa31c').get_compound(2157).molecular_formula
+    with pytest.raises(errors.ChemSpiPyAuthError):
+        mf = ChemSpider('6qBA6lrJycPAYTTcajkkaN02brz5S6Ee').get_compound(2157).molecular_formula
 
 
-def test_invalid_rid():
-    """Test ChemSpiPyServerError is raised when an invalid transaction ID is used."""
-    with pytest.raises(ChemSpiPyServerError):
-        cs.get_async_search_status('xxxxxx')
+def test_invalid_query_id():
+    """Test ChemSpiPyBadRequestError is raised when an invalid query ID is used."""
+    with pytest.raises(errors.ChemSpiPyBadRequestError):
+        cs.get_status('xxxxxx')
 
 
-def test_expired_rid():
-    """Test ChemSpiPyServerError is raised when a valid but expired transaction ID is used."""
-    with pytest.raises(ChemSpiPyServerError):
-        cs.get_async_search_status('1a93ee87-acbe-4caa-bc3b-23c3ff39be0f')
+def test_expired_query_id():
+    """Test ChemSpiPyBadRequestError is raised when a valid but expired query ID is used."""
+    with pytest.raises(errors.ChemSpiPyBadRequestError):
+        cs.get_status('1a93ee87-acbe-4caa-bc3b-23c3ff39be0f')
 
 
-def test_fictional_rid():
-    """Test ChemSpiPyServerError is raised when a valid but made up transaction ID is used."""
-    with pytest.raises(ChemSpiPyServerError):
-        cs.get_async_search_status('1a93ee87-acbe-4caa-bc3b-23c3ff39be0a')
+def test_fictional_query_id():
+    """Test ChemSpiPyBadRequestError is raised when a valid but made up query ID is used."""
+    with pytest.raises(errors.ChemSpiPyBadRequestError):
+        cs.get_status('1a93ee87-acbe-4caa-bc3b-23c3ff39be0a')
