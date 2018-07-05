@@ -185,17 +185,6 @@ def test_get_record_mol():
         assert 'M  END' in mol
 
 
-def test_simple_search_by_formula():
-    """Test simple_search_by_formula returns a list of CSIDs."""
-    assert [c.csid for c in cs.simple_search_by_formula('C2H6')] == [6084]
-
-
-def test_simple_search_by_mass():
-    """Test simple_search_by_mass returns a list of CSIDs."""
-    csids = [c.csid for c in cs.simple_search_by_mass(17, 0.1)]
-    assert len(csids) > 8
-
-
 # Search
 
 def test_async_simple_search():

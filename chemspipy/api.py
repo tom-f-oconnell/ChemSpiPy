@@ -406,29 +406,6 @@ class MassSpecApi(BaseChemSpider):
             warnings.warn('calc3d parameter for get_record_mol is no longer supported.', DeprecationWarning)
         return self.get_mol(record_id=csid)
 
-    def simple_search_by_formula(self, formula):
-        """Search ChemSpider by molecular formula.
-
-        :param string formula: Molecular formula
-        :returns: A list of Compounds.
-        :rtype: list[:class:`~chemspipy.Compound`]
-        """
-        warnings.warn('Use search_by_formula instead of simple_search_by_formula.', DeprecationWarning)
-        response = self.request('MassSpecApi', 'SearchByFormula2', formula=formula)
-        return [Compound(self, el.text) for el in response]
-
-    def simple_search_by_mass(self, mass, mass_range):
-        """Search ChemSpider by mass +/- range.
-
-        :param float mass: The mass to search for.
-        :param float mass_range: The +/- mass range to allow.
-        :returns: A list of Compounds.
-        :rtype: list[:class:`~chemspipy.Compound`]
-        """
-        warnings.warn('Use search_by_mass instead of simple_search_by_mass.', DeprecationWarning)
-        response = self.request('MassSpecApi', 'SearchByMass2', mass=mass, range=mass_range)
-        return [Compound(self, el.text) for el in response]
-
 
 class SearchApi(BaseChemSpider):
 
