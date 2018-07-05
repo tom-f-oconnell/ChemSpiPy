@@ -171,7 +171,9 @@ def test_get_extended_mol_compound_info_list():
         assert all(isinstance(info[0][field], float) for field in [
             'averageMass', 'molecularWeight', 'monoisotopicMass'
         ])
-        assert all(isinstance(info[0][field], int) for field in ['csid', 'reference_count', 'datasource_count'])
+        assert all(isinstance(info[0][field], int) for field in [
+            'id', 'referenceCount', 'dataSourceCount', 'pubMedCount', 'rscCount'
+        ])
         assert all(isinstance(info[0][field], six.text_type) for field in [
             'smiles', 'formula', 'commonName', 'mol2D'
         ])
@@ -189,58 +191,67 @@ def test_get_record_mol():
 
 def test_async_simple_search():
     """Test async_simple_search returns a transaction ID."""
-    rid = cs.async_simple_search('benzene')
-    assert re.compile(r'[a-f0-9\-]{20,50}').search(rid)
+    with pytest.warns(DeprecationWarning):
+        rid = cs.async_simple_search('benzene')
+        assert re.compile(r'[a-f0-9\-]{20,50}').search(rid)
 
 
 def test_async_simple_search_ordered():
     """Test async_simple_search returns a transaction ID."""
-    rid = cs.async_simple_search_ordered('glucose')
-    assert re.compile(r'[a-f0-9\-]{20,50}').search(rid)
+    with pytest.warns(DeprecationWarning):
+        rid = cs.async_simple_search_ordered('glucose')
+        assert re.compile(r'[a-f0-9\-]{20,50}').search(rid)
 
 
 def test_get_async_search_status():
     """Test get_async_search_status returns the status for a transaction ID."""
-    rid = cs.async_simple_search('benzene')
-    status = cs.get_async_search_status(rid)
-    assert status in {'Unknown', 'Created', 'Scheduled', 'Processing', 'Suspended', 'PartialResultReady', 'ResultReady'}
+    with pytest.warns(DeprecationWarning):
+        rid = cs.async_simple_search('benzene')
+        status = cs.get_async_search_status(rid)
+        assert status in {
+            'Complete', 'Suspended', 'Failed', 'Not Found', 'Unknown', 'Created', 'Scheduled', 'Processing',
+            'Suspended', 'PartialResultReady', 'ResultReady'
+        }
 
 
 def test_get_async_search_status_and_count():
     """Test get_async_search_status_and_count returns the status for a transaction ID."""
-    rid = cs.async_simple_search('benzene')
-    while True:
-        status = cs.get_async_search_status_and_count(rid)
-        if status['status'] in {'Created', 'Scheduled', 'Processing'}:
-            continue
-        assert status['count'] == 1
-        assert status['message'] == 'Found by approved synonym'
-        break
+    with pytest.warns(DeprecationWarning):
+        rid = cs.async_simple_search('benzene')
+        while True:
+            status = cs.get_async_search_status_and_count(rid)
+            if status['status'] in {'Created', 'Scheduled', 'Processing'}:
+                continue
+            assert status['count'] == 1
+            assert status['message'] == 'Found by approved synonym'
+            break
 
 
 def test_get_async_search_result():
     """Test get_async_search_result returns a list of CSIDs."""
-    rid = cs.async_simple_search('benzene')
-    while True:
-        status = cs.get_async_search_status(rid)
-        if status in {'Created', 'Scheduled', 'Processing'}:
-            continue
-        assert [c.csid for c in cs.get_async_search_result(rid)] == [236]
-        break
+    with pytest.warns(DeprecationWarning):
+        rid = cs.async_simple_search('benzene')
+        while True:
+            status = cs.get_async_search_status(rid)
+            if status in {'Created', 'Scheduled', 'Processing'}:
+                continue
+            assert [c.csid for c in cs.get_async_search_result(rid)] == [236]
+            break
 
 
 def test_get_async_search_result_part():
     """Test get_async_search_result_part returns a list of CSIDs."""
-    rid = cs.async_simple_search('glucose')
-    while True:
-        status = cs.get_async_search_status(rid)
-        if status in {'Created', 'Scheduled', 'Processing'}:
-            continue
-        assert len(cs.get_async_search_result_part(rid)) > 6
-        assert len(cs.get_async_search_result_part(rid, start=2)) > 2
-        assert len(cs.get_async_search_result_part(rid, start=2, count=2)) == 2
-        assert len(cs.get_async_search_result_part(rid, start=2, count=99)) > 2
-        break
+    with pytest.warns(DeprecationWarning):
+        rid = cs.async_simple_search('glucose')
+        while True:
+            status = cs.get_async_search_status(rid)
+            if status in {'Created', 'Scheduled', 'Processing'}:
+                continue
+            assert len(cs.get_async_search_result_part(rid)) > 6
+            assert len(cs.get_async_search_result_part(rid, start=2)) > 2
+            assert len(cs.get_async_search_result_part(rid, start=2, count=2)) == 2
+            assert len(cs.get_async_search_result_part(rid, start=2, count=99)) > 2
+            break
 
 
 def test_get_compound_info():
