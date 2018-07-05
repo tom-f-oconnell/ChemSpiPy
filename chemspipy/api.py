@@ -370,6 +370,8 @@ class MassSpecApi(BaseChemSpider):
         :param bool calc3d: Whether 3D coordinates should be calculated before returning record data.
         """
         warnings.warn('Use get_mol instead of get_record_mol.', DeprecationWarning)
+        if calc3d:
+            warnings.warn('calc3d parameter for get_record_mol is no longer supported.', DeprecationWarning)
         return self.get_mol(record_id=csid)
 
     def simple_search_by_formula(self, formula):
