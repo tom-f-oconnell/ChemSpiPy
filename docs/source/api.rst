@@ -17,7 +17,6 @@ This part of the documentation is automatically generated from the ChemSpiPy sou
    .. automethod:: search(query, order=None, direction=ASCENDING, raise_errors=False)
    .. automethod:: simple_search(query)
    .. automethod:: get_record_mol(csid, calc3d=False)
-   .. automethod:: get_original_mol(csid)
    .. automethod:: get_compound_thumbnail(csid)
    .. automethod:: get_databases()
    .. automethod:: get_compound_info(csid)

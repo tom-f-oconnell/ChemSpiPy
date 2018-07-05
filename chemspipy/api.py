@@ -541,31 +541,6 @@ class SearchApi(BaseChemSpider):
         return [Compound(self, el.text) for el in response]
 
 
-class InchiApi(BaseChemSpider):
-
-    def get_original_mol(self, csid):
-        """Get original submitted MOL file. Security token is required.
-
-        :param string|int csid: ChemSpider ID.
-        """
-        response = self.request('InChI', 'CSIDToMol', csid=csid)
-        return response.text
-
-    # TODO
-    # InChIKeyToCSID - inchi_key - csid
-    # InChIKeyToInChI - inchi_key - InChI
-    # InChIKeyToMol - inchi_key - Mol
-    # InChIToCSID - inchi - csid
-    # InChIToInChIKey - inchi - inchikey
-    # InChIToMol - inchi - mol
-    # InChIToSMILES - inchi - smiles
-    # IsValidInChIKey - inchi_key - bool
-    # MolToInChI - mol - inchi
-    # MolToInChIKey - mol - inchi
-    # ResolveInChIKey - inchi_key, out_format (MOL/SDF/SMILES/InChI) - list of strings
-    # SMILESToInChI - smiles - inchi
-
-
 class CustomApi(BaseChemSpider):
 
     def get_compound(self, csid):
@@ -607,7 +582,7 @@ class CustomApi(BaseChemSpider):
     # TODO: Wrappers for subscriber role asynchronous searches
 
 
-class ChemSpider(CustomApi, LookupsApi, RecordsApi, MassSpecApi, SearchApi, InchiApi):
+class ChemSpider(CustomApi, LookupsApi, RecordsApi, MassSpecApi, SearchApi):
     """Provides access to the ChemSpider API.
 
     Usage::

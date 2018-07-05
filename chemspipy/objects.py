@@ -184,14 +184,6 @@ class Compound(object):
         return self._cs.get_record_mol(self.csid, calc3d=True)
 
     @memoized_property
-    def mol_raw(self):
-        """Return unprocessed MOL file for this Compound.
-
-        :rtype: string
-        """
-        return self._cs.get_original_mol(self.csid)
-
-    @memoized_property
     def image(self):
         """Return a 2D depiction of this Compound.
 
