@@ -286,15 +286,6 @@ def test_simple_search():
     assert all(csid in [c.csid for c in cs.simple_search('glucose')] for csid in [5589, 58238, 71358, 96749, 9312824, 9484839])
 
 
-# InChI
-
-def test_get_original_mol():
-    """Test get_original_mol returns a MOL file."""
-    mol = cs.get_original_mol(6084)
-    assert 'V2000' in mol
-    assert 'M  END' in mol
-
-
 # Errors
 
 
