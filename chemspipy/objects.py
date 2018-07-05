@@ -10,6 +10,8 @@ Objects returned by ChemSpiPy API methods.
 from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
+import warnings
+
 
 from .utils import memoized_property
 
@@ -21,14 +23,14 @@ class Compound(object):
     a compound given its ChemSpider ID. Information is loaded lazily when requested, and cached for future access.
     """
 
-    def __init__(self, cs, csid):
+    def __init__(self, cs, record_id):
         """
 
         :param ChemSpider cs: ``ChemSpider`` session.
-        :param int|string csid: ChemSpider ID.
+        :param int|string record_id: Compound record ID.
         """
         self._cs = cs
-        self._csid = int(csid)
+        self._record_id = int(record_id)
         # TODO: Allow optional initialize  with a record-type response from the API (kwarg or class method from_dict?).
 
     def __eq__(self, other):
@@ -42,26 +44,25 @@ class Compound(object):
         return self.image
 
     @property
+    def record_id(self):
+        """Compound record ID."""
+        return self._record_id
+
+    @property
     def csid(self):
         """ChemSpider ID."""
-        return self._csid
-
-    # TODO: csid setter that clears cached properties?
+        warnings.warn('Use record_id instead of csid.', DeprecationWarning)
+        return self._record_id
 
     @property
     def image_url(self):
         """Return the URL of a PNG image of the 2D chemical structure."""
-        return 'http://www.chemspider.com/ImagesHandler.ashx?id=%s' % self.csid
+        return 'http://www.chemspider.com/ImagesHandler.ashx?id=%s' % self.record_id
 
     @memoized_property
-    def _compound_info(self):
+    def _details(self):
         """Request compound info and cache the result."""
-        return self._cs.get_compound_info(self.csid)
-
-    @memoized_property
-    def _extended_compound_info(self):
-        """Request extended compound info and cache the result."""
-        return self._cs.get_extended_compound_info(self.csid)
+        return self._cs.get_details(self.record_id)
 
     @property
     def molecular_formula(self):
@@ -69,7 +70,7 @@ class Compound(object):
 
         :rtype: string
         """
-        return self._extended_compound_info['molecular_formula']
+        return self._details['formula']
 
     @property
     def smiles(self):
@@ -77,7 +78,9 @@ class Compound(object):
 
         :rtype: string
         """
-        return self._compound_info['smiles']
+        return self._details['smiles']
+
+    # TODO: Convert tool to get inchi?
 
     @property
     def stdinchi(self):
@@ -117,7 +120,7 @@ class Compound(object):
 
         :rtype: float
         """
-        return self._extended_compound_info['average_mass']
+        return self._details['averageMass']
 
     @property
     def molecular_weight(self):
@@ -125,7 +128,7 @@ class Compound(object):
 
         :rtype: float
         """
-        return self._extended_compound_info['molecular_weight']
+        return self._details['molecularWeight']
 
     @property
     def monoisotopic_mass(self):
@@ -133,7 +136,7 @@ class Compound(object):
 
         :rtype: float
         """
-        return self._extended_compound_info['monoisotopic_mass']
+        return self._details['monoisotopicMass']
 
     @property
     def nominal_mass(self):
@@ -141,23 +144,7 @@ class Compound(object):
 
         :rtype: float
         """
-        return self._extended_compound_info['nominal_mass']
-
-    @property
-    def alogp(self):
-        """Return the calculated AlogP for this Compound.
-
-        :rtype: float
-        """
-        return self._extended_compound_info['alogp']
-
-    @property
-    def xlogp(self):
-        """Return the calculated XlogP for this Compound.
-
-        :rtype: float
-        """
-        return self._extended_compound_info['xlogp']
+        return self._details['nominalMass']
 
     @property
     def common_name(self):
@@ -165,7 +152,7 @@ class Compound(object):
 
         :rtype: string
         """
-        return self._extended_compound_info['common_name']
+        return self._details['commonName']
 
     @memoized_property
     def mol_2d(self):
@@ -173,7 +160,7 @@ class Compound(object):
 
         :rtype: string
         """
-        return self._cs.get_record_mol(self.csid, calc3d=False)
+        return self._details['mol2D']
 
     @memoized_property
     def mol_3d(self):
@@ -181,7 +168,7 @@ class Compound(object):
 
         :rtype: string
         """
-        return self._cs.get_record_mol(self.csid, calc3d=True)
+        return self._details['mol3D']
 
     @memoized_property
     def image(self):
@@ -189,4 +176,4 @@ class Compound(object):
 
         :rtype: bytes
         """
-        return self._cs.get_compound_thumbnail(self.csid)
+        return self._cs.get_image(self.record_id)

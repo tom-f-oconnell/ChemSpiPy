@@ -13,6 +13,7 @@ from __future__ import division
 import logging
 import os
 
+import pytest
 import requests
 
 from chemspipy import ChemSpider, Compound
@@ -30,10 +31,14 @@ def test_get_compound():
     """Test getting a compound by ChemSpider ID."""
     compound = cs.get_compound(2157)
     assert isinstance(compound, Compound)
-    assert compound.csid == 2157
+    assert compound.record_id == 2157
+    with pytest.warns(DeprecationWarning):
+        assert compound.csid == 2157
     compound = cs.get_compound('2157')
     assert isinstance(compound, Compound)
-    assert compound.csid == 2157
+    assert compound.record_id == 2157
+    with pytest.warns(DeprecationWarning):
+        assert compound.csid == 2157
 
 
 def test_get_compounds():
@@ -130,13 +135,6 @@ def test_masses():
     assert compound.nominal_mass == 180
 
 
-def test_descriptors():
-    """Test Compound property alogp, xlogp."""
-    compound = cs.get_compound(348191)
-    assert compound.alogp == 0.0
-    assert compound.xlogp == 1.2
-
-
 def test_name():
     """Test Compound property common_name."""
     compound = cs.get_compound(2157)
@@ -148,7 +146,6 @@ def test_molfiles():
     compound = cs.get_compound(2157)
     assert 'V2000' in compound.mol_2d
     assert 'V2000' in compound.mol_3d
-    assert 'V2000' in compound.mol_raw
 
 
 def test_image():
