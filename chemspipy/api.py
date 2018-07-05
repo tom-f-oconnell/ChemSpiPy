@@ -397,36 +397,6 @@ class MassSpecApi(BaseChemSpider):
         response = self.request('MassSpecApi', 'SearchByMass2', mass=mass, range=mass_range)
         return [Compound(self, el.text) for el in response]
 
-    # def get_compressed_records_sdf(self, rid):
-    #     """Get an SDF containing all the results from a search operation.
-    #
-    #     A maximum of 10000 records can be fetched per request. Subscriber role security token is required.
-    #
-    #     Warning: This doesn't work reliably.
-    #
-    #     :param string rid: A transaction ID, returned by an asynchronous search method.
-    #     :returns: SDF containing the requested records.
-    #     :rtype: string
-    #     """
-    #     response = self.request('MassSpecApi', 'GetCompressedRecordsSdf', rid=rid, eComp='eGzip')
-    #     if response.text:
-    #         return zlib.decompress(b64decode(response.text.encode('utf-8')), 16+zlib.MAX_WBITS)
-    #
-    # def get_records_sdf(self, rid):
-    #     """Get an SDF containing all the results from a search operation.
-    #
-    #     A maximum of 10000 records can be fetched per request. Subscriber role security token is required.
-    #
-    #     Warning: This doesn't work reliably.
-    #
-    #     :param string rid: A transaction ID, returned by an asynchronous search method.
-    #     :returns: SDF containing the requested records.
-    #     :rtype: string
-    #     """
-    #     response = self.request('MassSpecApi', 'GetRecordsSdf', rid=rid)
-    #     if response.text:
-    #         return response.text.encode('utf-8')
-
 
 class SearchApi(BaseChemSpider):
 
