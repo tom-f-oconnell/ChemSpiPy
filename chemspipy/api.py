@@ -322,6 +322,41 @@ class RecordsApi(BaseChemSpider):
         return response['sdf']
 
 
+class FilterApi(BaseChemSpider):
+    """"""
+
+    def filter_name(self, name, order_by=None, order_direction=None):
+        """Search by compound name.
+
+        Valid values for orderBy are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
+        pubMedCount, rscCount.
+
+        Valid values for orderDirection are ascending, descending.
+
+        :param string name: Compound name.
+        :param string order_by: What to sort the results by.
+        :param string order_direction: Ascending or descending sort direction for results.
+        :return:
+        """
+        json = {'name': name, 'orderBy': order_by, 'orderDirection': order_direction}
+        response = self.post(api='compounds', namespace='filter', endpoint='name', json=json)
+        return response['queryId']
+
+    def get_results(self, query_id, start=None, count=None):
+        """Get filter results using a query ID that was returned by a previous filter requests.
+
+        :param query_id: Query ID from a previous filter request.
+        :param int start: Zero-based results offset.
+        :param int count: Number of results to return.
+        :return: List of results.
+        :rtype: list[int]
+        """
+        endpoint = '{}/results'.format(query_id)
+        params = {'start': start, 'count': count}
+        response = self.get(api='compounds', namespace='filter', endpoint=endpoint, params=params)
+        return response['sdf']
+
+
 class MassSpecApi(BaseChemSpider):
 
     def get_databases(self):
@@ -465,8 +500,9 @@ class SearchApi(BaseChemSpider):
         :returns: A list of Compounds.
         :rtype: list[:class:`~chemspipy.Compound`]
         """
-        response = self.request('Search', 'GetAsyncSearchResult', rid=rid)
-        return [Compound(self, el.text) for el in response]
+        warnings.warn('Use get_results instead of get_async_search_result.', DeprecationWarning)
+        results = self.get_results(query_id=rid)
+        return [Compound(self, record_id) for record_id in results]
 
     def get_async_search_result_part(self, rid, start=0, count=-1):
         """Get a slice of the results from a asynchronous search operation. Security token is required.
@@ -477,8 +513,11 @@ class SearchApi(BaseChemSpider):
         :returns: A list of Compounds.
         :rtype: list[:class:`~chemspipy.Compound`]
         """
-        response = self.request('Search', 'GetAsyncSearchResultPart', rid=rid, start=start, count=count)
-        return [Compound(self, el.text) for el in response]
+        warnings.warn('Use get_results instead of get_async_search_result_part.', DeprecationWarning)
+        if count == -1:
+            count = None
+        results = self.get_results(query_id=rid, start=start, count=count)
+        return [Compound(self, record_id) for record_id in results]
 
     def get_compound_info(self, csid):
         """Get SMILES, StdInChI and StdInChIKey for a given CSID. Security token is required.
