@@ -160,32 +160,21 @@ def test_get_extended_compound_info_list():
 
 def test_get_extended_mol_compound_info_list():
     """Test get_extended_mol_compound_info_list returns info for a list of CSIDs."""
-    info = cs.get_extended_mol_compound_info_list([1236], include_external_references=True,
-                                                  include_reference_counts=True)
-    assert len(info) == 1
-    assert all(field in info[0] for field in [
-        'csid', 'molecular_formula', 'smiles', 'inchi', 'inchikey', 'average_mass', 'molecular_weight',
-        'monoisotopic_mass', 'nominal_mass', 'alogp', 'xlogp', 'common_name', 'reference_count', 'datasource_count',
-        'mol_2d'
-    ])
-    assert all(isinstance(info[0][field], float) for field in [
-        'average_mass', 'molecular_weight', 'monoisotopic_mass', 'nominal_mass', 'alogp', 'xlogp'
-    ])
-    assert all(isinstance(info[0][field], int) for field in ['csid', 'reference_count', 'datasource_count'])
-    assert all(isinstance(info[0][field], six.text_type) for field in [
-        'molecular_formula', 'smiles', 'inchi', 'inchikey', 'common_name', 'mol_2d'
-    ])
-
-
-def test_get_extended_mol_compound_info_list_dimensions():
-    """Test get_extended_mol_compound_info_list returns 2D/3D/both MOL."""
-    info = cs.get_extended_mol_compound_info_list([1236], mol_type=MOL2D)
-    assert 'mol_2d' in info[0]
-    info = cs.get_extended_mol_compound_info_list([1236], mol_type=MOL3D)
-    assert 'mol_3d' in info[0]
-    info = cs.get_extended_mol_compound_info_list([1236], mol_type=BOTH)
-    assert 'mol_2d' in info[0]
-    assert 'mol_3d' in info[0]
+    with pytest.warns(DeprecationWarning):
+        info = cs.get_extended_mol_compound_info_list([1236], include_external_references=True,
+                                                      include_reference_counts=True)
+        assert len(info) == 1
+        assert all(field in info[0] for field in [
+            'id', 'smiles', 'formula', 'averageMass', 'molecularWeight', 'monoisotopicMass', 'nominalMass',
+            'commonName', 'referenceCount', 'dataSourceCount', 'pubMedCount', 'rscCount', 'mol2D'
+        ])
+        assert all(isinstance(info[0][field], float) for field in [
+            'averageMass', 'molecularWeight', 'monoisotopicMass'
+        ])
+        assert all(isinstance(info[0][field], int) for field in ['csid', 'reference_count', 'datasource_count'])
+        assert all(isinstance(info[0][field], six.text_type) for field in [
+            'smiles', 'formula', 'commonName', 'mol2D'
+        ])
 
 
 def test_get_record_mol():

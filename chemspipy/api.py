@@ -392,11 +392,8 @@ class MassSpecApi(BaseChemSpider):
         :param bool include_reference_counts: Whether to include reference counts.
         :param bool include_external_references: Whether to include external references.
         """
-        response = self.request('MassSpecApi', 'GetExtendedMolCompoundInfoArray', csids=csids,
-                                eMolType=DIMENSIONS.get(mol_type, mol_type),
-                                includeReferenceCounts=include_reference_counts,
-                                includeExternalReferences=include_external_references)
-        return [xml_to_dict(result) for result in response]
+        warnings.warn('Use get_details_batch instead of get_extended_mol_compound_info_list.', DeprecationWarning)
+        return self.get_details_batch(record_ids=csids)
 
     def get_record_mol(self, csid, calc3d=False):
         """Get ChemSpider record in MOL format. Security token is required.
