@@ -293,16 +293,16 @@ def test_invalid_api_key2():
 def test_invalid_query_id():
     """Test ChemSpiPyBadRequestError is raised when an invalid query ID is used."""
     with pytest.raises(errors.ChemSpiPyBadRequestError):
-        cs.get_status('xxxxxx')
+        cs.filter_status('xxxxxx')
 
 
 def test_expired_query_id():
     """Test ChemSpiPyBadRequestError is raised when a valid but expired query ID is used."""
     with pytest.raises(errors.ChemSpiPyBadRequestError):
-        cs.get_status('1a93ee87-acbe-4caa-bc3b-23c3ff39be0f')
+        cs.filter_status('1a93ee87-acbe-4caa-bc3b-23c3ff39be0f')
 
 
 def test_fictional_query_id():
     """Test ChemSpiPyBadRequestError is raised when a valid but made up query ID is used."""
     with pytest.raises(errors.ChemSpiPyBadRequestError):
-        cs.get_status('1a93ee87-acbe-4caa-bc3b-23c3ff39be0a')
+        cs.filter_status('1a93ee87-acbe-4caa-bc3b-23c3ff39be0a')

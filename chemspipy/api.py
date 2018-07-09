@@ -419,7 +419,7 @@ class FilterApi(BaseChemSpider):
         response = self.post(api='compounds', namespace='filter', endpoint='name', json=json)
         return response['queryId']
 
-    def get_status(self, query_id):
+    def filter_status(self, query_id):
         """Get filter status using a query ID that was returned by a previous filter request.
 
         :param query_id: Query ID from a previous filter request.
@@ -430,7 +430,7 @@ class FilterApi(BaseChemSpider):
         response = self.get(api='compounds', namespace='filter', endpoint=endpoint)
         return response
 
-    def get_results(self, query_id, start=None, count=None):
+    def filter_results(self, query_id, start=None, count=None):
         """Get filter results using a query ID that was returned by a previous filter request.
 
         :param query_id: Query ID from a previous filter request.
@@ -540,8 +540,8 @@ class SearchApi(BaseChemSpider):
                   TooManyRecords
         :rtype: string
         """
-        warnings.warn('Use get_status instead of get_async_search_status.', DeprecationWarning)
-        return self.get_status(query_id=rid)['status']
+        warnings.warn('Use filter_status instead of get_async_search_status.', DeprecationWarning)
+        return self.filter_status(query_id=rid)['status']
 
     def get_async_search_status_and_count(self, rid):
         """Check the status of an asynchronous search operation. If ready, a count and message are also returned.
@@ -551,8 +551,8 @@ class SearchApi(BaseChemSpider):
         :param string rid: A transaction ID, returned by an asynchronous search method.
         :rtype: dict
         """
-        warnings.warn('Use get_status instead of get_async_search_status_and_count.', DeprecationWarning)
-        return self.get_status(query_id=rid)
+        warnings.warn('Use filter_status instead of get_async_search_status_and_count.', DeprecationWarning)
+        return self.filter_status(query_id=rid)
 
     def get_async_search_result(self, rid):
         """Get the results from a asynchronous search operation. Security token is required.
@@ -561,8 +561,8 @@ class SearchApi(BaseChemSpider):
         :returns: A list of Compounds.
         :rtype: list[:class:`~chemspipy.Compound`]
         """
-        warnings.warn('Use get_results instead of get_async_search_result.', DeprecationWarning)
-        results = self.get_results(query_id=rid)
+        warnings.warn('Use filter_results instead of get_async_search_result.', DeprecationWarning)
+        results = self.filter_results(query_id=rid)
         return [Compound(self, record_id) for record_id in results]
 
     def get_async_search_result_part(self, rid, start=0, count=-1):
@@ -574,10 +574,10 @@ class SearchApi(BaseChemSpider):
         :returns: A list of Compounds.
         :rtype: list[:class:`~chemspipy.Compound`]
         """
-        warnings.warn('Use get_results instead of get_async_search_result_part.', DeprecationWarning)
+        warnings.warn('Use filter_results instead of get_async_search_result_part.', DeprecationWarning)
         if count == -1:
             count = None
-        results = self.get_results(query_id=rid, start=start, count=count)
+        results = self.filter_results(query_id=rid, start=start, count=count)
         return [Compound(self, record_id) for record_id in results]
 
     def get_compound_info(self, csid):
@@ -607,7 +607,7 @@ class SearchApi(BaseChemSpider):
         :returns: List of :class:`Compounds <chemspipy.Compound>`.
         :rtype: list[:class:`~chemspipy.Compound`]
         """
-        warnings.warn('Use filter_name instead of simple_search.', DeprecationWarning)  
+        warnings.warn('Use filter_name instead of simple_search.', DeprecationWarning)
         response = self.request('Search', 'SimpleSearch', query=query)
         return [Compound(self, el.text) for el in response]
 
