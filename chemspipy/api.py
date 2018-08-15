@@ -815,7 +815,7 @@ class CustomApi(BaseChemSpider):
         """
         return [Compound(self, csid) for csid in csids]
 
-    def search(self, query, order=None, direction=ASCENDING, raise_errors=False):
+    def search(self, query, format='name', order=None, direction=ASCENDING, raise_errors=False):
         """Search ChemSpider for the specified query and return the results. Security token is required.
 
         :param string|int query: Search query.
@@ -826,14 +826,12 @@ class CustomApi(BaseChemSpider):
         :param string direction: (Optional) :data:`~chemspipy.api.ASCENDING` or :data:`~chemspipy.api.DESCENDING`.
         :param bool raise_errors: If True, raise exceptions. If False, store on Results ``exception`` property.
         :return: Search Results list.
-        :rtype: Results
+        :rtype: chemspipy.search.Results
         """
-        if order and direction:
-            return Results(self, self.async_simple_search_ordered, (query, order, direction), raise_errors=raise_errors)
-        else:
-            return Results(self, self.async_simple_search, (query,), raise_errors=raise_errors)
+        # TODO: Use format parameter to choose filter_name, filter_formula, filter_inchi, filter_inchikey, filter_smiles
+        return Results(self, self.filter_name, (query, order, direction), raise_errors=raise_errors)
 
-    # TODO: Wrappers for subscriber role asynchronous searches
+    # TODO: search_element, search_intrinsicproperty, search_mass
 
 
 class ChemSpider(CustomApi, FilterApi, LookupsApi, RecordsApi, ToolsApi, MassSpecApi, SearchApi):
