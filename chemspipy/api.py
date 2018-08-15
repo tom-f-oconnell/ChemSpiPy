@@ -791,9 +791,8 @@ class SearchApi(BaseChemSpider):
         :return: List of :class:`Compounds <chemspipy.Compound>`.
         :rtype: list[:class:`~chemspipy.Compound`]
         """
-        warnings.warn('Use filter_name instead of simple_search.', DeprecationWarning)
-        response = self.request('Search', 'SimpleSearch', query=query)
-        return [Compound(self, el.text) for el in response]
+        warnings.warn('Use search instead of simple_search.', DeprecationWarning)
+        return self.search(query=query)
 
 
 class CustomApi(BaseChemSpider):
