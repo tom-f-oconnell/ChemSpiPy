@@ -52,7 +52,6 @@ def test_chemspider_repr():
 def test_get_datasources():
     """Test get_datasources returns the list of ChemSpider data sources."""
     datasources = cs.get_datasources()
-    print(datasources)
     assert all(source in datasources for source in ['Wikipedia', 'ZINC', 'PubChem'])
 
 
@@ -117,9 +116,32 @@ def test_get_mol():
 
 # Filter
 
+def test_filter_intrinsicproperty_formula():
+    """Test filter_intrinsicproperty returns a list of CSIDs."""
+    qid = cs.filter_intrinsicproperty(formula='C6H6')
+    while True:
+        status = cs.filter_status(qid)
+        if status['status'] in {'Suspended', 'Failed', 'Not Found', 'Complete'}:
+            break
+        time.sleep(1)
+    results = cs.filter_results(qid)
+    assert len(results) > 10
+
+
+def test_filter_intrinsicproperty_mass():
+    """Test filter_intrinsicproperty returns a list of CSIDs."""
+    qid = cs.filter_intrinsicproperty(monoisotopic_mass=500, monoisotopic_mass_range=0.001)
+    while True:
+        status = cs.filter_status(qid)
+        if status['status'] in {'Suspended', 'Failed', 'Not Found', 'Complete'}:
+            break
+        time.sleep(1)
+    results = cs.filter_results(qid)
+    assert len(results) > 10
+
 
 def test_filter_mass():
-    """Test get_async_search_result returns a list of CSIDs."""
+    """Test filter_mass returns a list of CSIDs."""
     qid = cs.filter_mass(500, 0.001)
     while True:
         status = cs.filter_status(qid)

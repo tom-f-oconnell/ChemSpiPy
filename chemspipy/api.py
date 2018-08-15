@@ -406,6 +406,54 @@ class FilterApi(BaseChemSpider):
         response = self.post(api='compounds', namespace='filter', endpoint='inchikey', json=json)
         return response['queryId']
 
+    def filter_intrinsicproperty(self, formula=None, molecular_weight=None, nominal_mass=None, average_mass=None,
+                                 monoisotopic_mass=None, molecular_weight_range=None, nominal_mass_range=None,
+                                 average_mass_range=None, monoisotopic_mass_range=None, complexity=None, isotopic=None,
+                                 order_by=None, order_direction=None):
+        """Search compounds by intrinsic property, such as formula and mass.
+
+        At least one of formula, molecular_weight, nominal_mass, average_mass, monoisotopic_mass must be specified.
+
+        A compound with a complexity of 'multiple' has more than one disconnected system in it or a metal atom or ion.
+
+        Valid values for order_by are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
+        pubMedCount, rscCount.
+
+        Valid values for order_direction are ascending, descending.
+
+        :param string formula: Molecular formula.
+        :param float molecular_weight: Molecular weight.
+        :param float nominal_mass: Nominal mass.
+        :param float average_mass: Average mass.
+        :param float monoisotopic_mass: Monoisotopic mass.
+        :param float molecular_weight_range: Molecular weight range.
+        :param float nominal_mass_range: Nominal mass range.
+        :param float average_mass_range: Average mass range.
+        :param float monoisotopic_mass_range: Monoisotopic mass range.
+        :param string complexity: 'any', 'single', or 'multiple'
+        :param string isotopic: 'any', 'labeled', or 'unlabeled'.
+        :param string order_by: What to sort the results by.
+        :param string order_direction: Ascending or descending sort direction for results.
+        :return: Query ID that may be passed to ``filter_status`` and ``filter_results``.
+        :rtype: string
+        """
+        json = {
+            'formula': formula,
+            'options': {'complexity': complexity, 'isotopic': isotopic},
+            'orderBy': order_by,
+            'orderDirection': order_direction
+        }
+        if molecular_weight is not None and molecular_weight_range is not None:
+            json['molecularWeight'] = {'mass': molecular_weight, 'range': molecular_weight_range}
+        if nominal_mass is not None and nominal_mass_range is not None:
+            json['nominalMass'] = {'mass': nominal_mass, 'range': nominal_mass_range}
+        if average_mass is not None and average_mass_range is not None:
+            json['averageMass'] = {'mass': average_mass, 'range': average_mass_range}
+        if monoisotopic_mass is not None and monoisotopic_mass_range is not None:
+            json['monoisotopicMass'] = {'mass': monoisotopic_mass, 'range': monoisotopic_mass_range}
+        response = self.post(api='compounds', namespace='filter', endpoint='intrinsicproperty', json=json)
+        return response['queryId']
+
     def filter_mass(self, mass, mass_range, datasources=None, order_by=None, order_direction=None):
         """Search compounds by mass.
 
