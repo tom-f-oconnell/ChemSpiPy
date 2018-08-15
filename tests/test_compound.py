@@ -97,33 +97,35 @@ def test_smiles():
 def test_inchi():
     """Test Compound property inchi."""
     compound = cs.get_compound(2157)
-    assert compound.inchi == 'InChI=1/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)'
+    assert compound.inchi == 'InChI=1S/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)'
     # Ensure value is the same on subsequent access from cache
-    assert compound.inchi == 'InChI=1/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)'
+    assert compound.inchi == 'InChI=1S/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)'
 
 
 def test_stdinchi():
     """Test Compound property stdinchi."""
     compound = cs.get_compound(2157)
-    assert compound.stdinchi == 'InChI=1S/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)'
-    # Ensure value is the same on subsequent access from cache
-    assert compound.stdinchi == 'InChI=1S/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)'
+    with pytest.warns(DeprecationWarning):
+        assert compound.stdinchi == 'InChI=1S/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)'
+        # Ensure value is the same on subsequent access from cache
+        assert compound.stdinchi == 'InChI=1S/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)'
 
 
 def test_inchikey():
     """Test Compound property inchikey."""
     compound = cs.get_compound(2157)
-    assert compound.inchikey == 'BSYNRYMUTXBXSQ-UHFFFAOYAW'
+    assert compound.inchikey == 'BSYNRYMUTXBXSQ-UHFFFAOYSA-N'
     # Ensure value is the same on subsequent access from cache
-    assert compound.inchikey == 'BSYNRYMUTXBXSQ-UHFFFAOYAW'
+    assert compound.inchikey == 'BSYNRYMUTXBXSQ-UHFFFAOYSA-N'
 
 
 def test_stdinchikey():
     """Test Compound property stdinchikey."""
     compound = cs.get_compound(2157)
-    assert compound.stdinchikey == 'BSYNRYMUTXBXSQ-UHFFFAOYSA-N'
-    # Ensure value is the same on subsequent access from cache
-    assert compound.stdinchikey == 'BSYNRYMUTXBXSQ-UHFFFAOYSA-N'
+    with pytest.warns(DeprecationWarning):
+        assert compound.stdinchikey == 'BSYNRYMUTXBXSQ-UHFFFAOYSA-N'
+        # Ensure value is the same on subsequent access from cache
+        assert compound.stdinchikey == 'BSYNRYMUTXBXSQ-UHFFFAOYSA-N'
 
 
 def test_masses():

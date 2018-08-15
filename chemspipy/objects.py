@@ -88,7 +88,8 @@ class Compound(object):
 
         :rtype: string
         """
-        return self._compound_info['inchi']
+        warnings.warn('Use inchi instead of stdinchi.', DeprecationWarning)
+        return self.inchi
 
     @property
     def stdinchikey(self):
@@ -96,7 +97,8 @@ class Compound(object):
 
         :rtype: string
         """
-        return self._compound_info['inchikey']
+        warnings.warn('Use inchikey instead of stdinchikey.', DeprecationWarning)
+        return self.inchikey
 
     @property
     def inchi(self):
@@ -104,7 +106,7 @@ class Compound(object):
 
         :rtype: string
         """
-        return self._extended_compound_info['inchi']
+        return self._cs.convert(self.mol_2d, 'Mol', 'InChI')
 
     @property
     def inchikey(self):
@@ -112,7 +114,7 @@ class Compound(object):
 
         :rtype: string
         """
-        return self._extended_compound_info['inchikey']
+        return self._cs.convert(self.mol_2d, 'Mol', 'InChIKey')
 
     @property
     def average_mass(self):
