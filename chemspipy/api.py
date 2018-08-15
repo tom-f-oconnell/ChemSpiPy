@@ -349,7 +349,8 @@ class FilterApi(BaseChemSpider):
         :param string isotopic: 'any', 'labeled', or 'unlabeled'.
         :param string order_by: What to sort the results by.
         :param string order_direction: Ascending or descending sort direction for results.
-        :return:
+        :return: Query ID that may be passed to ``filter_status`` and ``filter_results``.
+        :rtype: string
         """
         json = {
             'includeElements': include_elements,
@@ -376,7 +377,8 @@ class FilterApi(BaseChemSpider):
         :param list[string] datasources: List of datasources to restrict the results to.
         :param string order_by: What to sort the results by.
         :param string order_direction: Ascending or descending sort direction for results.
-        :return:
+        :return: Query ID that may be passed to ``filter_status`` and ``filter_results``.
+        :rtype: string
         """
         json = {'formula': formula, 'dataSources': datasources, 'orderBy': order_by, 'orderDirection': order_direction}
         response = self.post(api='compounds', namespace='filter', endpoint='formula', json=json)
@@ -386,7 +388,8 @@ class FilterApi(BaseChemSpider):
         """Search compounds by InChI.
 
         :param string inchi: InChI.
-        :return:
+        :return: Query ID that may be passed to ``filter_status`` and ``filter_results``.
+        :rtype: string
         """
         json = {'inchi': inchi}
         response = self.post(api='compounds', namespace='filter', endpoint='inchi', json=json)
@@ -396,7 +399,8 @@ class FilterApi(BaseChemSpider):
         """Search compounds by InChIKey.
 
         :param string inchikey: InChIKey.
-        :return:
+        :return: Query ID that may be passed to ``filter_status`` and ``filter_results``.
+        :rtype: string
         """
         json = {'inchikey': inchikey}
         response = self.post(api='compounds', namespace='filter', endpoint='inchikey', json=json)
@@ -413,7 +417,8 @@ class FilterApi(BaseChemSpider):
         :param string name: Compound name.
         :param string order_by: What to sort the results by.
         :param string order_direction: Ascending or descending sort direction for results.
-        :return:
+        :return: Query ID that may be passed to ``filter_status`` and ``filter_results``.
+        :rtype: string
         """
         json = {'name': name, 'orderBy': order_by, 'orderDirection': order_direction}
         response = self.post(api='compounds', namespace='filter', endpoint='name', json=json)
@@ -505,7 +510,7 @@ class SearchApi(BaseChemSpider):
         Security token is required.
 
         :param string query: Search query - a name, SMILES, InChI, InChIKey, CSID, etc.
-        :returns: Transaction ID.
+        :return: Transaction ID.
         :rtype: string
         """
         warnings.warn('Use filter_name instead of async_simple_search.', DeprecationWarning)
@@ -524,7 +529,7 @@ class SearchApi(BaseChemSpider):
                              :data:`~chemspipy.api.DATASOURCE_COUNT`, :data:`~chemspipy.api.PUBMED_COUNT` or
                              :data:`~chemspipy.api.RSC_COUNT`.
         :param string direction: :data:`~chemspipy.api.ASCENDING` or :data:`~chemspipy.api.DESCENDING`.
-        :returns: Transaction ID.
+        :return: Transaction ID.
         :rtype: string
         """
         warnings.warn('Use filter_name instead of async_simple_search.', DeprecationWarning)
@@ -536,7 +541,7 @@ class SearchApi(BaseChemSpider):
         Security token is required.
 
         :param string rid: A transaction ID, returned by an asynchronous search method.
-        :returns: Unknown, Created, Scheduled, Processing, Suspended, PartialResultReady, ResultReady, Failed,
+        :return: Unknown, Created, Scheduled, Processing, Suspended, PartialResultReady, ResultReady, Failed,
                   TooManyRecords
         :rtype: string
         """
@@ -558,7 +563,7 @@ class SearchApi(BaseChemSpider):
         """Get the results from a asynchronous search operation. Security token is required.
 
         :param string rid: A transaction ID, returned by an asynchronous search method.
-        :returns: A list of Compounds.
+        :return: A list of Compounds.
         :rtype: list[:class:`~chemspipy.Compound`]
         """
         warnings.warn('Use filter_results instead of get_async_search_result.', DeprecationWarning)
@@ -571,7 +576,7 @@ class SearchApi(BaseChemSpider):
         :param string rid: A transaction ID, returned by an asynchronous search method.
         :param int start: The number of results to skip.
         :param int count: The number of results to return. -1 returns all through to end.
-        :returns: A list of Compounds.
+        :return: A list of Compounds.
         :rtype: list[:class:`~chemspipy.Compound`]
         """
         warnings.warn('Use filter_results instead of get_async_search_result_part.', DeprecationWarning)
@@ -604,7 +609,7 @@ class SearchApi(BaseChemSpider):
         A maximum of 100 results are returned. Security token is required.
 
         :param string query: Search query - a name, SMILES, InChI, InChIKey, CSID, etc.
-        :returns: List of :class:`Compounds <chemspipy.Compound>`.
+        :return: List of :class:`Compounds <chemspipy.Compound>`.
         :rtype: list[:class:`~chemspipy.Compound`]
         """
         warnings.warn('Use filter_name instead of simple_search.', DeprecationWarning)
@@ -618,7 +623,7 @@ class CustomApi(BaseChemSpider):
         """Return a Compound object for a given ChemSpider ID. Security token is required.
 
         :param string|int csid: ChemSpider ID.
-        :returns: The Compound with the specified ChemSpider ID.
+        :return: The Compound with the specified ChemSpider ID.
         :rtype: :class:`~chemspipy.Compound`
         """
         return Compound(self, csid)
@@ -627,7 +632,7 @@ class CustomApi(BaseChemSpider):
         """Return a list of Compound objects, given a list ChemSpider IDs. Security token is required.
 
         :param list[string|int] csids: List of ChemSpider IDs.
-        :returns: List of Compounds with the specified ChemSpider IDs.
+        :return: List of Compounds with the specified ChemSpider IDs.
         :rtype: list[:class:`~chemspipy.Compound`]
         """
         return [Compound(self, csid) for csid in csids]
@@ -642,7 +647,7 @@ class CustomApi(BaseChemSpider):
                              :data:`~chemspipy.api.RSC_COUNT`.
         :param string direction: (Optional) :data:`~chemspipy.api.ASCENDING` or :data:`~chemspipy.api.DESCENDING`.
         :param bool raise_errors: If True, raise exceptions. If False, store on Results ``exception`` property.
-        :returns: Search Results list.
+        :return: Search Results list.
         :rtype: Results
         """
         if order and direction:
