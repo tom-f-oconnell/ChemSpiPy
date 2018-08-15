@@ -406,6 +406,34 @@ class FilterApi(BaseChemSpider):
         response = self.post(api='compounds', namespace='filter', endpoint='inchikey', json=json)
         return response['queryId']
 
+    def filter_mass(self, mass, mass_range, datasources=None, order_by=None, order_direction=None):
+        """Search compounds by mass.
+
+        Filter to compounds within ``mass_range`` of the given ``mass``.
+
+        Optionally filter the results by data source. Use :meth:`~chemspipy.api.ChemSpider.get_datasources` to get the
+        available datasources.
+
+        Valid values for order_by are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
+        pubMedCount, rscCount.
+
+        Valid values for order_direction are ascending, descending.
+
+        :param float mass: Mass between 1 and 11000 Atomic Mass Units.
+        :param float mass_range: Mass range between 0.0001 and 100 Atomic Mass Units.
+        :param list[string] datasources: List of datasources to restrict the results to.
+        :param string order_by: What to sort the results by.
+        :param string order_direction: Ascending or descending sort direction for results.
+        :return: Query ID that may be passed to ``filter_status`` and ``filter_results``.
+        :rtype: string
+        """
+        json = {
+            'mass': mass, 'range': mass_range, 'dataSources': datasources, 'orderBy': order_by,
+            'orderDirection': order_direction
+        }
+        response = self.post(api='compounds', namespace='filter', endpoint='mass', json=json)
+        return response['queryId']
+
     def filter_name(self, name, order_by=None, order_direction=None):
         """Search compounds by name.
 

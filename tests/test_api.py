@@ -13,6 +13,7 @@ from __future__ import division
 import logging
 import os
 import re
+import time
 
 import pytest
 import six
@@ -112,6 +113,21 @@ def test_get_mol():
     mol = cs.get_mol(6084)
     assert 'V2000' in mol
     assert 'M  END' in mol
+
+
+# Filter
+
+
+def test_filter_mass():
+    """Test get_async_search_result returns a list of CSIDs."""
+    qid = cs.filter_mass(500, 0.001)
+    while True:
+        status = cs.filter_status(qid)
+        if status['status'] in {'Suspended', 'Failed', 'Not Found', 'Complete'}:
+            break
+        time.sleep(1)
+    results = cs.filter_results(qid)
+    assert len(results) > 10
 
 
 # MassSpecAPI
