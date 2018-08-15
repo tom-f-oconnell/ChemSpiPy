@@ -116,6 +116,22 @@ def test_get_mol():
 
 # Filter
 
+def test_filter_formula_batch():
+    """Test filter_formula_batch returns a list of CSIDs."""
+    qid = cs.filter_formula_batch(formulas=['C2H2', 'C3H6'])
+    while True:
+        status = cs.filter_formula_batch_status(qid)
+        if status['status'] in {'Suspended', 'Failed', 'Not Found', 'Complete'}:
+            break
+        time.sleep(1)
+    results = cs.filter_formula_batch_results(qid)
+    assert len(results) == 2
+    for result in results:
+        assert 'formula' in result
+        assert 'results' in result
+        assert len(result['results']) > 1
+
+
 def test_filter_intrinsicproperty_formula():
     """Test filter_intrinsicproperty returns a list of CSIDs."""
     qid = cs.filter_intrinsicproperty(formula='C6H6')
