@@ -199,6 +199,18 @@ def test_filter_smiles():
     assert results[0] == 236  # Benzene ChemSpider ID
 
 
+def test_filter_sdf():
+    """Test filter_results_sdf returns an SDF file."""
+    qid = cs.filter_formula('C10H20')
+    while True:
+        status = cs.filter_status(qid)
+        if status['status'] in {'Suspended', 'Failed', 'Not Found', 'Complete'}:
+            break
+        time.sleep(1)
+    sdf = cs.filter_results_sdf(qid)
+    assert b'V2000' in sdf
+    assert b'$$$$' in sdf
+
 # MassSpecAPI
 
 def test_get_databases():

@@ -10,10 +10,11 @@ Core API for interacting with ChemSpider web services.
 from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
-from base64 import b64decode
+import base64
 import logging
 import sys
 import warnings
+import zlib
 
 import requests
 import six
@@ -311,7 +312,7 @@ class RecordsApi(BaseChemSpider):
         """
         endpoint = '{}/image'.format(record_id)
         response = self.get(api='compounds', namespace='records', endpoint=endpoint)
-        return b64decode(response['image'])
+        return base64.b64decode(response['image'])
 
     def get_mol(self, record_id):
         """Get MOLfile for a compound record.
@@ -409,7 +410,7 @@ class FilterApi(BaseChemSpider):
     def filter_formula_batch_status(self, query_id):
         """Get formula batch filter status using a query ID that was returned by a previous filter request.
 
-        :param query_id: Query ID from a previous formula batch filter request.
+        :param string query_id: Query ID from a previous formula batch filter request.
         :return: Status dict with 'status', 'count', and 'message' fields.
         :rtype: dict
         """
@@ -422,7 +423,7 @@ class FilterApi(BaseChemSpider):
 
         Each result is a dict containing a ``formula`` key and a ``results`` key.
 
-        :param query_id: Query ID from a previous formula batch filter request.
+        :param string query_id: Query ID from a previous formula batch filter request.
         :return: List of results.
         :rtype: list[dict]
         """
@@ -558,7 +559,7 @@ class FilterApi(BaseChemSpider):
     def filter_mass_batch_status(self, query_id):
         """Get formula batch filter status using a query ID that was returned by a previous filter request.
 
-        :param query_id: Query ID from a previous formula batch filter request.
+        :param string query_id: Query ID from a previous formula batch filter request.
         :return: Status dict with 'status', 'count', and 'message' fields.
         :rtype: dict
         """
@@ -571,7 +572,7 @@ class FilterApi(BaseChemSpider):
 
         Each result is a dict containing a ``formula`` key and a ``results`` key.
 
-        :param query_id: Query ID from a previous formula batch filter request.
+        :param string query_id: Query ID from a previous formula batch filter request.
         :return: List of results.
         :rtype: list[dict]
         """
@@ -611,7 +612,7 @@ class FilterApi(BaseChemSpider):
     def filter_status(self, query_id):
         """Get filter status using a query ID that was returned by a previous filter request.
 
-        :param query_id: Query ID from a previous filter request.
+        :param string query_id: Query ID from a previous filter request.
         :return: Status dict with 'status', 'count', and 'message' fields.
         :rtype: dict
         """
@@ -622,7 +623,7 @@ class FilterApi(BaseChemSpider):
     def filter_results(self, query_id, start=None, count=None):
         """Get filter results using a query ID that was returned by a previous filter request.
 
-        :param query_id: Query ID from a previous filter request.
+        :param string query_id: Query ID from a previous filter request.
         :param int start: Zero-based results offset.
         :param int count: Number of results to return.
         :return: List of results.
@@ -632,6 +633,17 @@ class FilterApi(BaseChemSpider):
         params = {'start': start, 'count': count}
         response = self.get(api='compounds', namespace='filter', endpoint=endpoint, params=params)
         return response['results']
+
+    def filter_results_sdf(self, query_id):
+        """Get filter results as SDF file using a query ID that was returned by a previous filter request.
+
+        :param string query_id: Query ID from a previous filter request.
+        :return: SDF file containing the results.
+        :rtype: bytes
+        """
+        endpoint = '{}/results/sdf'.format(query_id)
+        response = self.get(api='compounds', namespace='filter', endpoint=endpoint)
+        return zlib.decompress(base64.b64decode(response['results']), 16 + zlib.MAX_WBITS)
 
 
 class MassSpecApi(BaseChemSpider):
