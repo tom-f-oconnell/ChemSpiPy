@@ -546,6 +546,17 @@ class FilterApi(BaseChemSpider):
         response = self.post(api='compounds', namespace='filter', endpoint='name', json=json)
         return response['queryId']
 
+    def filter_smiles(self, smiles):
+        """Search compounds by SMILES.
+
+        :param string smiles: Compound SMILES.
+        :return: Query ID that may be passed to ``filter_status`` and ``filter_results``.
+        :rtype: string
+        """
+        json = {'smiles': smiles}
+        response = self.post(api='compounds', namespace='filter', endpoint='smiles', json=json)
+        return response['queryId']
+
     def filter_status(self, query_id):
         """Get filter status using a query ID that was returned by a previous filter request.
 

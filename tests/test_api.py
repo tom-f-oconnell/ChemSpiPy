@@ -168,6 +168,19 @@ def test_filter_mass():
     assert len(results) > 10
 
 
+def test_filter_smiles():
+    """Test filter_smiles returns a list of CSIDs."""
+    qid = cs.filter_smiles('c1ccccc1')
+    while True:
+        status = cs.filter_status(qid)
+        if status['status'] in {'Suspended', 'Failed', 'Not Found', 'Complete'}:
+            break
+        time.sleep(1)
+    results = cs.filter_results(qid)
+    assert len(results) == 1
+    assert results[0] == 236  # Benzene ChemSpider ID
+
+
 # MassSpecAPI
 
 def test_get_databases():
