@@ -152,3 +152,14 @@ def test_image():
     """Test Compound property image."""
     compound = cs.get_compound(2157)
     assert compound.image[:8] == b'\x89PNG\x0d\x0a\x1a\x0a'  # PNG magic number
+
+
+def test_external_references():
+    """Test Compound property external_references."""
+    compound = cs.get_compound(97809)
+    assert len(compound.external_references) > 50
+    for xref in compound.external_references:
+        assert 'externalId' in xref
+        assert 'externalUrl' in xref
+        assert 'source' in xref
+        assert 'sourceUrl' in xref

@@ -177,3 +177,11 @@ class Compound(object):
         :rtype: bytes
         """
         return self._cs.get_image(self.record_id)
+
+    @memoized_property
+    def external_references(self):
+        """Return external references for this Compound.
+
+        :rtype: list[string]
+        """
+        return self._cs.get_external_references(self.record_id)

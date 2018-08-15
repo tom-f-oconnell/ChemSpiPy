@@ -241,7 +241,7 @@ class RecordsApi(BaseChemSpider):
         :param int record_id: Record ID.
         :param list[string] datasources: List of datasources to restrict the results to.
         :return: External references.
-        :rtype: list[string]
+        :rtype: list[dict]
         """
         params = {}
         if datasources is not None:
