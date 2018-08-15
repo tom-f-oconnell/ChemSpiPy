@@ -221,6 +221,13 @@ def test_convert():
     assert cs.convert('UHOVQNZJYSORNB-UHFFFAOYSA-N', 'InChIKey', 'InChI') == 'InChI=1S/C6H6/c1-2-4-6-5-3-1/h1-6H'
 
 
+def test_validate_inchikey():
+    """Test validate_inchikey."""
+    assert cs.validate_inchikey('UHOVQNZJYSORNB-UHFFFAOYSA-N') is True
+    assert cs.validate_inchikey('UHOVQNZJYSORNB-UHFFFAOYSQ-N') is False
+    assert cs.validate_inchikey('UHOVQNZJYSORNB-UHFFFAOYSA') is False
+
+
 # MassSpecAPI
 
 def test_get_databases():

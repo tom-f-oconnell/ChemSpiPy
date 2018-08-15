@@ -667,6 +667,20 @@ class ToolsApi(BaseChemSpider):
         response = self.post(api='compounds', namespace='tools', endpoint='convert', json=json)
         return response['output']
 
+    def validate_inchikey(self, inchikey):
+        """Return whether ``inchikey`` is valid.
+
+        :param string inchikey: The InChIKey to validate.
+        :return: Whether the InChIKey is valid.
+        :rtype: bool
+        """
+        json = {'inchikey': inchikey}
+        try:
+            response = self.post(api='compounds', namespace='tools', endpoint='validate/inchikey', json=json)
+            return response['valid']
+        except errors.ChemSpiPyHTTPError:
+            return False
+
 
 class MassSpecApi(BaseChemSpider):
 
