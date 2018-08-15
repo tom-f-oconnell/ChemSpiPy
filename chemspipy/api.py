@@ -646,6 +646,28 @@ class FilterApi(BaseChemSpider):
         return zlib.decompress(base64.b64decode(response['results']), 16 + zlib.MAX_WBITS)
 
 
+class ToolsApi(BaseChemSpider):
+    """"""
+
+    def convert(self, input, input_format, output_format):
+        """Convert a chemical from one format to another.
+
+        Format: ``SMILES``, ``InChI``, ``InChIKey`` or ``Mol``.
+
+        Allowed conversions: from InChI to InChIKey, from InChI to Mol file, from InChI to SMILES, from InChIKey to
+        InChI, from InChIKey to Mol file, from Mol file to InChI, from Mol file to InChIKey, from SMILES to InChI.
+
+        :param string input: Input chemical.
+        :param string input_format: Input format.
+        :param string output_format: Output format.
+        :return: Input chemical in output format.
+        :rtype: string
+        """
+        json = {'input': input, 'inputFormat': input_format, 'outputFormat': output_format}
+        response = self.post(api='compounds', namespace='tools', endpoint='convert', json=json)
+        return response['output']
+
+
 class MassSpecApi(BaseChemSpider):
 
     def get_databases(self):
@@ -854,7 +876,7 @@ class CustomApi(BaseChemSpider):
     # TODO: Wrappers for subscriber role asynchronous searches
 
 
-class ChemSpider(CustomApi, FilterApi, LookupsApi, RecordsApi, MassSpecApi, SearchApi):
+class ChemSpider(CustomApi, FilterApi, LookupsApi, RecordsApi, ToolsApi, MassSpecApi, SearchApi):
     """Provides access to the ChemSpider API.
 
     Usage::

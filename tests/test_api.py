@@ -211,6 +211,16 @@ def test_filter_sdf():
     assert b'V2000' in sdf
     assert b'$$$$' in sdf
 
+
+# Tools
+
+def test_convert():
+    """Test convert."""
+    assert cs.convert('c1ccccc1', 'SMILES', 'InChI') == 'InChI=1S/C6H6/c1-2-4-6-5-3-1/h1-6H'
+    assert cs.convert('InChI=1S/C6H6/c1-2-4-6-5-3-1/h1-6H', 'InChI', 'InChIKey') == 'UHOVQNZJYSORNB-UHFFFAOYSA-N'
+    assert cs.convert('UHOVQNZJYSORNB-UHFFFAOYSA-N', 'InChIKey', 'InChI') == 'InChI=1S/C6H6/c1-2-4-6-5-3-1/h1-6H'
+
+
 # MassSpecAPI
 
 def test_get_databases():
