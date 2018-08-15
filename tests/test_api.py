@@ -168,6 +168,24 @@ def test_filter_mass():
     assert len(results) > 10
 
 
+def test_filter_mass_batch():
+    """Test filter_mass_batch returns a list of CSIDs."""
+    qid = cs.filter_mass_batch(masses=[(12, 0.001), (24, 0.001)])
+    while True:
+        status = cs.filter_mass_batch_status(qid)
+        if status['status'] in {'Suspended', 'Failed', 'Not Found', 'Complete'}:
+            break
+        time.sleep(1)
+    results = cs.filter_mass_batch_results(qid)
+    print(results)
+    assert len(results) == 2
+    for result in results:
+        assert 'mass' in result
+        assert 'range' in result
+        assert 'results' in result
+        assert len(result['results']) > 0
+
+
 def test_filter_smiles():
     """Test filter_smiles returns a list of CSIDs."""
     qid = cs.filter_smiles('c1ccccc1')

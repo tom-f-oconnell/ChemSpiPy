@@ -528,6 +528,57 @@ class FilterApi(BaseChemSpider):
         response = self.post(api='compounds', namespace='filter', endpoint='mass', json=json)
         return response['queryId']
 
+    def filter_mass_batch(self, masses, datasources=None, order_by=None, order_direction=None):
+        """Search compounds with a list of masses and mass ranges.
+
+        The ``masses`` parameter should be a list of tuples, each with two elements: A mass, and a mass range::
+
+            qid = cs.filter_mass_batch(masses=[(12, 0.001), (24, 0.001)])
+
+        Optionally filter the results by data source. Use :meth:`~chemspipy.api.ChemSpider.get_datasources` to get the
+        available datasources.
+
+        Valid values for order_by are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
+        pubMedCount, rscCount.
+
+        Valid values for order_direction are ascending, descending.
+
+        :param list[tuple[float, float]] masses: List of (mass, range) tuples.
+        :param list[string] datasources: List of datasources to restrict the results to.
+        :param string order_by: What to sort the results by.
+        :param string order_direction: Ascending or descending sort direction for results.
+        :return: Query ID that may be passed to ``filter_formula_batch_status`` and ``filter_formula_batch_results``.
+        :rtype: string
+        """
+        masses = [{'mass': m, 'range': r} for m, r in masses]
+        json = {'masses': masses, 'dataSources': datasources, 'orderBy': order_by, 'orderDirection': order_direction}
+        response = self.post(api='compounds', namespace='filter', endpoint='mass/batch', json=json)
+        return response['queryId']
+
+    def filter_mass_batch_status(self, query_id):
+        """Get formula batch filter status using a query ID that was returned by a previous filter request.
+
+        :param query_id: Query ID from a previous formula batch filter request.
+        :return: Status dict with 'status', 'count', and 'message' fields.
+        :rtype: dict
+        """
+        endpoint = 'mass/batch/{}/status'.format(query_id)
+        response = self.get(api='compounds', namespace='filter', endpoint=endpoint)
+        return response
+
+    def filter_mass_batch_results(self, query_id):
+        """Get formula batch filter results using a query ID that was returned by a previous filter request.
+
+        Each result is a dict containing a ``formula`` key and a ``results`` key.
+
+        :param query_id: Query ID from a previous formula batch filter request.
+        :return: List of results.
+        :rtype: list[dict]
+        """
+        endpoint = 'mass/batch/{}/results'.format(query_id)
+        response = self.get(api='compounds', namespace='filter', endpoint=endpoint)
+        return response['batchResults']
+
     def filter_name(self, name, order_by=None, order_direction=None):
         """Search compounds by name.
 
