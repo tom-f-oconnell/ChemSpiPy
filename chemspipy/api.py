@@ -87,44 +87,6 @@ ORDERS = {
     RSC_COUNT: 'rscCount'
 }
 
-#: API to python field mappings
-FIELDS = {
-    'CSID': ('csid', int),
-    'csid': ('csid', int),
-    'MF': ('molecular_formula', six.text_type),
-    'SMILES': ('smiles', six.text_type),
-    'InChI': ('inchi', six.text_type),
-    'InChIKey': ('inchikey', six.text_type),
-    'AverageMass': ('average_mass', float),
-    'MolecularWeight': ('molecular_weight', float),
-    'MonoisotopicMass': ('monoisotopic_mass', float),
-    'NominalMass': ('nominal_mass', float),
-    'ALogP': ('alogp', float),
-    'XLogP': ('xlogp', float),
-    'CommonName': ('common_name', six.text_type),
-    'MOL2d': ('mol_2d', six.text_type),
-    'MOL3d': ('mol_3d', six.text_type),
-    'ReferenceCount': ('reference_count', int),
-    'DataSourceCount': ('datasource_count', int),
-    'PubMedCount': ('pubmed_count', int),
-    'RSCCount': ('rsc_count', int),
-    'ExternalReferences': ('external_references', list),
-    'ds_name': ('datasource_name', six.text_type),
-    'ds_url': ('datasource_url', six.text_type),
-    'ext_id': ('external_id', six.text_type),
-    'ext_url': ('external_url', six.text_type),
-    'Status': ('status', six.text_type),
-    'Count': ('count', int),
-    'Message': ('message', six.text_type),
-    'Elapsed': ('elapsed', six.text_type),
-    'spc_id': ('spectrum_id', int),
-    'spc_type': ('spectrum_type', six.text_type),
-    'file_name': ('file_name', six.text_type),
-    'comments': ('comments', six.text_type),
-    'original_url': ('original_url', six.text_type),
-    'submitted_date': ('submitted_date', six.text_type),
-}
-
 
 class BaseChemSpider(object):
 
@@ -206,21 +168,6 @@ class BaseChemSpider(object):
         :rtype: dict or string
         """
         return self.request('POST', api=api, namespace=namespace, endpoint=endpoint, json=json)
-
-
-def xml_to_dict(t):
-    """Convert a ChemSpider XML response to a python dict."""
-    d = {}
-    for child in t:
-        tag = child.tag.split('}')[1]
-        tag, rtype = FIELDS.get(tag, (tag, six.text_type))
-        if rtype == list:
-            d[tag] = [xml_to_dict(grandchild) for grandchild in child]
-        elif rtype == dict:
-            d[tag] = xml_to_dict(child)
-        elif child.text is not None:
-            d[tag] = rtype(child.text.strip())
-    return d
 
 
 class LookupsApi(BaseChemSpider):
