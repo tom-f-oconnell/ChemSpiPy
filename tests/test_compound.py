@@ -5,8 +5,6 @@ test_compound
 
 Test the Compound object.
 
-:copyright: Copyright 2014 by Matt Swain.
-:license: MIT, see LICENSE file for more details.
 """
 
 from __future__ import print_function
@@ -15,27 +13,32 @@ from __future__ import division
 import logging
 import os
 
+import pytest
 import requests
 
-from chemspipy import ChemSpider, Compound, Spectrum
+from chemspipy import ChemSpider, Compound
 
 
 logging.basicConfig(level=logging.WARN, format='%(levelname)s:%(name)s:(%(threadName)-10s):%(message)s')
 logging.getLogger('chemspipy').setLevel(logging.DEBUG)
 
-# Security token is retrieved from environment variables
-CHEMSPIDER_SECURITY_TOKEN = os.environ['CHEMSPIDER_SECURITY_TOKEN']
-cs = ChemSpider(security_token=CHEMSPIDER_SECURITY_TOKEN)
+# API key is retrieved from environment variables
+CHEMSPIDER_API_KEY = os.environ['CHEMSPIDER_API_KEY']
+cs = ChemSpider(CHEMSPIDER_API_KEY)
 
 
 def test_get_compound():
     """Test getting a compound by ChemSpider ID."""
     compound = cs.get_compound(2157)
     assert isinstance(compound, Compound)
-    assert compound.csid == 2157
+    assert compound.record_id == 2157
+    with pytest.deprecated_call():
+        assert compound.csid == 2157
     compound = cs.get_compound('2157')
     assert isinstance(compound, Compound)
-    assert compound.csid == 2157
+    assert compound.record_id == 2157
+    with pytest.deprecated_call():
+        assert compound.csid == 2157
 
 
 def test_get_compounds():
@@ -94,33 +97,35 @@ def test_smiles():
 def test_inchi():
     """Test Compound property inchi."""
     compound = cs.get_compound(2157)
-    assert compound.inchi == 'InChI=1/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)'
+    assert compound.inchi == 'InChI=1S/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)'
     # Ensure value is the same on subsequent access from cache
-    assert compound.inchi == 'InChI=1/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)'
+    assert compound.inchi == 'InChI=1S/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)'
 
 
 def test_stdinchi():
     """Test Compound property stdinchi."""
     compound = cs.get_compound(2157)
-    assert compound.stdinchi == 'InChI=1S/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)'
-    # Ensure value is the same on subsequent access from cache
-    assert compound.stdinchi == 'InChI=1S/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)'
+    with pytest.deprecated_call():
+        assert compound.stdinchi == 'InChI=1S/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)'
+        # Ensure value is the same on subsequent access from cache
+        assert compound.stdinchi == 'InChI=1S/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)'
 
 
 def test_inchikey():
     """Test Compound property inchikey."""
     compound = cs.get_compound(2157)
-    assert compound.inchikey == 'BSYNRYMUTXBXSQ-UHFFFAOYAW'
+    assert compound.inchikey == 'BSYNRYMUTXBXSQ-UHFFFAOYSA-N'
     # Ensure value is the same on subsequent access from cache
-    assert compound.inchikey == 'BSYNRYMUTXBXSQ-UHFFFAOYAW'
+    assert compound.inchikey == 'BSYNRYMUTXBXSQ-UHFFFAOYSA-N'
 
 
 def test_stdinchikey():
     """Test Compound property stdinchikey."""
     compound = cs.get_compound(2157)
-    assert compound.stdinchikey == 'BSYNRYMUTXBXSQ-UHFFFAOYSA-N'
-    # Ensure value is the same on subsequent access from cache
-    assert compound.stdinchikey == 'BSYNRYMUTXBXSQ-UHFFFAOYSA-N'
+    with pytest.deprecated_call():
+        assert compound.stdinchikey == 'BSYNRYMUTXBXSQ-UHFFFAOYSA-N'
+        # Ensure value is the same on subsequent access from cache
+        assert compound.stdinchikey == 'BSYNRYMUTXBXSQ-UHFFFAOYSA-N'
 
 
 def test_masses():
@@ -130,13 +135,6 @@ def test_masses():
     assert 180 < compound.molecular_weight < 180.2
     assert 180 < compound.monoisotopic_mass < 180.2
     assert compound.nominal_mass == 180
-
-
-def test_descriptors():
-    """Test Compound property alogp, xlogp."""
-    compound = cs.get_compound(348191)
-    assert compound.alogp == 0.0
-    assert compound.xlogp == 1.2
 
 
 def test_name():
@@ -150,7 +148,6 @@ def test_molfiles():
     compound = cs.get_compound(2157)
     assert 'V2000' in compound.mol_2d
     assert 'V2000' in compound.mol_3d
-    assert 'V2000' in compound.mol_raw
 
 
 def test_image():
@@ -159,12 +156,12 @@ def test_image():
     assert compound.image[:8] == b'\x89PNG\x0d\x0a\x1a\x0a'  # PNG magic number
 
 
-def test_spectra():
-    """Test Compound property spectra."""
-    compound = cs.get_compound(2157)
-    for s in compound.spectra:
-        assert isinstance(s, Spectrum)
-        assert s.csid == 2157
-        assert isinstance(s.spectrum_id, int)
-    compound = cs.get_compound(263)
-    assert compound.spectra == []
+def test_external_references():
+    """Test Compound property external_references."""
+    compound = cs.get_compound(97809)
+    assert len(compound.external_references) > 50
+    for xref in compound.external_references:
+        assert 'externalId' in xref
+        assert 'externalUrl' in xref
+        assert 'source' in xref
+        assert 'sourceUrl' in xref

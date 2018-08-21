@@ -24,7 +24,6 @@ setup(
     zip_safe=False,
     install_requires=['requests', 'six'],
     tests_require=['pytest'],
-    extras_require={'lxml': ['lxml']},
     classifiers=[
         'Environment :: Console',
         'Intended Audience :: Developers',

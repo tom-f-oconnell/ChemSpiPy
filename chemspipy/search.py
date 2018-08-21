@@ -5,34 +5,25 @@ chemspipy.search
 
 A wrapper for asynchronous search requests.
 
-:copyright: Copyright 2014 by Matt Swain.
-:license: MIT, see LICENSE file for more details.
 """
 
 from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
+import datetime
 import logging
 import threading
 import time
 
-try:
-    from lxml import etree
-except ImportError:
-    try:
-        import xml.etree.cElementTree as etree
-    except ImportError:
-        import xml.etree.ElementTree as etree
+from six.moves import range
 
-import six
-
-from .errors import ChemSpiPyServerError, ChemSpiPyTimeoutError
-from .utils import duration
+from . import errors, objects, utils
 
 
 log = logging.getLogger(__name__)
 
 
+# TODO: Use Sequence abc metaclass?
 class Results(object):
     """Container class to perform a search on a background thread and hold the results when ready."""
 
@@ -46,12 +37,15 @@ class Results(object):
         :param int max_requests: Maximum number of times to check if search results are ready.
         """
         log.debug('Results init')
+        self._cs = cs
         self._raise_errors = raise_errors
         self._max_requests = max_requests
         self._status = 'Created'
         self._exception = None
+        self._qid = None
         self._message = None
-        self._duration = None
+        self._start = None
+        self._end = None
         self._results = []
         self._searchthread = threading.Thread(name='SearchThread', target=self._search, args=(cs, searchfunc, searchargs))
         self._searchthread.start()
@@ -59,34 +53,36 @@ class Results(object):
     def _search(self, cs, searchfunc, searchargs):
         """Perform the search and retrieve the results."""
         log.debug('Searching in background thread')
+        self._start = datetime.datetime.utcnow()
         try:
-            rid = searchfunc(*searchargs)
-            log.debug('Setting rid: %s' % rid)
-            for _ in six.moves.range(self._max_requests):
-                log.debug('Checking status: %s' % rid)
-                status = cs.get_async_search_status_and_count(rid)
+            self._qid = searchfunc(*searchargs)
+            log.debug('Setting qid: %s' % self._qid)
+            for _ in range(self._max_requests):
+                log.debug('Checking status: %s' % self._qid)
+                status = cs.filter_status(self._qid)
                 self._status = status['status']
                 self._message = status.get('message', '')
-                self._duration = duration(status['elapsed'])
                 log.debug(status)
                 time.sleep(0.2)
-                if status['status'] == 'ResultReady':
+                if status['status'] == 'Complete':
                     break
-                elif status['status'] in {'Failed', 'Unknown', 'Suspended'}:
-                    raise ChemSpiPyServerError('Search Failed: %s' % status.get('message', ''))
-                elif status['status'] == 'TooManyRecords':
-                    raise ChemSpiPyServerError('Too many results')
+                elif status['status'] in {'Failed', 'Unknown', 'Suspended', 'Not Found'}:
+                    raise errors.ChemSpiPyServerError('Search Failed: %s' % status.get('message', ''))
             else:
-                raise ChemSpiPyTimeoutError('Search took too long')
+                raise errors.ChemSpiPyTimeoutError('Search took too long')
             log.debug('Search success!')
+            self._end = datetime.datetime.utcnow()
             if status['count'] > 0:
-                self._results = cs.get_async_search_result(rid)
+                self._results = [objects.Compound(cs, csid) for csid in cs.filter_results(self._qid)]
                 log.debug('Results: %s', self._results)
             elif not self._message:
                 self._message = 'No results found'
         except Exception as e:
             # Catch and store exception so we can raise it in the main thread
             self._exception = e
+            self._end = datetime.datetime.utcnow()
+            if self._status == 'Created':
+                self._status = 'Failed'
 
     def ready(self):
         """Return True if the search finished.
@@ -113,8 +109,7 @@ class Results(object):
     def status(self):
         """Current status string returned by ChemSpider.
 
-
-        :returns: 'Unknown', 'Created', 'Scheduled', 'Processing', 'Suspended', 'PartialResultReady', 'ResultReady'
+        :return: 'Unknown', 'Created', 'Scheduled', 'Processing', 'Suspended', 'PartialResultReady', 'ResultReady'
         :rtype: string
         """
         return self._status
@@ -124,6 +119,14 @@ class Results(object):
         """Any Exception raised during the search. Blocks until the search is finished."""
         self.wait()  # TODO: If raise_errors=True this will raise the exception when trying to access it?
         return self._exception
+
+    @property
+    def qid(self):
+        """Search query ID.
+
+        :rtype: string
+        """
+        return self._qid
 
     @property
     def message(self):
@@ -149,19 +152,17 @@ class Results(object):
         :rtype: :py:class:`datetime.timedelta`
         """
         self.wait()
-        return self._duration
+        return self._end - self._start
 
-    # @memoized_property
-    # def sdf(self):
-    #     """Get an SDF containing all the search results.
-    #
-    #     Warning: The SDF API endpoints don't seem to work properly.
-    #
-    #     :rtype: string
-    #     :returns: SDF containing the search results.
-    #     """
-    #     self.wait()
-    #     return self._cs.get_records_sdf(self._rid)
+    @utils.memoized_property
+    def sdf(self):
+        """Get an SDF containing all the search results.
+
+        :return: SDF containing the search results.
+        :rtype: bytes
+        """
+        self.wait()
+        return self._cs.filter_results_sdf(self._qid)
 
     def __getitem__(self, index):
         """Get a single result or a slice of results. Blocks until the search is finished.
@@ -189,9 +190,3 @@ class Results(object):
             return 'Results(%s)' % self._results
         else:
             return 'Results(%s)' % self.status
-
-
-# TODO: fetch method that gets the property values for every Compound in the list of results.
-# Do this by running get_extended_mol_compound_info_list and then inserting info into Compounds
-# Do multiple requests in chunks of 250 Compounds if necessary
-# Compound will need a method to insert info from JSON response
