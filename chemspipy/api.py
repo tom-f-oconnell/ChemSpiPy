@@ -87,6 +87,12 @@ ORDERS = {
     RSC_COUNT: 'rscCount'
 }
 
+#: All available compound details fields.
+FIELDS = {
+    'SMILES', 'Formula', 'AverageMass', 'MolecularWeight', 'MonoisotopicMass', 'NominalMass', 'CommonName',
+    'ReferenceCount', 'DataSourceCount', 'PubMedCount', 'RSCCount', 'Mol2D', 'Mol3D'
+}
+
 
 class BaseChemSpider(object):
 
@@ -189,45 +195,31 @@ class LookupsApi(BaseChemSpider):
 class RecordsApi(BaseChemSpider):
     """"""
 
-    def get_details(self, record_id, fields=None):
+    def get_details(self, record_id, fields=FIELDS):
         """Get details for a compound record.
 
-        The available fields are: SMILES, Formula, AverageMass, MolecularWeight, MonoisotopicMass, NominalMass,
-        CommonName, ReferenceCount, DataSourceCount, PubMedCount, RSCCount, Mol2D, Mol3D.
+        The available fields are listed in :data:`~chemspipy.api.FIELDS`.
 
         :param int record_id: Record ID.
         :param list[string] fields: List of fields to include in the result.
         :return: Record details.
         :rtype: dict
         """
-        # Use all fields if none are specified
-        if fields is None:
-            fields = [
-                'SMILES', 'Formula', 'AverageMass', 'MolecularWeight', 'MonoisotopicMass', 'NominalMass', 'CommonName',
-                'ReferenceCount', 'DataSourceCount', 'PubMedCount', 'RSCCount', 'Mol2D', 'Mol3D'
-            ]
         params = {'fields': ','.join(fields)}
         endpoint = '{}/details'.format(record_id)
         response = self.get(api='compounds', namespace='records', endpoint=endpoint, params=params)
         return response
 
-    def get_details_batch(self, record_ids, fields=None):
+    def get_details_batch(self, record_ids, fields=FIELDS):
         """Get details for a list of compound records.
 
-        The available fields are: SMILES, Formula, AverageMass, MolecularWeight, MonoisotopicMass, NominalMass,
-        CommonName, ReferenceCount, DataSourceCount, PubMedCount, RSCCount, Mol2D, Mol3D.
+        The available fields are listed in :data:`~chemspipy.api.FIELDS`.
 
         :param list[int] record_ids: List of record IDs (up to 100).
         :param list[string] fields: List of fields to include in the results.
         :return: List of record details.
         :rtype: list[dict]
         """
-        # Use all fields if none are specified
-        if fields is None:
-            fields = [
-                'SMILES', 'Formula', 'AverageMass', 'MolecularWeight', 'MonoisotopicMass', 'NominalMass', 'CommonName',
-                'ReferenceCount', 'DataSourceCount', 'PubMedCount', 'RSCCount', 'Mol2D', 'Mol3D'
-            ]
         json = {'recordIds': record_ids, 'fields': fields}
         response = self.post(api='compounds', namespace='records', endpoint='batch', json=json)
         return response['records']
