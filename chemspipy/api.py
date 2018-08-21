@@ -99,7 +99,9 @@ class BaseChemSpider(object):
         log.debug('Initializing ChemSpider')
         self.api_url = api_url
         self.http = requests.session()
-        self.http.headers['User-Agent'] = user_agent if user_agent else 'ChemSpiPy/{} Python/{} '.format(__version__, sys.version.split()[0])
+        self.http.headers['User-Agent'] = user_agent if user_agent else 'ChemSpiPy/{} Python/{} '.format(
+            __version__, sys.version.split()[0]
+        )
         self.api_key = api_key
         self.api_version = api_version
 
