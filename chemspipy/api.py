@@ -290,8 +290,8 @@ class FilterApi(BaseChemSpider):
             'includeElements': include_elements,
             'excludeElements': exclude_elements,
             'options': {'includeAll': include_all, 'complexity': complexity, 'isotopic': isotopic},
-            'orderBy': order,
-            'orderDirection': direction
+            'orderBy': ORDERS.get(order),
+            'orderDirection': DIRECTIONS.get(direction)
         }
         response = self.post(api='compounds', namespace='filter', endpoint='element', json=json)
         return response['queryId']
@@ -314,7 +314,12 @@ class FilterApi(BaseChemSpider):
         :return: Query ID that may be passed to ``filter_status`` and ``filter_results``.
         :rtype: string
         """
-        json = {'formula': formula, 'dataSources': datasources, 'orderBy': order, 'orderDirection': direction}
+        json = {
+            'formula': formula,
+            'dataSources': datasources,
+            'orderBy': ORDERS.get(order),
+            'orderDirection': DIRECTIONS.get(direction)
+        }
         response = self.post(api='compounds', namespace='filter', endpoint='formula', json=json)
         return response['queryId']
 
@@ -336,7 +341,12 @@ class FilterApi(BaseChemSpider):
         :return: Query ID that may be passed to ``filter_formula_batch_status`` and ``filter_formula_batch_results``.
         :rtype: string
         """
-        json = {'formulas': formulas, 'dataSources': datasources, 'orderBy': order, 'orderDirection': direction}
+        json = {
+            'formulas': formulas,
+            'dataSources': datasources,
+            'orderBy': ORDERS.get(order),
+            'orderDirection': DIRECTIONS.get(direction)
+        }
         response = self.post(api='compounds', namespace='filter', endpoint='formula/batch', json=json)
         return response['queryId']
 
@@ -420,8 +430,8 @@ class FilterApi(BaseChemSpider):
         json = {
             'formula': formula,
             'options': {'complexity': complexity, 'isotopic': isotopic},
-            'orderBy': order,
-            'orderDirection': direction
+            'orderBy': ORDERS.get(order),
+            'orderDirection': DIRECTIONS.get(direction)
         }
         if molecular_weight is not None and molecular_weight_range is not None:
             json['molecularWeight'] = {'mass': molecular_weight, 'range': molecular_weight_range}
@@ -456,8 +466,11 @@ class FilterApi(BaseChemSpider):
         :rtype: string
         """
         json = {
-            'mass': mass, 'range': mass_range, 'dataSources': datasources, 'orderBy': order,
-            'orderDirection': direction
+            'mass': mass,
+            'range': mass_range,
+            'dataSources': datasources,
+            'orderBy': ORDERS.get(order),
+            'orderDirection': DIRECTIONS.get(direction)
         }
         response = self.post(api='compounds', namespace='filter', endpoint='mass', json=json)
         return response['queryId']
@@ -485,7 +498,12 @@ class FilterApi(BaseChemSpider):
         :rtype: string
         """
         masses = [{'mass': m, 'range': r} for m, r in masses]
-        json = {'masses': masses, 'dataSources': datasources, 'orderBy': order, 'orderDirection': direction}
+        json = {
+            'masses': masses,
+            'dataSources': datasources,
+            'orderBy': ORDERS.get(order),
+            'orderDirection': DIRECTIONS.get(direction)
+        }
         response = self.post(api='compounds', namespace='filter', endpoint='mass/batch', json=json)
         return response['queryId']
 
@@ -527,7 +545,7 @@ class FilterApi(BaseChemSpider):
         :return: Query ID that may be passed to ``filter_status`` and ``filter_results``.
         :rtype: string
         """
-        json = {'name': name, 'orderBy': order, 'orderDirection': direction}
+        json = {'name': name, 'orderBy': ORDERS.get(order),  'orderDirection': DIRECTIONS.get(direction)}
         response = self.post(api='compounds', namespace='filter', endpoint='name', json=json)
         return response['queryId']
 
