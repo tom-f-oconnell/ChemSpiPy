@@ -80,10 +80,10 @@ ORDERS = {
 }
 
 #: All available compound details fields.
-FIELDS = {
+FIELDS = [
     'SMILES', 'Formula', 'AverageMass', 'MolecularWeight', 'MonoisotopicMass', 'NominalMass', 'CommonName',
     'ReferenceCount', 'DataSourceCount', 'PubMedCount', 'RSCCount', 'Mol2D', 'Mol3D'
-}
+]
 
 
 class BaseChemSpider(object):
