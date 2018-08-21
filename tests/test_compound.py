@@ -32,12 +32,12 @@ def test_get_compound():
     compound = cs.get_compound(2157)
     assert isinstance(compound, Compound)
     assert compound.record_id == 2157
-    with pytest.warns(DeprecationWarning):
+    with pytest.deprecated_call():
         assert compound.csid == 2157
     compound = cs.get_compound('2157')
     assert isinstance(compound, Compound)
     assert compound.record_id == 2157
-    with pytest.warns(DeprecationWarning):
+    with pytest.deprecated_call():
         assert compound.csid == 2157
 
 
@@ -105,7 +105,7 @@ def test_inchi():
 def test_stdinchi():
     """Test Compound property stdinchi."""
     compound = cs.get_compound(2157)
-    with pytest.warns(DeprecationWarning):
+    with pytest.deprecated_call():
         assert compound.stdinchi == 'InChI=1S/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)'
         # Ensure value is the same on subsequent access from cache
         assert compound.stdinchi == 'InChI=1S/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)'
@@ -122,7 +122,7 @@ def test_inchikey():
 def test_stdinchikey():
     """Test Compound property stdinchikey."""
     compound = cs.get_compound(2157)
-    with pytest.warns(DeprecationWarning):
+    with pytest.deprecated_call():
         assert compound.stdinchikey == 'BSYNRYMUTXBXSQ-UHFFFAOYSA-N'
         # Ensure value is the same on subsequent access from cache
         assert compound.stdinchikey == 'BSYNRYMUTXBXSQ-UHFFFAOYSA-N'

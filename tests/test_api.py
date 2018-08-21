@@ -232,14 +232,14 @@ def test_validate_inchikey():
 
 def test_get_databases():
     """Test get_databases returns the list of ChemSpider data sources."""
-    with pytest.warns(DeprecationWarning):
+    with pytest.deprecated_call():
         dbs = cs.get_databases()
         assert all(source in dbs for source in ['Wikipedia', 'ZINC', 'PubChem'])
 
 
 def test_get_extended_compound_info():
     """Test get_extended_compound_info returns info for a CSID."""
-    with pytest.warns(DeprecationWarning):
+    with pytest.deprecated_call():
         info = cs.get_extended_compound_info(6543)
         assert all(field in info for field in [
             'id', 'smiles', 'formula', 'averageMass', 'molecularWeight', 'monoisotopicMass', 'nominalMass',
@@ -256,7 +256,7 @@ def test_get_extended_compound_info():
 
 def test_get_extended_compound_info_list():
     """Test get_extended_compound_info_list returns info for a list of CSIDs."""
-    with pytest.warns(DeprecationWarning):
+    with pytest.deprecated_call():
         info = cs.get_extended_compound_info_list([6543, 1235, 6084])
         assert len(info) == 3
         assert all(field in info[0] for field in [
@@ -274,7 +274,7 @@ def test_get_extended_compound_info_list():
 
 def test_get_extended_mol_compound_info_list():
     """Test get_extended_mol_compound_info_list returns info for a list of CSIDs."""
-    with pytest.warns(DeprecationWarning):
+    with pytest.deprecated_call():
         info = cs.get_extended_mol_compound_info_list([1236], include_external_references=True,
                                                       include_reference_counts=True)
         assert len(info) == 1
@@ -295,7 +295,7 @@ def test_get_extended_mol_compound_info_list():
 
 def test_get_record_mol():
     """Test get_record_mol returns a MOL file."""
-    with pytest.warns(DeprecationWarning):
+    with pytest.deprecated_call():
         mol = cs.get_record_mol(6084)
         assert 'V2000' in mol
         assert 'M  END' in mol
@@ -305,21 +305,21 @@ def test_get_record_mol():
 
 def test_async_simple_search():
     """Test async_simple_search returns a transaction ID."""
-    with pytest.warns(DeprecationWarning):
+    with pytest.deprecated_call():
         rid = cs.async_simple_search('benzene')
         assert re.compile(r'[a-f0-9\-]{20,50}').search(rid)
 
 
 def test_async_simple_search_ordered():
     """Test async_simple_search returns a transaction ID."""
-    with pytest.warns(DeprecationWarning):
+    with pytest.deprecated_call():
         rid = cs.async_simple_search_ordered('glucose')
         assert re.compile(r'[a-f0-9\-]{20,50}').search(rid)
 
 
 def test_get_async_search_status():
     """Test get_async_search_status returns the status for a transaction ID."""
-    with pytest.warns(DeprecationWarning):
+    with pytest.deprecated_call():
         rid = cs.async_simple_search('benzene')
         status = cs.get_async_search_status(rid)
         assert status in {
@@ -330,7 +330,7 @@ def test_get_async_search_status():
 
 def test_get_async_search_status_and_count():
     """Test get_async_search_status_and_count returns the status for a transaction ID."""
-    with pytest.warns(DeprecationWarning):
+    with pytest.deprecated_call():
         rid = cs.async_simple_search('benzene')
         while True:
             status = cs.get_async_search_status_and_count(rid)
@@ -343,7 +343,7 @@ def test_get_async_search_status_and_count():
 
 def test_get_async_search_result():
     """Test get_async_search_result returns a list of CSIDs."""
-    with pytest.warns(DeprecationWarning):
+    with pytest.deprecated_call():
         rid = cs.async_simple_search('benzene')
         while True:
             status = cs.get_async_search_status(rid)
@@ -355,7 +355,7 @@ def test_get_async_search_result():
 
 def test_get_async_search_result_part():
     """Test get_async_search_result_part returns a list of CSIDs."""
-    with pytest.warns(DeprecationWarning):
+    with pytest.deprecated_call():
         rid = cs.async_simple_search('glucose')
         while True:
             status = cs.get_async_search_status(rid)
@@ -370,7 +370,7 @@ def test_get_async_search_result_part():
 
 def test_get_compound_info():
     """Test get_compound_info returns info for a CSID."""
-    with pytest.warns(DeprecationWarning):
+    with pytest.deprecated_call():
         info = cs.get_compound_info(123)
         assert all(field in info for field in ['id', 'smiles'])
         assert isinstance(info['id'], int)
@@ -379,7 +379,7 @@ def test_get_compound_info():
 
 def test_get_compound_thumbnail():
     """Test get_compound_thumbnail returns image data for a CSID."""
-    with pytest.warns(DeprecationWarning):
+    with pytest.deprecated_call():
         img = cs.get_compound_thumbnail(123)
         assert img[:8] == b'\x89PNG\x0d\x0a\x1a\x0a'  # PNG magic number
 
