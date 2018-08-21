@@ -10,13 +10,14 @@ A wrapper for asynchronous search requests.
 from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
+import datetime
 import logging
 import threading
 import time
 
 from six.moves import range
 
-from . import errors, utils
+from . import errors, objects, utils
 
 
 log = logging.getLogger(__name__)
@@ -43,7 +44,8 @@ class Results(object):
         self._exception = None
         self._qid = None
         self._message = None
-        self._duration = None
+        self._start = None
+        self._end = None
         self._results = []
         self._searchthread = threading.Thread(name='SearchThread', target=self._search, args=(cs, searchfunc, searchargs))
         self._searchthread.start()
@@ -51,6 +53,7 @@ class Results(object):
     def _search(self, cs, searchfunc, searchargs):
         """Perform the search and retrieve the results."""
         log.debug('Searching in background thread')
+        self._start = datetime.datetime.utcnow()
         try:
             self._qid = searchfunc(*searchargs)
             log.debug('Setting qid: %s' % self._qid)
@@ -59,26 +62,27 @@ class Results(object):
                 status = cs.filter_status(self._qid)
                 self._status = status['status']
                 self._message = status.get('message', '')
-                self._duration = utils.duration(status['elapsed'])
                 log.debug(status)
                 time.sleep(0.2)
-                if status['status'] == 'ResultReady':
+                if status['status'] == 'Complete':
                     break
-                elif status['status'] in {'Failed', 'Unknown', 'Suspended'}:
+                elif status['status'] in {'Failed', 'Unknown', 'Suspended', 'Not Found'}:
                     raise errors.ChemSpiPyServerError('Search Failed: %s' % status.get('message', ''))
-                elif status['status'] == 'TooManyRecords':
-                    raise errors.ChemSpiPyServerError('Too many results')
             else:
                 raise errors.ChemSpiPyTimeoutError('Search took too long')
             log.debug('Search success!')
+            self._end = datetime.datetime.utcnow()
             if status['count'] > 0:
-                self._results = cs.filter_results(self._qid)
+                self._results = [objects.Compound(cs, csid) for csid in cs.filter_results(self._qid)]
                 log.debug('Results: %s', self._results)
             elif not self._message:
                 self._message = 'No results found'
         except Exception as e:
             # Catch and store exception so we can raise it in the main thread
             self._exception = e
+            self._end = datetime.datetime.utcnow()
+            if self._status == 'Created':
+                self._status = 'Failed'
 
     def ready(self):
         """Return True if the search finished.
@@ -148,7 +152,7 @@ class Results(object):
         :rtype: :py:class:`datetime.timedelta`
         """
         self.wait()
-        return self._duration
+        return self._end - self._start
 
     @utils.memoized_property
     def sdf(self):

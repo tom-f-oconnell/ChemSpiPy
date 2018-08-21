@@ -15,8 +15,7 @@ import os
 
 import pytest
 
-from chemspipy import ChemSpider, ASCENDING, DESCENDING, CSID, REFERENCE_COUNT, MOLECULAR_WEIGHT
-from chemspipy.errors import ChemSpiPyServerError
+from chemspipy import ChemSpider, errors, ASCENDING, DESCENDING, CSID, REFERENCE_COUNT, MOLECULAR_WEIGHT
 
 
 logging.basicConfig(level=logging.WARN, format='%(levelname)s:%(name)s:(%(threadName)-10s):%(message)s')
@@ -30,10 +29,10 @@ cs = ChemSpider(CHEMSPIDER_API_KEY)
 def test_search_smiles():
     """Test SMILES input to search."""
     results = cs.search('O=C(OCC)C')
-    assert results.ready() == False
+    assert results.ready() is False
     results.wait()
-    assert results.ready() == True
-    assert results.success() == True
+    assert results.ready() is True
+    assert results.success() is True
     assert results.message == 'Found by conversion query string to chemical structure (full match)'
     assert results[0].csid == 8525
     assert results.duration.total_seconds() > 0
@@ -64,7 +63,7 @@ def test_search_iter():
 def test_search_ordered_csid():
     """Test search results ordered by CSID."""
     results = cs.search('glucose', order=CSID)
-    assert list(results)  == sorted(results, key=lambda x: x.csid)
+    assert list(results) == sorted(results, key=lambda x: x.csid)
 
 
 def test_search_ordered_csid_descending():
@@ -89,8 +88,8 @@ def test_search_no_results():
     """Test name input to search."""
     results = cs.search('aergherguyaelrgiaubrfawyef')
     assert results.message == 'No results found'
-    assert results.ready() == True
-    assert results.success() == True
+    assert results.ready() is True
+    assert results.success() is True
     assert len(results) == 0
 
 
@@ -104,20 +103,17 @@ def test_search_failed():
     """Test ChemSpiPyServerError is raised for an invalid SMILES."""
     results = cs.search('O=C(OCC)C*')
     results.wait()
-    assert isinstance(results.exception, ChemSpiPyServerError)
+    assert isinstance(results.exception, errors.ChemSpiPyBadRequestError)
     assert results.status == 'Failed'
     assert repr(results) == 'Results(Failed)'
-    assert results.ready() == True
-    assert results.success() == False
+    assert results.ready() is True
+    assert results.success() is False
     assert results.count == 0
     assert results.duration.total_seconds() > 0
 
 
 def test_search_exception():
     """Test ChemSpiPyServerError is raised for an invalid SMILES."""
-    with pytest.raises(ChemSpiPyServerError):
+    with pytest.raises(errors.ChemSpiPyBadRequestError):
         results = cs.search('O=C(OCC)C*', raise_errors=True)
         results.wait()
-
-
-# ordered search - ascending/descending, different sort orders
