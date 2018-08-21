@@ -17,7 +17,6 @@ import warnings
 import zlib
 
 import requests
-import six
 
 from . import __version__, errors
 from .objects import Compound
@@ -46,7 +45,7 @@ DESCENDING = 'descending'
 
 #: Record ID sort order
 RECORD_ID = 'record_id'
-#: CSID sort order
+#: CSID sort order (same as RECORD_ID, kept for backwards compatibility)
 CSID = 'csid'
 #: Mass defect sort order
 MASS_DEFECT = 'mass_defect'
@@ -62,20 +61,13 @@ PUBMED_COUNT = 'pubmed_count'
 RSC_COUNT = 'rsc_count'
 
 
-#: Coordinate dimensions
-DIMENSIONS = {
-    MOL2D: 'e2D',
-    MOL3D: 'e3D',
-    BOTH: 'eBoth'
-}
-
-#: Sort directions
+#: Map sort directions to strings required by REST API.
 DIRECTIONS = {
     ASCENDING: 'ascending',
     DESCENDING: 'descending'
 }
 
-#: Sort orders
+#: Map sort orders to strings required by REST API.
 ORDERS = {
     RECORD_ID: 'recordId',
     CSID: 'recordId',
@@ -201,7 +193,7 @@ class RecordsApi(BaseChemSpider):
         The available fields are listed in :data:`~chemspipy.api.FIELDS`.
 
         :param int record_id: Record ID.
-        :param list[string] fields: List of fields to include in the result.
+        :param list[string] fields: (Optional) List of fields to include in the result.
         :return: Record details.
         :rtype: dict
         """
@@ -216,7 +208,7 @@ class RecordsApi(BaseChemSpider):
         The available fields are listed in :data:`~chemspipy.api.FIELDS`.
 
         :param list[int] record_ids: List of record IDs (up to 100).
-        :param list[string] fields: List of fields to include in the results.
+        :param list[string] fields: (Optional) List of fields to include in the results.
         :return: List of record details.
         :rtype: list[dict]
         """
@@ -231,7 +223,7 @@ class RecordsApi(BaseChemSpider):
         available datasources.
 
         :param int record_id: Record ID.
-        :param list[string] datasources: List of datasources to restrict the results to.
+        :param list[string] datasources: (Optional) List of datasources to restrict the results to.
         :return: External references.
         :rtype: list[dict]
         """
@@ -277,18 +269,18 @@ class FilterApi(BaseChemSpider):
 
         A compound with a complexity of 'multiple' has more than one disconnected system in it or a metal atom or ion.
 
-        Valid values for order are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
-        pubMedCount, rscCount.
-
-        Valid values for direction are ascending, descending.
+        The accepted values for ``order`` are: :data:`~chemspipy.api.RECORD_ID`, :data:`~chemspipy.api.MASS_DEFECT`,
+        :data:`~chemspipy.api.MOLECULAR_WEIGHT`, :data:`~chemspipy.api.REFERENCE_COUNT`,
+        :data:`~chemspipy.api.DATASOURCE_COUNT`, :data:`~chemspipy.api.PUBMED_COUNT` or
+        :data:`~chemspipy.api.RSC_COUNT`.
 
         :param list[string] include_elements: List of up to 15 elements to search for compounds containing.
         :param list[string] exclude_elements: List of up to 100 elements to exclude compounds containing.
-        :param bool include_all: Whether to only include compounds that have all include_elements.
-        :param string complexity: 'any', 'single', or 'multiple'
-        :param string isotopic: 'any', 'labeled', or 'unlabeled'.
-        :param string order: What to sort the results by.
-        :param string direction: Ascending or descending sort direction for results.
+        :param bool include_all: (Optional) Whether to only include compounds that have all include_elements.
+        :param string complexity: (Optional) 'any', 'single', or 'multiple'
+        :param string isotopic: (Optional) 'any', 'labeled', or 'unlabeled'.
+        :param string order: (Optional) Field to sort the result by.
+        :param string direction: (Optional) :data:`~chemspipy.api.ASCENDING` or :data:`~chemspipy.api.DESCENDING`.
         :return: Query ID that may be passed to ``filter_status`` and ``filter_results``.
         :rtype: string
         """
@@ -308,15 +300,15 @@ class FilterApi(BaseChemSpider):
         Optionally filter the results by data source. Use :meth:`~chemspipy.api.ChemSpider.get_datasources` to get the
         available datasources.
 
-        Valid values for order are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
-        pubMedCount, rscCount.
-
-        Valid values for direction are ascending, descending.
+        The accepted values for ``order`` are: :data:`~chemspipy.api.RECORD_ID`, :data:`~chemspipy.api.MASS_DEFECT`,
+        :data:`~chemspipy.api.MOLECULAR_WEIGHT`, :data:`~chemspipy.api.REFERENCE_COUNT`,
+        :data:`~chemspipy.api.DATASOURCE_COUNT`, :data:`~chemspipy.api.PUBMED_COUNT` or
+        :data:`~chemspipy.api.RSC_COUNT`.
 
         :param string formula: Molecular formula.
-        :param list[string] datasources: List of datasources to restrict the results to.
-        :param string order: What to sort the results by.
-        :param string direction: Ascending or descending sort direction for results.
+        :param list[string] datasources: (Optional) List of datasources to restrict the results to.
+        :param string order: (Optional) Field to sort the result by.
+        :param string direction: (Optional) :data:`~chemspipy.api.ASCENDING` or :data:`~chemspipy.api.DESCENDING`.
         :return: Query ID that may be passed to ``filter_status`` and ``filter_results``.
         :rtype: string
         """
@@ -330,15 +322,15 @@ class FilterApi(BaseChemSpider):
         Optionally filter the results by data source. Use :meth:`~chemspipy.api.ChemSpider.get_datasources` to get the
         available datasources.
 
-        Valid values for order are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
-        pubMedCount, rscCount.
-
-        Valid values for direction are ascending, descending.
+        The accepted values for ``order`` are: :data:`~chemspipy.api.RECORD_ID`, :data:`~chemspipy.api.MASS_DEFECT`,
+        :data:`~chemspipy.api.MOLECULAR_WEIGHT`, :data:`~chemspipy.api.REFERENCE_COUNT`,
+        :data:`~chemspipy.api.DATASOURCE_COUNT`, :data:`~chemspipy.api.PUBMED_COUNT` or
+        :data:`~chemspipy.api.RSC_COUNT`.
 
         :param list[string] formulas: Molecular formula.
-        :param list[string] datasources: List of datasources to restrict the results to.
-        :param string order: What to sort the results by.
-        :param string direction: Ascending or descending sort direction for results.
+        :param list[string] datasources: (Optional) List of datasources to restrict the results to.
+        :param string order: (Optional) Field to sort the result by.
+        :param string direction: (Optional) :data:`~chemspipy.api.ASCENDING` or :data:`~chemspipy.api.DESCENDING`.
         :return: Query ID that may be passed to ``filter_formula_batch_status`` and ``filter_formula_batch_results``.
         :rtype: string
         """
@@ -402,10 +394,10 @@ class FilterApi(BaseChemSpider):
 
         A compound with a complexity of 'multiple' has more than one disconnected system in it or a metal atom or ion.
 
-        Valid values for order are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
-        pubMedCount, rscCount.
-
-        Valid values for direction are ascending, descending.
+        The accepted values for ``order`` are: :data:`~chemspipy.api.RECORD_ID`, :data:`~chemspipy.api.MASS_DEFECT`,
+        :data:`~chemspipy.api.MOLECULAR_WEIGHT`, :data:`~chemspipy.api.REFERENCE_COUNT`,
+        :data:`~chemspipy.api.DATASOURCE_COUNT`, :data:`~chemspipy.api.PUBMED_COUNT` or
+        :data:`~chemspipy.api.RSC_COUNT`.
 
         :param string formula: Molecular formula.
         :param float molecular_weight: Molecular weight.
@@ -416,10 +408,10 @@ class FilterApi(BaseChemSpider):
         :param float nominal_mass_range: Nominal mass range.
         :param float average_mass_range: Average mass range.
         :param float monoisotopic_mass_range: Monoisotopic mass range.
-        :param string complexity: 'any', 'single', or 'multiple'
-        :param string isotopic: 'any', 'labeled', or 'unlabeled'.
-        :param string order: What to sort the results by.
-        :param string direction: Ascending or descending sort direction for results.
+        :param string complexity: (Optional) 'any', 'single', or 'multiple'
+        :param string isotopic: (Optional) 'any', 'labeled', or 'unlabeled'.
+        :param string order: (Optional) Field to sort the result by.
+        :param string direction: (Optional) :data:`~chemspipy.api.ASCENDING` or :data:`~chemspipy.api.DESCENDING`.
         :return: Query ID that may be passed to ``filter_status`` and ``filter_results``.
         :rtype: string
         """
@@ -448,16 +440,16 @@ class FilterApi(BaseChemSpider):
         Optionally filter the results by data source. Use :meth:`~chemspipy.api.ChemSpider.get_datasources` to get the
         available datasources.
 
-        Valid values for order are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
-        pubMedCount, rscCount.
-
-        Valid values for direction are ascending, descending.
+        The accepted values for ``order`` are: :data:`~chemspipy.api.RECORD_ID`, :data:`~chemspipy.api.MASS_DEFECT`,
+        :data:`~chemspipy.api.MOLECULAR_WEIGHT`, :data:`~chemspipy.api.REFERENCE_COUNT`,
+        :data:`~chemspipy.api.DATASOURCE_COUNT`, :data:`~chemspipy.api.PUBMED_COUNT` or
+        :data:`~chemspipy.api.RSC_COUNT`.
 
         :param float mass: Mass between 1 and 11000 Atomic Mass Units.
         :param float mass_range: Mass range between 0.0001 and 100 Atomic Mass Units.
-        :param list[string] datasources: List of datasources to restrict the results to.
-        :param string order: What to sort the results by.
-        :param string direction: Ascending or descending sort direction for results.
+        :param list[string] datasources: (Optional) List of datasources to restrict the results to.
+        :param string order: (Optional) Field to sort the result by.
+        :param string direction: (Optional) :data:`~chemspipy.api.ASCENDING` or :data:`~chemspipy.api.DESCENDING`.
         :return: Query ID that may be passed to ``filter_status`` and ``filter_results``.
         :rtype: string
         """
@@ -478,15 +470,15 @@ class FilterApi(BaseChemSpider):
         Optionally filter the results by data source. Use :meth:`~chemspipy.api.ChemSpider.get_datasources` to get the
         available datasources.
 
-        Valid values for order are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
-        pubMedCount, rscCount.
-
-        Valid values for direction are ascending, descending.
+        The accepted values for ``order`` are: :data:`~chemspipy.api.RECORD_ID`, :data:`~chemspipy.api.MASS_DEFECT`,
+        :data:`~chemspipy.api.MOLECULAR_WEIGHT`, :data:`~chemspipy.api.REFERENCE_COUNT`,
+        :data:`~chemspipy.api.DATASOURCE_COUNT`, :data:`~chemspipy.api.PUBMED_COUNT` or
+        :data:`~chemspipy.api.RSC_COUNT`.
 
         :param list[tuple[float, float]] masses: List of (mass, range) tuples.
-        :param list[string] datasources: List of datasources to restrict the results to.
-        :param string order: What to sort the results by.
-        :param string direction: Ascending or descending sort direction for results.
+        :param list[string] datasources: (Optional) List of datasources to restrict the results to.
+        :param string order: (Optional) Field to sort the result by.
+        :param string direction: (Optional) :data:`~chemspipy.api.ASCENDING` or :data:`~chemspipy.api.DESCENDING`.
         :return: Query ID that may be passed to ``filter_formula_batch_status`` and ``filter_formula_batch_results``.
         :rtype: string
         """
@@ -522,14 +514,14 @@ class FilterApi(BaseChemSpider):
     def filter_name(self, name, order=None, direction=None):
         """Search compounds by name.
 
-        Valid values for order are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
-        pubMedCount, rscCount.
-
-        Valid values for direction are ascending, descending.
+        The accepted values for ``order`` are: :data:`~chemspipy.api.RECORD_ID`, :data:`~chemspipy.api.MASS_DEFECT`,
+        :data:`~chemspipy.api.MOLECULAR_WEIGHT`, :data:`~chemspipy.api.REFERENCE_COUNT`,
+        :data:`~chemspipy.api.DATASOURCE_COUNT`, :data:`~chemspipy.api.PUBMED_COUNT` or
+        :data:`~chemspipy.api.RSC_COUNT`.
 
         :param string name: Compound name.
-        :param string order: What to sort the results by.
-        :param string direction: Ascending or descending sort direction for results.
+        :param string order: (Optional) Field to sort the result by.
+        :param string direction: (Optional) :data:`~chemspipy.api.ASCENDING` or :data:`~chemspipy.api.DESCENDING`.
         :return: Query ID that may be passed to ``filter_status`` and ``filter_results``.
         :rtype: string
         """
@@ -695,11 +687,8 @@ class SearchApi(BaseChemSpider):
         Security token is required.
 
         :param string query: Search query - a name, SMILES, InChI, InChIKey, CSID, etc.
-        :param string order: :data:`~chemspipy.api.CSID`, :data:`~chemspipy.api.MASS_DEFECT`,
-                             :data:`~chemspipy.api.MOLECULAR_WEIGHT`, :data:`~chemspipy.api.REFERENCE_COUNT`,
-                             :data:`~chemspipy.api.DATASOURCE_COUNT`, :data:`~chemspipy.api.PUBMED_COUNT` or
-                             :data:`~chemspipy.api.RSC_COUNT`.
-        :param string direction: :data:`~chemspipy.api.ASCENDING` or :data:`~chemspipy.api.DESCENDING`.
+        :param string order: (Optional) Field to sort the result by.
+        :param string direction: (Optional) :data:`~chemspipy.api.ASCENDING` or :data:`~chemspipy.api.DESCENDING`.
         :return: Transaction ID.
         :rtype: string
         """
@@ -777,11 +766,12 @@ class SearchApi(BaseChemSpider):
     def simple_search(self, query):
         """Search ChemSpider with arbitrary query.
 
-        A maximum of 100 results are returned. Security token is required.
+        .. deprecated:: 2.0
+           Use :meth:`~chemspipy.api.ChemSpider.search` instead.
 
-        :param string query: Search query - a name, SMILES, InChI, InChIKey, CSID, etc.
-        :return: List of :class:`Compounds <chemspipy.Compound>`.
-        :rtype: list[:class:`~chemspipy.Compound`]
+        :param string query: Search query - a chemical name.
+        :return: Search Results list.
+        :rtype: chemspipy.search.Results
         """
         warnings.warn('Use search instead of simple_search.', DeprecationWarning)
         return self.search(query=query)
@@ -807,23 +797,23 @@ class CustomApi(BaseChemSpider):
         """
         return [Compound(self, csid) for csid in csids]
 
-    def search(self, query, format='name', order=None, direction=ASCENDING, raise_errors=False):
+    def search(self, query, order=None, direction=ASCENDING, raise_errors=False):
         """Search ChemSpider for the specified query and return the results. Security token is required.
 
+        The accepted values for ``order`` are: :data:`~chemspipy.api.RECORD_ID`, :data:`~chemspipy.api.MASS_DEFECT`,
+        :data:`~chemspipy.api.MOLECULAR_WEIGHT`, :data:`~chemspipy.api.REFERENCE_COUNT`,
+        :data:`~chemspipy.api.DATASOURCE_COUNT`, :data:`~chemspipy.api.PUBMED_COUNT` or
+        :data:`~chemspipy.api.RSC_COUNT`.
+
         :param string|int query: Search query.
-        :param string order: (Optional) :data:`~chemspipy.api.CSID`, :data:`~chemspipy.api.MASS_DEFECT`,
-                             :data:`~chemspipy.api.MOLECULAR_WEIGHT`, :data:`~chemspipy.api.REFERENCE_COUNT`,
-                             :data:`~chemspipy.api.DATASOURCE_COUNT`, :data:`~chemspipy.api.PUBMED_COUNT` or
-                             :data:`~chemspipy.api.RSC_COUNT`.
+        :param string order: (Optional) Field to sort the result by.
         :param string direction: (Optional) :data:`~chemspipy.api.ASCENDING` or :data:`~chemspipy.api.DESCENDING`.
-        :param bool raise_errors: If True, raise exceptions. If False, store on Results ``exception`` property.
+        :param bool raise_errors: (Optional) If True, raise exceptions. If False, store on Results ``exception``
+                                  property.
         :return: Search Results list.
         :rtype: chemspipy.search.Results
         """
-        # TODO: Use format parameter to choose filter_name, filter_formula, filter_inchi, filter_inchikey, filter_smiles
         return Results(self, self.filter_name, (query, order, direction), raise_errors=raise_errors)
-
-    # TODO: search_element, search_intrinsicproperty, search_mass
 
 
 class ChemSpider(CustomApi, FilterApi, LookupsApi, RecordsApi, ToolsApi, MassSpecApi, SearchApi):
