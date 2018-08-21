@@ -269,7 +269,7 @@ class FilterApi(BaseChemSpider):
     """"""
 
     def filter_element(self, include_elements, exclude_elements=None, include_all=False, complexity=None, isotopic=None,
-                       order_by=None, order_direction=None):
+                       order=None, direction=None):
         """Search compounds by element.
 
         Set include_all to true to only consider records that contain all of the elements in ``include_elements``,
@@ -277,18 +277,18 @@ class FilterApi(BaseChemSpider):
 
         A compound with a complexity of 'multiple' has more than one disconnected system in it or a metal atom or ion.
 
-        Valid values for order_by are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
+        Valid values for order are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
         pubMedCount, rscCount.
 
-        Valid values for order_direction are ascending, descending.
+        Valid values for direction are ascending, descending.
 
         :param list[string] include_elements: List of up to 15 elements to search for compounds containing.
         :param list[string] exclude_elements: List of up to 100 elements to exclude compounds containing.
         :param bool include_all: Whether to only include compounds that have all include_elements.
         :param string complexity: 'any', 'single', or 'multiple'
         :param string isotopic: 'any', 'labeled', or 'unlabeled'.
-        :param string order_by: What to sort the results by.
-        :param string order_direction: Ascending or descending sort direction for results.
+        :param string order: What to sort the results by.
+        :param string direction: Ascending or descending sort direction for results.
         :return: Query ID that may be passed to ``filter_status`` and ``filter_results``.
         :rtype: string
         """
@@ -296,53 +296,53 @@ class FilterApi(BaseChemSpider):
             'includeElements': include_elements,
             'excludeElements': exclude_elements,
             'options': {'includeAll': include_all, 'complexity': complexity, 'isotopic': isotopic},
-            'orderBy': order_by,
-            'orderDirection': order_direction
+            'orderBy': order,
+            'orderDirection': direction
         }
         response = self.post(api='compounds', namespace='filter', endpoint='element', json=json)
         return response['queryId']
 
-    def filter_formula(self, formula, datasources=None, order_by=None, order_direction=None):
+    def filter_formula(self, formula, datasources=None, order=None, direction=None):
         """Search compounds by formula.
 
         Optionally filter the results by data source. Use :meth:`~chemspipy.api.ChemSpider.get_datasources` to get the
         available datasources.
 
-        Valid values for order_by are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
+        Valid values for order are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
         pubMedCount, rscCount.
 
-        Valid values for order_direction are ascending, descending.
+        Valid values for direction are ascending, descending.
 
         :param string formula: Molecular formula.
         :param list[string] datasources: List of datasources to restrict the results to.
-        :param string order_by: What to sort the results by.
-        :param string order_direction: Ascending or descending sort direction for results.
+        :param string order: What to sort the results by.
+        :param string direction: Ascending or descending sort direction for results.
         :return: Query ID that may be passed to ``filter_status`` and ``filter_results``.
         :rtype: string
         """
-        json = {'formula': formula, 'dataSources': datasources, 'orderBy': order_by, 'orderDirection': order_direction}
+        json = {'formula': formula, 'dataSources': datasources, 'orderBy': order, 'orderDirection': direction}
         response = self.post(api='compounds', namespace='filter', endpoint='formula', json=json)
         return response['queryId']
 
-    def filter_formula_batch(self, formulas, datasources=None, order_by=None, order_direction=None):
+    def filter_formula_batch(self, formulas, datasources=None, order=None, direction=None):
         """Search compounds with a list of formulas.
 
         Optionally filter the results by data source. Use :meth:`~chemspipy.api.ChemSpider.get_datasources` to get the
         available datasources.
 
-        Valid values for order_by are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
+        Valid values for order are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
         pubMedCount, rscCount.
 
-        Valid values for order_direction are ascending, descending.
+        Valid values for direction are ascending, descending.
 
         :param list[string] formulas: Molecular formula.
         :param list[string] datasources: List of datasources to restrict the results to.
-        :param string order_by: What to sort the results by.
-        :param string order_direction: Ascending or descending sort direction for results.
+        :param string order: What to sort the results by.
+        :param string direction: Ascending or descending sort direction for results.
         :return: Query ID that may be passed to ``filter_formula_batch_status`` and ``filter_formula_batch_results``.
         :rtype: string
         """
-        json = {'formulas': formulas, 'dataSources': datasources, 'orderBy': order_by, 'orderDirection': order_direction}
+        json = {'formulas': formulas, 'dataSources': datasources, 'orderBy': order, 'orderDirection': direction}
         response = self.post(api='compounds', namespace='filter', endpoint='formula/batch', json=json)
         return response['queryId']
 
@@ -395,17 +395,17 @@ class FilterApi(BaseChemSpider):
     def filter_intrinsicproperty(self, formula=None, molecular_weight=None, nominal_mass=None, average_mass=None,
                                  monoisotopic_mass=None, molecular_weight_range=None, nominal_mass_range=None,
                                  average_mass_range=None, monoisotopic_mass_range=None, complexity=None, isotopic=None,
-                                 order_by=None, order_direction=None):
+                                 order=None, direction=None):
         """Search compounds by intrinsic property, such as formula and mass.
 
         At least one of formula, molecular_weight, nominal_mass, average_mass, monoisotopic_mass must be specified.
 
         A compound with a complexity of 'multiple' has more than one disconnected system in it or a metal atom or ion.
 
-        Valid values for order_by are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
+        Valid values for order are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
         pubMedCount, rscCount.
 
-        Valid values for order_direction are ascending, descending.
+        Valid values for direction are ascending, descending.
 
         :param string formula: Molecular formula.
         :param float molecular_weight: Molecular weight.
@@ -418,16 +418,16 @@ class FilterApi(BaseChemSpider):
         :param float monoisotopic_mass_range: Monoisotopic mass range.
         :param string complexity: 'any', 'single', or 'multiple'
         :param string isotopic: 'any', 'labeled', or 'unlabeled'.
-        :param string order_by: What to sort the results by.
-        :param string order_direction: Ascending or descending sort direction for results.
+        :param string order: What to sort the results by.
+        :param string direction: Ascending or descending sort direction for results.
         :return: Query ID that may be passed to ``filter_status`` and ``filter_results``.
         :rtype: string
         """
         json = {
             'formula': formula,
             'options': {'complexity': complexity, 'isotopic': isotopic},
-            'orderBy': order_by,
-            'orderDirection': order_direction
+            'orderBy': order,
+            'orderDirection': direction
         }
         if molecular_weight is not None and molecular_weight_range is not None:
             json['molecularWeight'] = {'mass': molecular_weight, 'range': molecular_weight_range}
@@ -440,7 +440,7 @@ class FilterApi(BaseChemSpider):
         response = self.post(api='compounds', namespace='filter', endpoint='intrinsicproperty', json=json)
         return response['queryId']
 
-    def filter_mass(self, mass, mass_range, datasources=None, order_by=None, order_direction=None):
+    def filter_mass(self, mass, mass_range, datasources=None, order=None, direction=None):
         """Search compounds by mass.
 
         Filter to compounds within ``mass_range`` of the given ``mass``.
@@ -448,27 +448,27 @@ class FilterApi(BaseChemSpider):
         Optionally filter the results by data source. Use :meth:`~chemspipy.api.ChemSpider.get_datasources` to get the
         available datasources.
 
-        Valid values for order_by are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
+        Valid values for order are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
         pubMedCount, rscCount.
 
-        Valid values for order_direction are ascending, descending.
+        Valid values for direction are ascending, descending.
 
         :param float mass: Mass between 1 and 11000 Atomic Mass Units.
         :param float mass_range: Mass range between 0.0001 and 100 Atomic Mass Units.
         :param list[string] datasources: List of datasources to restrict the results to.
-        :param string order_by: What to sort the results by.
-        :param string order_direction: Ascending or descending sort direction for results.
+        :param string order: What to sort the results by.
+        :param string direction: Ascending or descending sort direction for results.
         :return: Query ID that may be passed to ``filter_status`` and ``filter_results``.
         :rtype: string
         """
         json = {
-            'mass': mass, 'range': mass_range, 'dataSources': datasources, 'orderBy': order_by,
-            'orderDirection': order_direction
+            'mass': mass, 'range': mass_range, 'dataSources': datasources, 'orderBy': order,
+            'orderDirection': direction
         }
         response = self.post(api='compounds', namespace='filter', endpoint='mass', json=json)
         return response['queryId']
 
-    def filter_mass_batch(self, masses, datasources=None, order_by=None, order_direction=None):
+    def filter_mass_batch(self, masses, datasources=None, order=None, direction=None):
         """Search compounds with a list of masses and mass ranges.
 
         The ``masses`` parameter should be a list of tuples, each with two elements: A mass, and a mass range::
@@ -478,20 +478,20 @@ class FilterApi(BaseChemSpider):
         Optionally filter the results by data source. Use :meth:`~chemspipy.api.ChemSpider.get_datasources` to get the
         available datasources.
 
-        Valid values for order_by are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
+        Valid values for order are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
         pubMedCount, rscCount.
 
-        Valid values for order_direction are ascending, descending.
+        Valid values for direction are ascending, descending.
 
         :param list[tuple[float, float]] masses: List of (mass, range) tuples.
         :param list[string] datasources: List of datasources to restrict the results to.
-        :param string order_by: What to sort the results by.
-        :param string order_direction: Ascending or descending sort direction for results.
+        :param string order: What to sort the results by.
+        :param string direction: Ascending or descending sort direction for results.
         :return: Query ID that may be passed to ``filter_formula_batch_status`` and ``filter_formula_batch_results``.
         :rtype: string
         """
         masses = [{'mass': m, 'range': r} for m, r in masses]
-        json = {'masses': masses, 'dataSources': datasources, 'orderBy': order_by, 'orderDirection': order_direction}
+        json = {'masses': masses, 'dataSources': datasources, 'orderBy': order, 'orderDirection': direction}
         response = self.post(api='compounds', namespace='filter', endpoint='mass/batch', json=json)
         return response['queryId']
 
@@ -519,21 +519,21 @@ class FilterApi(BaseChemSpider):
         response = self.get(api='compounds', namespace='filter', endpoint=endpoint)
         return response['batchResults']
 
-    def filter_name(self, name, order_by=None, order_direction=None):
+    def filter_name(self, name, order=None, direction=None):
         """Search compounds by name.
 
-        Valid values for order_by are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
+        Valid values for order are recordId, massDefect, molecularWeight, referenceCount, dataSourceCount,
         pubMedCount, rscCount.
 
-        Valid values for order_direction are ascending, descending.
+        Valid values for direction are ascending, descending.
 
         :param string name: Compound name.
-        :param string order_by: What to sort the results by.
-        :param string order_direction: Ascending or descending sort direction for results.
+        :param string order: What to sort the results by.
+        :param string direction: Ascending or descending sort direction for results.
         :return: Query ID that may be passed to ``filter_status`` and ``filter_results``.
         :rtype: string
         """
-        json = {'name': name, 'orderBy': order_by, 'orderDirection': order_direction}
+        json = {'name': name, 'orderBy': order, 'orderDirection': direction}
         response = self.post(api='compounds', namespace='filter', endpoint='name', json=json)
         return response['queryId']
 
@@ -704,7 +704,7 @@ class SearchApi(BaseChemSpider):
         :rtype: string
         """
         warnings.warn('Use filter_name instead of async_simple_search.', DeprecationWarning)
-        return self.filter_name(name=query, order_by=ORDERS[order], order_direction=DIRECTIONS[direction])
+        return self.filter_name(name=query, order=order, direction=direction)
 
     def get_async_search_status(self, rid):
         """Check the status of an asynchronous search operation.
