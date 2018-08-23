@@ -45,18 +45,27 @@ class Compound(object):
 
     @property
     def record_id(self):
-        """Compound record ID."""
+        """Compound record ID.
+
+        :rtype: int
+        """
         return self._record_id
 
     @property
     def csid(self):
-        """ChemSpider ID."""
+        """ChemSpider ID.
+
+        :rtype: int
+        """
         warnings.warn('Use record_id instead of csid.', DeprecationWarning)
         return self._record_id
 
     @property
     def image_url(self):
-        """Return the URL of a PNG image of the 2D chemical structure."""
+        """Return the URL of a PNG image of the 2D chemical structure.
+
+        :rtype: string
+        """
         return 'http://www.chemspider.com/ImagesHandler.ashx?id=%s' % self.record_id
 
     @memoized_property

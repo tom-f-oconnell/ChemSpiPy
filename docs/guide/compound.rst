@@ -3,15 +3,15 @@
 Compound
 ========
 
-Many ChemSpiPy search methods return :class:`~chemspipy..api.Compound` objects, which provide more functionality that a
-simple list of ChemSpider IDs. The primary benefit is allowing easy access to further compound properties after
+Many ChemSpiPy search methods return :class:`~chemspipy.objects.Compound` objects, which provide more functionality that
+a simple list of ChemSpider IDs. The primary benefit is allowing easy access to further compound properties after
 performing a search.
 
 Creating a Compound
 -------------------
 
 The easiest way to create a :class:`~chemspipy.objects.Compound` for a given ChemSpider ID is to use the
-``get_compound`` method::
+:meth:`~chemspipy.api.ChemSpider.get_compound` method::
 
     >>> compound = cs.get_compound(2157)
 
@@ -25,9 +25,9 @@ properties are requested::
     >>> print(compound.molecular_formula)
     C_{9}H_{8}O_{4}
     >>> print(compound.molecular_weight)
-    180.15742
+    180.1574
     >>> print(compound.smiles)
-    CC(=O)OC1=CC=CC=C1C(=O)O
+    CC(=O)Oc1ccccc1C(=O)O
     >>> print(compound.common_name)
     Aspirin
 
@@ -39,38 +39,66 @@ Searching for Compounds
 
 See the :ref:`searching documentation <searching>` for full details.
 
-Compound properties
--------------------
-
-- ``csid``: ChemSpider ID.
-- ``image_url``: URL of a PNG image of the 2D chemical structure.
-- ``molecular_formula``: Molecular formula.
-- ``smiles``: SMILES string.
-- ``stdinchi``: Standard InChI string.
-- ``stdinchikey``: Standard InChIKey.
-- ``inchi``: InChI string.
-- ``inchikey``: InChIKey.
-- ``average_mass``: Average mass.
-- ``molecular_weight``: Molecular weight.
-- ``monoisotopic_mass``: Monoisotopic mass.
-- ``nominal_mass``: Nominal mass.
-- ``alogp``: AlogP.
-- ``xlogp``: XlogP.
-- ``common_name``: Common Name.
-- ``mol_2d``: MOL file containing 2D coordinates.
-- ``mol_3d``: MOL file containing 3D coordinates.
-- ``mol_raw``: Unprocessed MOL file.
-- ``image``: 2D depiction as binary data in PNG format.
-
 Implementation details
 ----------------------
 
 Each :class:`~chemspipy.objects.Compound` object is a simple wrapper around a ChemSpider ID. Behind the scenes, the
-property methods use the ``get_compound_info``, ``get_extended_compound_info``, ``get_record_mol`` and
-``get_compound_thumbnail`` API methods to retrieve the relevant information. It is possible to use these API methods
-directly if required::
+property methods use the :meth:`~chemspipy.api.ChemSpider.get_details`, :meth:`~chemspipy.api.ChemSpider.convert`,
+:meth:`~chemspipy.api.ChemSpider.get_image`, and :meth:`~chemspipy.api.ChemSpider.get_external_references` API methods
+to retrieve the relevant information. It is possible to use these API methods directly if required::
 
-    >>> info = cs.get_extended_compound_info(2157)
-    {u'smiles': u'CC(=O)Oc1ccccc1C(=O)O', u'common_name': u'Aspirin', u'nominal_mass': 180.0, u'molecular_formula': u'C_{9}H_{8}O_{4}', u'inchikey': u'BSYNRYMUTXBXSQ-UHFFFAOYAW', u'molecular_weight': 180.1574, u'inchi': u'InChI=1/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)', u'average_mass': 180.1574, u'csid': 2157, u'alogp': 0.0, u'xlogp': 0.0, u'monoisotopic_mass': 180.042252}
+    >>> info = cs.get_details(2157)
+    >>> print(info.keys())
+    dict_keys(['id', 'smiles', 'formula', 'averageMass', 'molecularWeight', 'monoisotopicMass', 'nominalMass', 'commonName', 'referenceCount', 'dataSourceCount', 'pubMedCount', 'rscCount', 'mol2D', 'mol3D'])
+    >>> print(info['smiles'])
+    CC(=O)Oc1ccccc1C(=O)O
 
-Results are returned as a python dictionary that is derived directly from the ChemSpider API XML response.
+Results are returned as a python dictionary that is derived directly from the ChemSpider API JSON response.
+
+Compound properties
+-------------------
+
+.. class:: chemspipy.objects.Compound
+   :noindex:
+
+   .. autoattribute:: record_id
+      :noindex:
+
+   .. autoattribute:: image_url
+      :noindex:
+
+   .. autoattribute:: molecular_formula
+      :noindex:
+
+   .. autoattribute:: inchi
+      :noindex:
+
+   .. autoattribute:: inchikey
+      :noindex:
+
+   .. autoattribute:: average_mass
+      :noindex:
+
+   .. autoattribute:: molecular_weight
+      :noindex:
+
+   .. autoattribute:: monoisotopic_mass
+      :noindex:
+
+   .. autoattribute:: nominal_mass
+      :noindex:
+
+   .. autoattribute:: common_name
+      :noindex:
+
+   .. autoattribute:: mol_2d
+      :noindex:
+
+   .. autoattribute:: mol_3d
+      :noindex:
+
+   .. autoattribute:: image
+      :noindex:
+
+   .. autoattribute:: external_references
+      :noindex:
