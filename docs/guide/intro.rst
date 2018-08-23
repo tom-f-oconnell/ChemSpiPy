@@ -23,7 +23,7 @@ All operations require an API key. To obtain one, `Register for a RSC Developers
 ChemSpiPy license
 -----------------
 
-.. include:: ../../../LICENSE
+.. include:: ../../LICENSE
 
 .. _`ChemSpider website`: http://www.chemspider.com
 .. _`full documentation for the ChemSpider APIs`: https://developer.rsc.org/compounds-v1/apis

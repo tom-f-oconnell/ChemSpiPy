@@ -1,4 +1,4 @@
-.. ChemSpiPy documentation master file, created by sphinx-quickstart on Mon Sep 15 10:51:47 2014.
+.. ChemSpiPy documentation master file
 
 ChemSpiPy
 =========
