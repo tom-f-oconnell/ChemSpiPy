@@ -22,11 +22,12 @@ Quick guide to contributing
 1. `Fork the ChemSpiPy repository on GitHub`_, then clone your fork to your local machine::
 
     git clone https://github.com/<username>/ChemSpiPy.git
+    cd ChemSpiPy
 
-2. Install the development requirements::
+2. Install the development requirements into a `conda environment`_::
 
-    cd chemspipy
-    pip install -r requirements/dev.txt
+    conda env create -n chemspipy -f environment.yml
+    source activate chemspipy
 
 3. Create a new branch for your changes::
 
@@ -35,8 +36,6 @@ Quick guide to contributing
 4. Make your changes or additions. Ideally add some tests and ensure they pass by running::
 
     pytest
-
-   The final line of the output should be ``OK``.
 
 5. Commit your changes and push to your fork on GitHub::
 
@@ -58,6 +57,7 @@ Tips
 .. _`Issue Tracker`: https://github.com/mcs07/ChemSpiPy/issues
 .. _`source code`: https://github.com/mcs07/ChemSpiPy
 .. _`Fork the ChemSpiPy repository on GitHub`: https://github.com/mcs07/ChemSpiPy/fork
+.. _`conda environment`: https://conda.io/docs/
 .. _`Submit a pull request`: https://github.com/mcs07/ChemSpiPy/compare/
 .. _`PEP8`: https://www.python.org/dev/peps/pep-0008
 .. _`PEP257`: https://www.python.org/dev/peps/pep-0257
