@@ -1,6 +1,7 @@
 include *.rst
+include CHANGELOG.md
+include environment.yml
 include LICENSE
 recursive-include tests *.py
 recursive-include docs *
-recursive-include requirements *.txt
-prune docs/build
+prune docs/_build
