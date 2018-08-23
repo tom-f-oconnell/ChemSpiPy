@@ -19,6 +19,6 @@ __license__ = 'MIT'
 
 
 from .api import ChemSpider, MOL2D, MOL3D, BOTH, ASCENDING, DESCENDING, RECORD_ID, CSID, MASS_DEFECT, MOLECULAR_WEIGHT
-from .api import REFERENCE_COUNT, DATASOURCE_COUNT, PUBMED_COUNT, RSC_COUNT
+from .api import REFERENCE_COUNT, DATASOURCE_COUNT, PUBMED_COUNT, RSC_COUNT, FIELDS
 from .objects import Compound
 from .search import Results
