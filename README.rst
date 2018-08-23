@@ -24,7 +24,12 @@ depiction and retrieval of chemical properties::
 Installation
 ------------
 
-Install ChemSpiPy using pip::
+Install ChemSpiPy using conda::
+
+    conda install -c conda-forge chemspipy
+
+
+or using pip::
 
     pip install chemspipy
 
