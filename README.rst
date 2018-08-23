@@ -1,16 +1,16 @@
 ChemSpiPy
 =========
 
-.. image:: http://img.shields.io/pypi/v/ChemSpiPy.svg?style=flat
+.. image:: https://img.shields.io/pypi/v/ChemSpiPy.svg?style=flat
     :target: https://pypi.python.org/pypi/ChemSpiPy
 
-.. image:: http://img.shields.io/pypi/l/ChemSpiPy.svg?style=flat
+.. image:: https://img.shields.io/pypi/l/ChemSpiPy.svg?style=flat
     :target: https://github.com/mcs07/ChemSpiPy/blob/master/LICENSE
 
-.. image:: http://img.shields.io/travis/mcs07/ChemSpiPy/master.svg?style=flat
+.. image:: https://img.shields.io/travis/mcs07/ChemSpiPy/master.svg?style=flat
     :target: https://travis-ci.org/mcs07/ChemSpiPy
 
-.. image:: http://img.shields.io/coveralls/mcs07/ChemSpiPy/master.svg?style=flat
+.. image:: https://img.shields.io/coveralls/mcs07/ChemSpiPy/master.svg?style=flat
     :target: https://coveralls.io/r/mcs07/ChemSpiPy?branch=master
 
 ChemSpiPy provides a way to interact with ChemSpider in Python. It allows chemical searches, chemical file downloads,
@@ -38,7 +38,7 @@ Alternatively, try one of the other `installation options`_.
 Documentation
 -------------
 
-Full documentation is available at http://chemspipy.readthedocs.io.
+Full documentation is available at https://chemspipy.readthedocs.io/en/stable/.
 
 The `general documentation for the ChemSpider API`_ is also a useful resource.
 
@@ -55,9 +55,9 @@ ChemSpiPy is licensed under the `MIT license`_.
 
 This project was originally forked from `ChemSpiPy by Cameron Neylon`_, which has been released into the public domain.
 
-.. _`installation options`: http://chemspipy.readthedocs.io/en/latest/guide/install.html
+.. _`installation options`: https://chemspipy.readthedocs.io/en/stable/guide/install.html
 .. _`source code`: https://github.com/mcs07/ChemSpiPy
 .. _`Issue Tracker`: https://github.com/mcs07/ChemSpiPy/issues
 .. _`MIT license`: https://github.com/mcs07/ChemSpiPy/blob/master/LICENSE
 .. _`ChemSpiPy by Cameron Neylon`: https://github.com/cameronneylon/ChemSpiPy
-.. _`general documentation for the ChemSpider API`: http://www.chemspider.com/AboutServices.aspx
+.. _`general documentation for the ChemSpider API`: https://developer.rsc.org/compounds-v1/apis

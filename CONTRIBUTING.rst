@@ -53,15 +53,13 @@ Tips
 - Include docstrings as described in `PEP257`_.
 - Try and include tests that cover your changes.
 - Try to write `good commit messages`_.
-- Consider `squashing your commits`_ with rebase.
 - Read the GitHub help page on `Using pull requests`_.
 
 .. _`Issue Tracker`: https://github.com/mcs07/ChemSpiPy/issues
 .. _`source code`: https://github.com/mcs07/ChemSpiPy
 .. _`Fork the ChemSpiPy repository on GitHub`: https://github.com/mcs07/ChemSpiPy/fork
 .. _`Submit a pull request`: https://github.com/mcs07/ChemSpiPy/compare/
-.. _`squashing your commits`: http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html
 .. _`PEP8`: https://www.python.org/dev/peps/pep-0008
 .. _`PEP257`: https://www.python.org/dev/peps/pep-0257
-.. _`good commit messages`: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
+.. _`good commit messages`: https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 .. _`Using pull requests`: https://help.github.com/articles/using-pull-requests

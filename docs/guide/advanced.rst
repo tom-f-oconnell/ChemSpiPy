@@ -38,4 +38,4 @@ ChemSpiPy can generate logging statements if required. Just set the desired logg
 
 The logger is named 'chemspipy'. There is more information on logging in the `Python logging documentation`_.
 
-.. _`Python logging documentation`: http://docs.python.org/2/howto/logging.html
+.. _`Python logging documentation`: https://docs.python.org/3/howto/logging.html
