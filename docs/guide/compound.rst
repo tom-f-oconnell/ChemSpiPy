@@ -3,24 +3,24 @@
 Compound
 ========
 
-Many ChemSpiPy search methods return :class:`~chemspipy.Compound` objects, which provide more functionality that a
+Many ChemSpiPy search methods return :class:`~chemspipy..api.Compound` objects, which provide more functionality that a
 simple list of ChemSpider IDs. The primary benefit is allowing easy access to further compound properties after
 performing a search.
 
 Creating a Compound
 -------------------
 
-The easiest way to create a :class:`~chemspipy.Compound` for a given ChemSpider ID is to use the ``get_compound``
-method::
+The easiest way to create a :class:`~chemspipy.objects.Compound` for a given ChemSpider ID is to use the
+``get_compound`` method::
 
     >>> compound = cs.get_compound(2157)
 
-Alternatively, a :class:`~chemspipy.Compound` can be instantiated directly::
+Alternatively, a :class:`~chemspipy.objects.Compound` can be instantiated directly::
 
     >>> compound = Compound(cs, 2157)
 
-Either way, no requests are made to the ChemSpider servers until specific :class:`~chemspipy.Compound` properties are
-requested::
+Either way, no requests are made to the ChemSpider servers until specific :class:`~chemspipy.objects.Compound`
+properties are requested::
 
     >>> print(compound.molecular_formula)
     C_{9}H_{8}O_{4}
@@ -65,8 +65,8 @@ Compound properties
 Implementation details
 ----------------------
 
-Each :class:`~chemspipy.Compound` object is a simple wrapper around a ChemSpider ID. Behind the scenes, the property
-methods use the ``get_compound_info``, ``get_extended_compound_info``, ``get_record_mol`` and
+Each :class:`~chemspipy.objects.Compound` object is a simple wrapper around a ChemSpider ID. Behind the scenes, the
+property methods use the ``get_compound_info``, ``get_extended_compound_info``, ``get_record_mol`` and
 ``get_compound_thumbnail`` API methods to retrieve the relevant information. It is possible to use these API methods
 directly if required::
 

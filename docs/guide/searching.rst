@@ -21,8 +21,8 @@ provide any type of query, and ChemSpider will interpret it and provide the most
 The supported query types include systematic names, synonyms, trade names, registry numbers, molecular formula, SMILES,
 InChI and InChIKey.
 
-The :class:`~chemspipy.Results` object that is returned can be treated just like any regular python list. For example,
-you can iterate over the results::
+The :class:`~chemspipy.search.Results` object that is returned can be treated just like any regular python list. For
+example, you can iterate over the results::
 
     >>> for result in cs.search('Glucose'):
     ...    print(result.csid)
@@ -33,8 +33,8 @@ you can iterate over the results::
     9312824
     9484839
 
-The :class:`~chemspipy.Results` object also provides the time take to perform the search, and a message that explains
-how the query type was resolved::
+The :class:`~chemspipy.search.Results` object also provides the time take to perform the search, and a message that
+explains how the query type was resolved::
 
     >>> r = cs.search('Glucose')
     >>> print(r.duration)
@@ -48,8 +48,8 @@ Asynchronous searching
 Certain types of search can sometimes take slightly longer, which can be inconvenient if the search method blocks the
 Python interpreter until the search results are returned. Fortunately, the ChemSpiPy search method works asynchronously.
 
-Once a search is executed, ChemSpiPy immediately returns the :class:`~chemspipy.Results` object, which is actually
-empty at first::
+Once a search is executed, ChemSpiPy immediately returns the :class:`~chemspipy.search.Results` object, which is
+actually empty at first::
 
     >>> results = cs.search('O=C(OCC)C')
     >>> print(results.ready())

@@ -185,7 +185,7 @@ class ChemSpider(object):
 
         :param string|int csid: ChemSpider ID.
         :return: The Compound with the specified ChemSpider ID.
-        :rtype: :class:`~chemspipy.Compound`
+        :rtype: :class:`~chemspipy.objects.Compound`
         """
         return Compound(self, csid)
 
@@ -194,7 +194,7 @@ class ChemSpider(object):
 
         :param list[string|int] csids: List of ChemSpider IDs.
         :return: List of Compounds with the specified ChemSpider IDs.
-        :rtype: list[:class:`~chemspipy.Compound`]
+        :rtype: list[:class:`~chemspipy.objects.Compound`]
         """
         return [Compound(self, csid) for csid in csids]
 
@@ -212,7 +212,7 @@ class ChemSpider(object):
         :param bool raise_errors: (Optional) If True, raise exceptions. If False, store on Results ``exception``
                                   property.
         :return: Search Results list.
-        :rtype: chemspipy.search.Results
+        :rtype: :class:`~chemspipy.search.Results`
         """
         return Results(self, self.filter_name, (query, order, direction), raise_errors=raise_errors)
 
@@ -772,7 +772,7 @@ class ChemSpider(object):
 
         :param string rid: A transaction ID, returned by an asynchronous search method.
         :return: A list of Compounds.
-        :rtype: list[:class:`~chemspipy.Compound`]
+        :rtype: list[:class:`~chemspipy.objects.Compound`]
         """
         warnings.warn('Use filter_results instead of get_async_search_result.', DeprecationWarning)
         results = self.filter_results(query_id=rid)
@@ -785,7 +785,7 @@ class ChemSpider(object):
         :param int start: The number of results to skip.
         :param int count: The number of results to return. -1 returns all through to end.
         :return: A list of Compounds.
-        :rtype: list[:class:`~chemspipy.Compound`]
+        :rtype: list[:class:`~chemspipy.objects.Compound`]
         """
         warnings.warn('Use filter_results instead of get_async_search_result_part.', DeprecationWarning)
         if count == -1:
@@ -819,7 +819,7 @@ class ChemSpider(object):
 
         :param string query: Search query - a chemical name.
         :return: Search Results list.
-        :rtype: chemspipy.search.Results
+        :rtype: :class:`~chemspipy.search.Results`
         """
         warnings.warn('Use search instead of simple_search.', DeprecationWarning)
         return self.search(query=query)

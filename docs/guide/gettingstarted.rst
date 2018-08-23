@@ -33,7 +33,7 @@ Let's get the Compound with `ChemSpider ID 2157`_::
 
     >>> c = cs.get_compound(2157)
 
-Now we have a :class:`~chemspipy.Compound` object called ``c``. We can get various identifiers and calculated
+Now we have a :class:`~chemspipy.objects.Compound` object called ``c``. We can get various identifiers and calculated
 properties from this object::
 
     >>> print(c.molecular_formula)
