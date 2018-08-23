@@ -3,7 +3,7 @@
 Installation
 ============
 
-ChemSpiPy supports Python versions 2.7, 3.2, 3.3 and 3.4.
+ChemSpiPy supports Python versions 2.7 and 3.5+.
 
 There are two required dependencies: `six`_ and `requests`_.
 

@@ -22,7 +22,7 @@ Features
 - Download compound records as a MOL file with 2D or 3D coordinates.
 - Get a 2D compound depiction as a PNG image.
 - Complete interface to every endpoint of the ChemSpider Web APIs.
-- Supports Python versions 2.7 – 3.4.
+- Supports Python versions 2.7 and 3.5+.
 
 User guide
 ----------
