@@ -181,7 +181,7 @@ class ChemSpider(object):
         return self.request('POST', api=api, namespace=namespace, endpoint=endpoint, json=json)
 
     def get_compound(self, csid):
-        """Return a Compound object for a given ChemSpider ID. Security token is required.
+        """Return a Compound object for a given ChemSpider ID.
 
         :param string|int csid: ChemSpider ID.
         :return: The Compound with the specified ChemSpider ID.
@@ -190,7 +190,7 @@ class ChemSpider(object):
         return Compound(self, csid)
 
     def get_compounds(self, csids):
-        """Return a list of Compound objects, given a list ChemSpider IDs. Security token is required.
+        """Return a list of Compound objects, given a list ChemSpider IDs.
 
         :param list[string|int] csids: List of ChemSpider IDs.
         :return: List of Compounds with the specified ChemSpider IDs.
@@ -199,7 +199,7 @@ class ChemSpider(object):
         return [Compound(self, csid) for csid in csids]
 
     def search(self, query, order=None, direction=ASCENDING, raise_errors=False):
-        """Search ChemSpider for the specified query and return the results. Security token is required.
+        """Search ChemSpider for the specified query and return the results.
 
         The accepted values for ``order`` are: :data:`~chemspipy.api.RECORD_ID`, :data:`~chemspipy.api.MASS_DEFECT`,
         :data:`~chemspipy.api.MOLECULAR_WEIGHT`, :data:`~chemspipy.api.REFERENCE_COUNT`,
@@ -664,12 +664,20 @@ class ChemSpider(object):
             return False
 
     def get_databases(self):
-        """Get the list of datasources in ChemSpider."""
+        """Get the list of datasources in ChemSpider.
+
+        .. deprecated:: 2.0.0
+           Use :py:meth:`~chemspipy.api.ChemSpider.get_datasources` instead.
+
+        """
         warnings.warn('Use get_datasources instead of get_databases.', DeprecationWarning)
         return self.get_datasources()
 
     def get_extended_compound_info(self, csid):
-        """Get extended record details for a CSID. Security token is required.
+        """Get extended record details for a CSID.
+
+        .. deprecated:: 2.0.0
+           Use :py:meth:`~chemspipy.api.ChemSpider.get_details` instead.
 
         :param string|int csid: ChemSpider ID.
         """
@@ -677,7 +685,10 @@ class ChemSpider(object):
         return self.get_details(record_id=csid)
 
     def get_extended_compound_info_list(self, csids):
-        """Get extended record details for a list of CSIDs. Security token is required.
+        """Get extended record details for a list of CSIDs.
+
+        .. deprecated:: 2.0.0
+           Use :py:meth:`~chemspipy.api.ChemSpider.get_details_batch` instead.
 
         :param list[string|int] csids: ChemSpider IDs.
         """
@@ -688,7 +699,10 @@ class ChemSpider(object):
                                             include_external_references=False):
         """Get extended record details (including MOL) for a list of CSIDs.
 
-        A maximum of 250 CSIDs can be fetched per request. Security token is required.
+        A maximum of 250 CSIDs can be fetched per request.
+
+        .. deprecated:: 2.0.0
+           Use :py:meth:`~chemspipy.api.ChemSpider.get_details_batch` instead.
 
         :param list[string|int] csids: ChemSpider IDs.
         :param string mol_type: :data:`~chemspipy.api.MOL2D`, :data:`~chemspipy.api.MOL3D` or
@@ -700,7 +714,10 @@ class ChemSpider(object):
         return self.get_details_batch(record_ids=csids)
 
     def get_record_mol(self, csid, calc3d=False):
-        """Get ChemSpider record in MOL format. Security token is required.
+        """Get ChemSpider record in MOL format.
+
+        .. deprecated:: 2.0.0
+           Use :py:meth:`~chemspipy.api.ChemSpider.get_mol` instead.
 
         :param string|int csid: ChemSpider ID.
         :param bool calc3d: Whether 3D coordinates should be calculated before returning record data.
@@ -714,8 +731,6 @@ class ChemSpider(object):
         """Search ChemSpider with arbitrary query, returning results in order of the best match found.
 
         This method returns a transaction ID which can be used with other methods to get search status and results.
-
-        Security token is required.
 
         .. deprecated:: 2.0.0
            Use :py:meth:`~chemspipy.api.ChemSpider.filter_name` instead.
@@ -732,7 +747,8 @@ class ChemSpider(object):
 
         This method returns a transaction ID which can be used with other methods to get search status and results.
 
-        Security token is required.
+        .. deprecated:: 2.0.0
+           Use :meth:`~chemspipy.api.ChemSpider.filter_name` instead.
 
         :param string query: Search query - a name, SMILES, InChI, InChIKey, CSID, etc.
         :param string order: (Optional) Field to sort the result by.
@@ -746,7 +762,8 @@ class ChemSpider(object):
     def get_async_search_status(self, rid):
         """Check the status of an asynchronous search operation.
 
-        Security token is required.
+        .. deprecated:: 2.0.0
+           Use :meth:`~chemspipy.api.ChemSpider.filter_status` instead.
 
         :param string rid: A transaction ID, returned by an asynchronous search method.
         :return: Unknown, Created, Scheduled, Processing, Suspended, PartialResultReady, ResultReady, Failed,
@@ -759,7 +776,8 @@ class ChemSpider(object):
     def get_async_search_status_and_count(self, rid):
         """Check the status of an asynchronous search operation. If ready, a count and message are also returned.
 
-        Security token is required.
+        .. deprecated:: 2.0.0
+           Use :meth:`~chemspipy.api.ChemSpider.filter_status` instead.
 
         :param string rid: A transaction ID, returned by an asynchronous search method.
         :rtype: dict
@@ -768,7 +786,10 @@ class ChemSpider(object):
         return self.filter_status(query_id=rid)
 
     def get_async_search_result(self, rid):
-        """Get the results from a asynchronous search operation. Security token is required.
+        """Get the results from a asynchronous search operation.
+
+        .. deprecated:: 2.0.0
+           Use :meth:`~chemspipy.api.ChemSpider.filter_results` instead.
 
         :param string rid: A transaction ID, returned by an asynchronous search method.
         :return: A list of Compounds.
@@ -779,7 +800,10 @@ class ChemSpider(object):
         return [Compound(self, record_id) for record_id in results]
 
     def get_async_search_result_part(self, rid, start=0, count=-1):
-        """Get a slice of the results from a asynchronous search operation. Security token is required.
+        """Get a slice of the results from a asynchronous search operation.
+
+        .. deprecated:: 2.0.0
+           Use :meth:`~chemspipy.api.ChemSpider.filter_results` instead.
 
         :param string rid: A transaction ID, returned by an asynchronous search method.
         :param int start: The number of results to skip.
@@ -794,7 +818,10 @@ class ChemSpider(object):
         return [Compound(self, record_id) for record_id in results]
 
     def get_compound_info(self, csid):
-        """Get SMILES, StdInChI and StdInChIKey for a given CSID. Security token is required.
+        """Get SMILES, StdInChI and StdInChIKey for a given CSID.
+
+        .. deprecated:: 2.0.0
+           Use :meth:`~chemspipy.api.ChemSpider.get_details` instead.
 
         :param string|int csid: ChemSpider ID.
         :rtype: dict
@@ -804,6 +831,9 @@ class ChemSpider(object):
 
     def get_compound_thumbnail(self, csid):
         """Get PNG image as binary data.
+
+        .. deprecated:: 2.0.0
+           Use :meth:`~chemspipy.api.ChemSpider.get_image` instead.
 
         :param string|int csid: ChemSpider ID.
         :rtype: bytes

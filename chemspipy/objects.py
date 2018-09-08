@@ -55,6 +55,9 @@ class Compound(object):
     def csid(self):
         """ChemSpider ID.
 
+        .. deprecated:: 2.0.0
+           Use :py:attr:`~chemspipy.objects.Compound.record_id` instead.
+
         :rtype: int
         """
         warnings.warn('Use record_id instead of csid.', DeprecationWarning)
@@ -95,6 +98,9 @@ class Compound(object):
     def stdinchi(self):
         """Return the Standard InChI for this Compound.
 
+        .. deprecated:: 2.0.0
+           Use :py:attr:`~chemspipy.objects.Compound.inchi` instead.
+
         :rtype: string
         """
         warnings.warn('Use inchi instead of stdinchi.', DeprecationWarning)
@@ -103,6 +109,9 @@ class Compound(object):
     @property
     def stdinchikey(self):
         """Return the Standard InChIKey for this Compound.
+
+        .. deprecated:: 2.0.0
+           Use :py:attr:`~chemspipy.objects.Compound.inchikey` instead.
 
         :rtype: string
         """
