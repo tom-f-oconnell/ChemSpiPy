@@ -3,7 +3,7 @@
 Advanced
 ========
 
-Keep your API key secret
+Keep Your API Key Secret
 ------------------------
 
 Be careful not to include your API key when sharing code. A simple way to ensure this doesn't happen by accident is to

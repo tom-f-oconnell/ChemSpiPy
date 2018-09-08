@@ -1,17 +1,17 @@
 .. _gettingstarted:
 
-Getting started
+Getting Started
 ===============
 
 This page gives a introduction on how to get started with ChemSpiPy.
 
-Before we start
+Before We Start
 ---------------
 
 - Make sure you have :ref:`installed ChemSpiPy <install>`.
 - :ref:`Obtain an API key <apikey>` from the ChemSpider web site.
 
-First steps
+First Steps
 -----------
 
 Start by importing ChemSpider::
@@ -45,7 +45,7 @@ properties from this object::
     >>> print(c.common_name)
     Aspirin
 
-Search for a name
+Search for a Name
 -----------------
 
 What if you don't know the ChemSpider ID of the Compound you want? Instead use the ``search`` method::

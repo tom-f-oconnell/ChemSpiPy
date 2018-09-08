@@ -5,7 +5,7 @@ Searching
 
 ChemSpiPy provides a number of different ways to search ChemSpider.
 
-Compound search
+Compound Search
 ---------------
 
 The main ChemSpiPy search method functions in a similar way to the main search box on the ChemSpider website. Just
@@ -48,7 +48,7 @@ explains how the query type was resolved::
     >>> print(r.message)
     Found by approved synonym
 
-Asynchronous searching
+Asynchronous Searching
 ----------------------
 
 Certain types of search can sometimes take slightly longer, which can be inconvenient if the search method blocks the
@@ -82,7 +82,7 @@ For more detailed information about the status of a search, use the :attr:`~chem
 
 The possible statuses are ``Created``, ``Failed``, ``Unknown``, ``Suspended``, ``Complete``.
 
-Search by formula
+Search by Formula
 -----------------
 
 Searching by molecular formula is supported by the main :meth:`~chemspipy.api.ChemSpider.search()` method, but there is
@@ -92,7 +92,7 @@ by formula, use::
     >>> cs.search_by_formula('C44H30N4Zn')
     [Compound(436642), Compound(3232330), Compound(24746832), Compound(26995124)]
 
-Search by mass
+Search by Mass
 --------------
 
 It is also possible to search ChemSpider by mass by specifying a certain range::

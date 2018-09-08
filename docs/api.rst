@@ -1,6 +1,6 @@
 .. _api:
 
-API documentation
+API Documentation
 =================
 
 .. sectionauthor:: Matt Swain <m.swain@me.com>

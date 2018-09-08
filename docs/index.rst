@@ -24,7 +24,7 @@ Features
 - Complete interface to every endpoint of the ChemSpider Web APIs.
 - Supports Python versions 2.7 and 3.5+.
 
-User guide
+User Guide
 ----------
 
 A step-by-step guide to getting started with ChemSpiPy.
@@ -41,7 +41,7 @@ A step-by-step guide to getting started with ChemSpiPy.
    guide/advanced
    guide/contributing
 
-API documentation
+API Documentation
 -----------------
 
 Comprehensive API documentation with information on every function, class and method.

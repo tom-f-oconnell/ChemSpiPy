@@ -38,7 +38,7 @@ If you don't already have pip installed, you can `install it using get-pip.py`_:
        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
        python get-pip.py
 
-Option 3: Download the latest release
+Option 3: Download the Latest Release
 -------------------------------------
 
 Alternatively, `download the latest release`_ manually and install yourself::
@@ -50,7 +50,7 @@ Alternatively, `download the latest release`_ manually and install yourself::
 The setup.py command will install ChemSpiPy in your `site-packages` folder so it is automatically available to all your
 python scripts.
 
-Option 4: Clone the repository
+Option 4: Clone the Repository
 ------------------------------
 
 The latest development version of ChemSpiPy is always `available on GitHub`_. This version is not guaranteed to be

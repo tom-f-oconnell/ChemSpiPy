@@ -61,7 +61,7 @@ Searching for Compounds
 
 See the :ref:`searching documentation <searching>` for full details.
 
-Implementation details
+Implementation Details
 ----------------------
 
 Each :class:`~chemspipy.objects.Compound` object is a simple wrapper around a ChemSpider ID. Behind the scenes, the
@@ -77,7 +77,7 @@ to retrieve the relevant information. It is possible to use these API methods di
 
 Results are returned as a python dictionary that is derived directly from the ChemSpider API JSON response.
 
-Compound properties
+Compound Properties
 -------------------
 
 .. class:: chemspipy.objects.Compound

@@ -12,7 +12,7 @@ documentation before getting started with ChemSpiPy to get an idea of what sort 
 
 .. _apikey:
 
-Obtaining an API key
+Obtaining an API Key
 --------------------
 
 The Royal Society of Chemistry web services are currently available as an Open Developer Preview. During the preview you
@@ -20,7 +20,7 @@ can make 1000 calls per month. For an increased allowance, contact `api@rsc.org`
 
 All operations require an API key. To obtain one, `Register for a RSC Developers account`_ and then `Add a new key`_.
 
-ChemSpiPy license
+ChemSpiPy License
 -----------------
 
 .. include:: ../../LICENSE
