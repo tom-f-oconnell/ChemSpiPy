@@ -202,6 +202,6 @@ class Compound(object):
     def external_references(self):
         """Return external references for this Compound.
 
-        :rtype: list[string]
+        :rtype: list[dict]
         """
         return self._cs.get_external_references(self.record_id)

@@ -34,6 +34,28 @@ properties are requested::
 Properties are cached locally after the first time they are retrieved, speeding up subsequent access and reducing the
 number of unnecessary requests to the ChemSpider servers.
 
+External References
+-------------------
+
+Get a list of all external references for a given compound using the
+:attr:`~chemspipy.objects.Compound.external_references` property::
+
+    >>> refs = compound.external_references
+    >>> print(len(refs))
+    28181
+    >>> print(refs[0])
+    {'source': 'ChemBank', 'sourceUrl': 'http://chembank.broadinstitute.org/', 'externalId': 'DivK1c_000555', 'externalUrl': 'http://chembank.broad.harvard.edu/chemistry/viewMolecule.htm?cbid=1171'}
+
+Each reference is a dict with details for an external source. The list of references can be very large and slow to
+retrieve for popular compounds, so it is possible to filter it by datasource. To do this, use the
+:meth:`~chemspipy.api.ChemSpider.get_external_references` method directly::
+
+    >>> refs = cs.get_external_references(2157, datasources=['PubChem'])
+    >>> print(refs)
+    [{'source': 'PubChem', 'sourceUrl': 'http://pubchem.ncbi.nlm.nih.gov/', 'externalId': 2244, 'externalUrl': 'http://pubchem.ncbi.nlm.nih.gov/summary/summary.cgi?cid=2244'}]
+
+See the :ref:`Data Sources <datasources>` documentation for how to get a list of all available data sources.
+
 Searching for Compounds
 -----------------------
 

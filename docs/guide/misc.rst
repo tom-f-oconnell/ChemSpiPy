@@ -3,7 +3,9 @@
 Miscellaneous
 =============
 
-Data sources
+.. _datasources:
+
+Data Sources
 ------------
 
 Get a list of data sources in ChemSpider::
