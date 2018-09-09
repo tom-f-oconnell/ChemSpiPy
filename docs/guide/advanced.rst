@@ -3,7 +3,7 @@
 Advanced
 ========
 
-Keep your API key secret
+Keep Your API Key Secret
 ------------------------
 
 Be careful not to include your API key when sharing code. A simple way to ensure this doesn't happen by accident is to
@@ -38,4 +38,4 @@ ChemSpiPy can generate logging statements if required. Just set the desired logg
 
 The logger is named 'chemspipy'. There is more information on logging in the `Python logging documentation`_.
 
-.. _`Python logging documentation`: http://docs.python.org/2/howto/logging.html
+.. _`Python logging documentation`: https://docs.python.org/3/howto/logging.html

@@ -1,4 +1,4 @@
-.. ChemSpiPy documentation master file, created by sphinx-quickstart on Mon Sep 15 10:51:47 2014.
+.. ChemSpiPy documentation master file
 
 ChemSpiPy
 =========
@@ -22,9 +22,9 @@ Features
 - Download compound records as a MOL file with 2D or 3D coordinates.
 - Get a 2D compound depiction as a PNG image.
 - Complete interface to every endpoint of the ChemSpider Web APIs.
-- Supports Python versions 2.7 – 3.4.
+- Supports Python versions 2.7 and 3.5+.
 
-User guide
+User Guide
 ----------
 
 A step-by-step guide to getting started with ChemSpiPy.
@@ -39,9 +39,8 @@ A step-by-step guide to getting started with ChemSpiPy.
    guide/searching
    guide/misc
    guide/advanced
-   guide/contributing
 
-API documentation
+API Documentation
 -----------------
 
 Comprehensive API documentation with information on every function, class and method.
@@ -50,3 +49,29 @@ Comprehensive API documentation with information on every function, class and me
    :maxdepth: 2
 
    api
+
+Additional Notes
+----------------
+
+.. toctree::
+   :maxdepth: 2
+
+   notes/license
+   notes/contributing
+   notes/migrating
+   notes/changelog
+
+Useful links
+------------
+
+- `ChemSpiPy on GitHub`_
+- `ChemSpiPy on PyPI`_
+- `Issue tracker`_
+- `Release history`_
+- `ChemSpiPy Travis CI`_
+
+.. _`ChemSpiPy on GitHub`: https://github.com/mcs07/ChemSpiPy
+.. _`ChemSpiPy on PyPI`: https://pypi.python.org/pypi/ChemSpiPy
+.. _`Issue tracker`: https://github.com/mcs07/ChemSpiPy/issues
+.. _`Release history`: https://github.com/mcs07/ChemSpiPy/releases
+.. _`ChemSpiPy Travis CI`: https://travis-ci.org/mcs07/ChemSpiPy

@@ -45,18 +45,30 @@ class Compound(object):
 
     @property
     def record_id(self):
-        """Compound record ID."""
+        """Compound record ID.
+
+        :rtype: int
+        """
         return self._record_id
 
     @property
     def csid(self):
-        """ChemSpider ID."""
+        """ChemSpider ID.
+
+        .. deprecated:: 2.0.0
+           Use :py:attr:`~chemspipy.objects.Compound.record_id` instead.
+
+        :rtype: int
+        """
         warnings.warn('Use record_id instead of csid.', DeprecationWarning)
         return self._record_id
 
     @property
     def image_url(self):
-        """Return the URL of a PNG image of the 2D chemical structure."""
+        """Return the URL of a PNG image of the 2D chemical structure.
+
+        :rtype: string
+        """
         return 'http://www.chemspider.com/ImagesHandler.ashx?id=%s' % self.record_id
 
     @memoized_property
@@ -86,6 +98,9 @@ class Compound(object):
     def stdinchi(self):
         """Return the Standard InChI for this Compound.
 
+        .. deprecated:: 2.0.0
+           Use :py:attr:`~chemspipy.objects.Compound.inchi` instead.
+
         :rtype: string
         """
         warnings.warn('Use inchi instead of stdinchi.', DeprecationWarning)
@@ -94,6 +109,9 @@ class Compound(object):
     @property
     def stdinchikey(self):
         """Return the Standard InChIKey for this Compound.
+
+        .. deprecated:: 2.0.0
+           Use :py:attr:`~chemspipy.objects.Compound.inchikey` instead.
 
         :rtype: string
         """
@@ -184,6 +202,6 @@ class Compound(object):
     def external_references(self):
         """Return external references for this Compound.
 
-        :rtype: list[string]
+        :rtype: list[dict]
         """
         return self._cs.get_external_references(self.record_id)
