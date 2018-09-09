@@ -39,7 +39,6 @@ A step-by-step guide to getting started with ChemSpiPy.
    guide/searching
    guide/misc
    guide/advanced
-   guide/contributing
 
 API Documentation
 -----------------
@@ -57,7 +56,8 @@ Additional Notes
 .. toctree::
    :maxdepth: 2
 
-   notes/changelog
-   notes/migrating
    notes/license
+   notes/contributing
+   notes/migrating
+   notes/changelog
 
