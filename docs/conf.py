@@ -12,6 +12,7 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
+import inspect
 import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
@@ -41,7 +42,7 @@ release = '1.0.5'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
-    'sphinx.ext.viewcode',
+    'sphinx.ext.linkcode',
     'm2r',
 ]
 
@@ -181,3 +182,45 @@ autodoc_member_order = 'bysource'
 autoclass_content = 'both'
 
 m2r_anonymous_references = True
+
+
+# Function courtesy of NumPy to return URLs containing line numbers
+def linkcode_resolve(domain, info):
+    """Determine the URL corresponding to Python object."""
+    if domain != 'py':
+        return None
+
+    modname = info['module']
+    fullname = info['fullname']
+
+    submod = sys.modules.get(modname)
+    if submod is None:
+        return None
+
+    obj = submod
+    for part in fullname.split('.'):
+        try:
+            obj = getattr(obj, part)
+        except:
+            return None
+
+    try:
+        fn = inspect.getsourcefile(obj)
+    except:
+        fn = None
+    if not fn:
+        return None
+
+    try:
+        source, lineno = inspect.findsource(obj)
+    except:
+        lineno = None
+
+    if lineno:
+        linespec = '#L{}'.format(lineno + 1)
+    else:
+        linespec = ""
+
+    fn = os.path.relpath(fn, start=os.path.abspath('..'))
+
+    return 'http://github.com/mcs07/ChemSpiPy/blob/master/{}{}'.format(fn, linespec)
