@@ -57,5 +57,6 @@ Additional Notes
 .. toctree::
    :maxdepth: 2
 
+   notes/changelog
    notes/license
 
