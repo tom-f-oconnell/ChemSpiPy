@@ -61,3 +61,17 @@ Additional Notes
    notes/migrating
    notes/changelog
 
+Useful links
+------------
+
+- `ChemSpiPy on GitHub`_
+- `ChemSpiPy on PyPI`_
+- `Issue tracker`_
+- `Release history`_
+- `ChemSpiPy Travis CI`_
+
+.. _`ChemSpiPy on GitHub`: https://github.com/mcs07/ChemSpiPy
+.. _`ChemSpiPy on PyPI`: https://pypi.python.org/pypi/ChemSpiPy
+.. _`Issue tracker`: https://github.com/mcs07/ChemSpiPy/issues
+.. _`Release history`: https://github.com/mcs07/ChemSpiPy/releases
+.. _`ChemSpiPy Travis CI`: https://travis-ci.org/mcs07/ChemSpiPy
