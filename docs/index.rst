@@ -50,3 +50,12 @@ Comprehensive API documentation with information on every function, class and me
    :maxdepth: 2
 
    api
+
+Additional Notes
+----------------
+
+.. toctree::
+   :maxdepth: 2
+
+   notes/license
+
