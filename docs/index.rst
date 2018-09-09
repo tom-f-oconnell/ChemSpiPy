@@ -58,5 +58,6 @@ Additional Notes
    :maxdepth: 2
 
    notes/changelog
+   notes/migrating
    notes/license
 
