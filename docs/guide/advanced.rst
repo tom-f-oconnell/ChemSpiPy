@@ -26,7 +26,7 @@ You can specify a custom User Agent through ChemSpiPy through the optional ``use
 class::
 
     >>> from chemspipy import ChemSpider
-    >>> cs = ChemSpider('<YOUR-API-KEY>', user_agent='My program 1.3, ChemSpiPy 1.0.5, Python 3.6')
+    >>> cs = ChemSpider('<YOUR-API-KEY>', user_agent='My program 1.3, ChemSpiPy 2.0.0, Python 3.6')
 
 Logging
 -------
