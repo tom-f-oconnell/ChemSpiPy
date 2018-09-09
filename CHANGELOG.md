@@ -5,12 +5,21 @@
 
 **Implemented enhancements:**
 
+- Access "data source" information through `ChemSpider` [\#3](https://github.com/mcs07/ChemSpiPy/issues/3)
 - Switch to new RSC REST API [\#12](https://github.com/mcs07/ChemSpiPy/pull/12) ([mcs07](https://github.com/mcs07))
+
+**Fixed bugs:**
+
+- Authentication problem [\#11](https://github.com/mcs07/ChemSpiPy/issues/11)
 
 **Closed issues:**
 
 - Make conda-forge recipe [\#13](https://github.com/mcs07/ChemSpiPy/issues/13)
 - return \# of data sources in search results [\#10](https://github.com/mcs07/ChemSpiPy/issues/10)
+
+**Merged pull requests:**
+
+- Update docs for new RSC REST API [\#14](https://github.com/mcs07/ChemSpiPy/pull/14) ([mcs07](https://github.com/mcs07))
 
 ## [v1.0.5](https://github.com/mcs07/ChemSpiPy/tree/v1.0.5) (2017-03-29)
 [Full Changelog](https://github.com/mcs07/ChemSpiPy/compare/v1.0.4...v1.0.5)
