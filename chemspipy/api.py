@@ -198,7 +198,8 @@ class ChemSpider(object):
         """
         return [Compound(self, csid) for csid in csids]
 
-    def search(self, query, order=None, direction=ASCENDING, raise_errors=False):
+    def search(self, query, order=None, direction=ASCENDING, raise_errors=False,
+        domain='name'):
         """Search ChemSpider for the specified query and return the results.
 
         The accepted values for ``order`` are: :data:`~chemspipy.api.RECORD_ID`, :data:`~chemspipy.api.MASS_DEFECT`,
@@ -214,7 +215,16 @@ class ChemSpider(object):
         :return: Search Results list.
         :rtype: :class:`~chemspipy.search.Results`
         """
-        return Results(self, self.filter_name, (query, order, direction), raise_errors=raise_errors)
+        if domain == 'name':
+            filter_fn = self.filter_name
+            args = (query, order, direction)
+        elif domain == 'inchi':
+            filter_fn = self.filter_inchi
+            args = (query,)
+        else:
+            raise ValueError('invalid domain')
+        # TODO extend above to other valid domains if inchi works
+        return Results(self, filter_fn, args, raise_errors=raise_errors)
 
     def get_datasources(self):
         """Get the list of datasources in ChemSpider.
